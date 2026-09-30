@@ -313,6 +313,39 @@ a.logo{text-decoration:none;color:inherit}
 .demo{background:var(--acc2);border:1px solid var(--accl);padding:10px 14px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-size:14px}
 .empty{color:var(--muted);font-size:14px;padding:6px 0}
 .foot a,.foot .linkb{color:var(--sub);font-size:12px}
+
+/* ---------- 항목 고르기 (대분류 › 중분류 › 항목) ---------- */
+.pickbtn{display:block;text-align:left;cursor:pointer;line-height:1.3;background:transparent}
+.pickbtn small{display:block;font-size:11px;color:var(--muted);font-weight:400}
+.pickbtn .phx{color:var(--sub);font-weight:700}
+tr.newrow .pickbtn{background:#fff}
+.xl .c-s{width:168px}
+.pk{display:grid;grid-template-columns:1fr 1fr 1.25fr;gap:10px;margin-top:12px}
+.pkcol{border:1px solid var(--line);max-height:380px;overflow:auto;background:#fff}
+.pkcol.pkall{grid-column:1/-1}
+.pkh{font-size:12px;font-weight:700;color:var(--sub);padding:8px 12px;border-bottom:1px solid var(--line);background:var(--accs);position:sticky;top:0;z-index:1}
+.pkcol>button{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid #F4F4F4;background:#fff;padding:10px 12px;font-size:15px;cursor:pointer}
+.pkcol>button:hover{background:var(--accs)}
+.pkcol>button.on{background:var(--acc);font-weight:700}
+.pkcol>button small{display:block;font-size:12px;color:var(--muted);font-weight:400}
+.pkempty{padding:14px 12px;color:var(--muted);font-size:13px}
+.pkadd{display:flex;gap:6px;padding:8px;border-top:1px solid var(--line);position:sticky;bottom:0;background:#fff}
+.pkadd input{flex:1;min-width:0;border:1px solid var(--line);padding:7px 8px;font-size:14px}
+.pkadd button{border:1px solid var(--accl);background:var(--acc2);padding:0 10px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
+#pkq{width:100%;border:1px solid #DAD9D2;padding:11px 12px;font-size:16px}
+#pkq:focus{outline:2px solid var(--accd);outline-offset:-2px}
+/* 폰 · 입력 창 안: 단계별 버튼을 위아래로 */
+#ov.sheet .pk,.pk.inline{grid-template-columns:1fr}
+.pk.inline .pkcol,#ov.sheet .pkcol{max-height:none;border:0}
+.pk.inline .pkcol>button,#ov.sheet .pkcol>button{display:inline-block;width:auto;border:1px solid var(--line);margin:0 6px 6px 0;padding:8px 12px}
+.pk.inline .pkcol>button small,#ov.sheet .pkcol>button small{display:none}
+.pk.inline .pkcol.pkall>button small,#ov.sheet .pkcol.pkall>button small{display:block}
+.pk.inline .pkh,#ov.sheet .pkh{position:static;background:none;border:0;padding:4px 0 6px}
+.pk.inline .pkadd,#ov.sheet .pkadd{position:static;border:0;padding:0 0 8px}
+.mform .pkadd input{padding:8px;font-size:15px}
+.pkopen{display:none}
+.pk.inline .pkadd:not(.open) input,.pk.inline .pkadd:not(.open) [data-act^="pkadd"],#ov.sheet .pkadd:not(.open) input,#ov.sheet .pkadd:not(.open) [data-act^="pkadd"]{display:none}
+.pk.inline .pkadd:not(.open) .pkopen,#ov.sheet .pkadd:not(.open) .pkopen{display:inline-block;border:1px dashed var(--accl);background:#fff;color:var(--sub);padding:7px 12px;font-size:13px;cursor:pointer}
 /* 웨딩홀 */
 .hall td,.hall th{white-space:nowrap}
 .hall td.st,.hall th.st{position:sticky;left:0;background:#fff;z-index:1;border-right:1px solid var(--line)}
@@ -520,7 +553,7 @@ function vHome(){
   <div class="grid g2 mt">
     <div class="card">
       <h2>항목별 예산 <button class="more" data-go="budget">예산 탭 ›</button></h2>
-      ${BIGS.map(g=>{const cs=CATS.filter(c=>c.big===g);const b=sum(cs,c=>MY[c.small]||0),p=sum(cs,c=>paid(c.small)),q=sum(cs,c=>plan(c.small));
+      ${bigsOf().map(g=>{const cs=CATS.filter(c=>c.big===g);const b=sum(cs,c=>MY[c.small]||0),p=sum(cs,c=>paid(c.small)),q=sum(cs,c=>plan(c.small));
         return `<div class="brow"><div class="t"><span>${g}</span><span><b>${man(p+q)}</b> <span class="mut">/ ${man(b)}</span></span></div>${bar(b,p,q)}</div>`}).join("")}
       <div class="legend"><span class="lp">냈어요</span><span class="lq">낼 예정</span><span class="lo">예산 넘음</span></div>
     </div>
@@ -620,7 +653,7 @@ const setMsg=t=>{const m=document.getElementById("setMsg");if(m)m.innerHTML=t};
 
 /* ================= 화면: 예산 ================= */
 function vBudget(){
-  const bigs=["전체",...BIGS];
+  const bigs=["전체",...bigsOf()];
   const cs=CATS.filter(c=>S.big==="전체"||c.big===S.big);
   let rows="",mob="";
   const groups=[];cs.forEach(c=>{const k=c.big+"|"+c.mid;let g=groups.find(x=>x.k===k);if(!g)groups.push(g={k,big:c.big,mid:c.mid,items:[]});g.items.push(c)});
@@ -638,8 +671,8 @@ function vBudget(){
         <td class="num"><input class="ly" data-bud="${esc(c.small)}" data-fk="b-${c.id}" data-col="bud" value="${b?(b/10000).toLocaleString():""}" placeholder="0" inputmode="numeric"><span class="u">만</span></td>
         <td class="num">${p?man(p):'<span class="mut">0</span>'}</td><td class="num">${q?man(q):'<span class="mut">0</span>'}</td>
         <td class="num b ${l<0?'red':''}">${b?man(l):'<span class="mut">–</span>'}</td>
-        <td><div class="pb">${bar(b,p,q)}<span>${b?pct+"%":""}</span></div></td><td>${af}</td></tr>`;
-      mob+=`<div class="mrow"><div class="a"><span class="n">${nm}</span><span><input class="ly" data-bud="${esc(c.small)}" data-fk="b-${c.id}" data-col="bud" value="${b?(b/10000).toLocaleString():""}" placeholder="예산" inputmode="numeric"><span class="u">만</span></span></div>
+        <td><div class="pb">${bar(b,p,q)}<span>${b?pct+"%":""}</span></div></td><td>${af}${c.custom?`<button class="x" data-act="delcat" data-id="${c.id}" title="직접 만든 항목 지우기">×</button>`:""}</td></tr>`;
+      mob+=`<div class="mrow"><div class="a"><span class="n">${nm}${c.custom?`<button class="x" data-act="delcat" data-id="${c.id}" title="직접 만든 항목 지우기">×</button>`:""}</span><span><input class="ly" data-bud="${esc(c.small)}" data-fk="b-${c.id}" data-col="bud" value="${b?(b/10000).toLocaleString():""}" placeholder="예산" inputmode="numeric"><span class="u">만</span></span></div>
         <div class="s"><span>${a!=null?"평균 "+man(a)+" · ":""}냈어요 ${man(p)}${q?" · 예정 "+man(q):""}</span><span class="b ${l<0?'red':''}">${b?"남은 "+man(l):""}</span></div>
         ${b||p||q?bar(b,p,q):""}${af?`<div style="margin-top:6px">${af}</div>`:""}</div>`;
     });
@@ -657,8 +690,57 @@ function vBudget(){
     <div class="card kpi"><div class="l">낼 예정</div><div class="v">${man(tq)}</div></div>
     <div class="card kpi hl"><div class="l">남은 돈</div><div class="v">${man(tb-tp-tq)}</div></div>
   </div>
+  <div style="margin:0 0 12px"><button class="addrow" data-act="pick" data-v="cat">+ 원하는 분류·항목 새로 만들기</button> <span class="mut" style="font-size:12px">대분류·중분류부터 새로 만들 수 있어요</span></div>
   ${S.mode==="pc"?`<div class="tw"><table><thead><tr><th>항목</th><th class="num">남들 평균</th><th class="num">우리 예산</th><th class="num">냈어요</th><th class="num">낼 예정</th><th class="num">남은 돈</th><th>진행</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`:mob}
   ${S.mode==="mo"?fab():""}${foot()}`;
+}
+
+/* ================= 항목 고르기 (대분류 › 중분류 › 항목) ================= */
+S.pk={big:null,mid:null,small:null};S.pkq="";S.pkTarget=null;S.newS="";
+const bigsOf=()=>[...new Set(CATS.map(c=>c.big))];
+function pkFrom(small){const c=cat(small);S.pk=c?{big:c.big,mid:c.mid,small:c.small}:{big:bigsOf()[0],mid:null,small:null};S.pkq="";}
+function hintFor(s){const c=cat(s);if(!c)return "";const b=MY[c.small]||0,l=b-paid(c.small)-plan(c.small),a=avgOf(c);
+  return `<b>${esc(c.big)} › ${esc(c.mid)} › ${esc(c.small)}</b> · ${b?`이 항목 남은 예산 <b class="${l<0?'red':''}">${man(l)}</b>`:"아직 예산을 안 적었어요"}${a!=null?` · 남들 평균 ${man(a)}`:""}`}
+const pkAddBox=(act,ph)=>`<div class="pkadd"><button class="pkopen" data-act="pkopen">+ 직접 추가</button><input data-pkadd="${act}" placeholder="${ph}"><button data-act="${act}">추가</button></div>`;
+function pkInner(){
+  const pk=S.pk,q=(S.pkq||"").trim();
+  if(q){const hits=CATS.filter(c=>(c.small+" "+c.mid+" "+c.big).includes(q)).slice(0,40);
+    return `<div class="pkcol pkall"><div class="pkh">"${esc(q)}" 찾은 항목 ${hits.length}개 · Enter를 누르면 첫 번째로 골라요</div>${hits.map(c=>`<button data-act="pksm" data-v="${esc(c.small)}" class="${c.small===pk.small?'on':''}">${esc(c.small)}<small>${esc(c.big)} › ${esc(c.mid)}</small></button>`).join("")||'<div class="pkempty">찾는 항목이 없어요. 검색칸을 비우면 원하는 분류에 새로 만들 수 있어요.</div>'}</div>`;}
+  const bigs=bigsOf();if(pk.big&&!bigs.includes(pk.big))bigs.push(pk.big);
+  const mids=pk.big?[...new Set(CATS.filter(c=>c.big===pk.big).map(c=>c.mid))]:[];if(pk.mid&&!mids.includes(pk.mid))mids.push(pk.mid);
+  const sms=pk.mid?CATS.filter(c=>c.big===pk.big&&c.mid===pk.mid):[];
+  const col=(h,body,add)=>`<div class="pkcol"><div class="pkh">${h}</div>${body}${add||""}</div>`;
+  const fresh=n=>'<small>새로 만든 분류예요. 아래에 항목을 추가하세요</small>';
+  return col("1. 대분류",bigs.map(b=>`<button data-act="pkbig" data-v="${esc(b)}" class="${b===pk.big?'on':''}">${esc(b)}${CATS.some(c=>c.big===b)?"":fresh()}</button>`).join(""),pkAddBox("pkaddbig","새 대분류 (예: 웨딩 촬영)"))
+    +col("2. 중분류",pk.big?mids.map(m=>`<button data-act="pkmid" data-v="${esc(m)}" class="${m===pk.mid?'on':''}">${esc(m)}${CATS.some(c=>c.big===pk.big&&c.mid===m)?"":fresh()}</button>`).join("")||'<div class="pkempty">중분류가 없어요. 아래에 적어서 만드세요.</div>':'<div class="pkempty">대분류를 먼저 골라요</div>',pk.big?pkAddBox("pkaddmid","새 중분류"):"")
+    +col("3. 항목",pk.mid?(sms.map(c=>{const b=MY[c.small]||0,l=b-paid(c.small)-plan(c.small);return `<button data-act="pksm" data-v="${esc(c.small)}" class="${c.small===pk.small?'on':''}">${esc(c.small)}<small>${b?`예산 ${man(b)} · 남은 ${man(l)}`:"예산 아직 없음"}</small></button>`}).join("")||'<div class="pkempty">아직 항목이 없어요. 아래에 적어서 추가하세요.</div>'):'<div class="pkempty">중분류를 고르면 항목이 나와요</div>',pk.mid?pkAddBox("pkaddsm","새 항목 (예: 폐백)"):"");
+}
+function pkRefresh(focusSel){const el=document.getElementById("pk");if(el)el.innerHTML=pkInner();if(focusSel)setTimeout(()=>{const f=document.querySelector(focusSel);if(f)f.focus()},0);}
+function pkClearForm(){if(S.pkTarget==="form"){const f=document.querySelector("#dlg #fS");if(f)f.value="";toast("")}}
+function dlgPick(target,cur){S.pkTarget=target;pkFrom(cur);
+  openDlg(`<h3>${target==="cat"?"분류·항목 새로 만들기":"어디에 쓴 돈이에요?"}</h3><input id="pkq" placeholder="바로 찾기: 예) 대관료, 스냅, 가전" autocomplete="off"><div id="pk" class="pk">${pkInner()}</div>
+    <p class="mut" style="font-size:12px;margin:10px 0 0">왼쪽부터 대분류 → 중분류 → 항목 순서로 눌러요. 원하는 게 없으면 각 칸 맨 아래에서 새로 만들 수 있어요.</p>`);
+  if(S.mode==="pc")document.getElementById("dlg").style.width="min(840px,calc(100% - 32px))";
+  setTimeout(()=>{const q=document.getElementById("pkq");if(q&&S.mode==="pc")q.focus()},0);}
+function pkChoose(small){
+  const t=S.pkTarget;S.pk.small=small;
+  if(t==="form"){const f=document.querySelector("#dlg #fS");if(f)f.value=small;S.pkq="";const q=document.querySelector("#dlg #pkq");if(q)q.value="";pkRefresh();toast(hintFor(small));return}
+  if(t==="new"){S.newS=small;closeDlg();render();toast(hintFor(small));const a=document.getElementById("fA");if(a)a.focus();return}
+  if(t&&t.startsWith("row:")){const e=EXP[+t.slice(4)];if(e)e.s=small;closeDlg();render();return}
+  if(t==="cat"){closeDlg();S.view="budget";S.big="전체";render();toast("");return}
+}
+function pkAdd(kind){
+  const inp=document.querySelector(`[data-pkadd="${kind}"]`),name=(inp&&inp.value||"").trim();
+  if(!name){if(inp)inp.focus();return}
+  const openNext=k=>setTimeout(()=>{const i=document.querySelector(`[data-pkadd="${k}"]`);if(i){i.closest(".pkadd").classList.add("open");i.focus()}},0);
+  if(kind==="pkaddbig"){S.pk={big:name,mid:null,small:null};pkClearForm();pkRefresh();openNext("pkaddmid");return}
+  if(kind==="pkaddmid"){S.pk.mid=name;S.pk.small=null;pkClearForm();pkRefresh();openNext("pkaddsm");return}
+  const ex=cat(name);
+  if(ex){pkChoose(name);if(ex.big!==S.pk.big||ex.mid!==S.pk.mid)toast(`'${esc(name)}'은(는) 이미 <b>${esc(ex.big)} › ${esc(ex.mid)}</b>에 있어서 그걸로 골랐어요.`);return}
+  const item={id:Date.now(),big:S.pk.big,mid:S.pk.mid,small:name,custom:true};
+  let at=CATS.map(c=>c.big===item.big&&c.mid===item.mid).lastIndexOf(true);
+  if(at<0)at=CATS.map(c=>c.big===item.big).lastIndexOf(true);
+  CATS.splice(at<0?CATS.length:at+1,0,item);save();pkChoose(name);
 }
 
 /* ================= 화면: 지출 ================= */
@@ -666,8 +748,10 @@ function expForm(m){
   const opt=PAY.map(p=>`<option ${p===S.pay?"selected":""}>${p}</option>`).join("");
   if(m) return `<div class="mform">
     <label>금액 (원)</label><input id="fA" inputmode="numeric" placeholder="예: 1500000">
-    <label>항목 <span class="mut" style="font-weight:400">글자 치면 찾아줘요</span></label><input id="fS" list="catlist" placeholder="예: 스냅">
-    <div class="hint" id="fH"></div>
+    <label>어디에 썼어요? <span class="mut" style="font-weight:400">대분류 → 중분류 → 항목</span></label>
+    <input type="hidden" id="fS" value="${esc(S.pk.small||"")}"><input id="pkq" placeholder="바로 찾기: 예) 대관료, 스냅" autocomplete="off">
+    <div id="pk" class="pk inline">${pkInner()}</div>
+    <div class="hint" id="fH">${S.pk.small?hintFor(S.pk.small):""}</div>
     <label>상태</label><div class="seg" id="fSt"><button class="${S.st==="완료"?"on":""}" data-act="st" data-v="완료">냈어요</button><button class="${S.st==="예정"?"on":""}" data-act="st" data-v="예정">낼 예정</button></div>
     <label>결제 수단</label><div class="chips">${PAY.map(p=>`<button class="${p===S.pay?'on':''}" data-act="pay" data-v="${p}">${p}</button>`).join("")}</div>
     <label>날짜</label><input id="fD" type="date" value="${todayISO()}">
@@ -695,7 +779,7 @@ function vExp(){
     const opt=v=>PAY.map(p=>`<option ${p===v?"selected":""}>${p}</option>`).join("");
     const stOpt=v=>`<option value="완료" ${v==="완료"?"selected":""}>냈어요</option><option value="예정" ${v==="예정"?"selected":""}>낼 예정</option>`;
     const newRow=`<tr class="newrow"><td><input class="ce c-d" id="fD" type="date" value="${todayISO()}" data-fk="n-d"></td>
-      <td><input class="ce c-s" id="fS" list="catlist" placeholder="+ 새 지출 항목" data-fk="n-s"></td>
+      <td><input type="hidden" id="fS" value="${esc(cat(S.newS)?S.newS:"")}"><button class="ce c-s pickbtn" id="fSbtn" data-act="pick" data-v="new" data-fk="n-s">${cat(S.newS)?`${esc(S.newS)}<small>${esc(cat(S.newS).big)} › ${esc(cat(S.newS).mid)}</small>`:'<span class="phx">+ 항목 고르기</span><small>대분류 › 중분류 › 항목</small>'}</button></td>
       <td><input class="ce c-a num" id="fA" inputmode="numeric" placeholder="금액" data-fk="n-a"></td>
       <td><select class="ce c-p" id="fP" data-fk="n-p">${opt(S.pay)}</select></td>
       <td><select class="ce c-st" id="fStS" data-fk="n-st">${stOpt(S.st)}</select></td>
@@ -705,7 +789,7 @@ function vExp(){
       <td class="pad" colspan="2"><button class="btn" data-act="addexp" style="padding:6px 14px">추가</button></td></tr>`;
     const rows=fl.map(e=>{const c=cat(e.s),l=leftOf(e.s),i=e.i,k=f=>`data-xi="${i}" data-xf="${f}" data-fk="e-${i}-${f}" data-col="x${f}"`;
       return `<tr class="${e.st==="예정"?"plan":""}"><td><input class="ce c-d" type="date" value="${e.d}" ${k("d")}></td>
-      <td><input class="ce c-s" list="catlist" value="${esc(e.s)}" ${k("s")}><small class="cat" style="padding-left:8px">${c?c.big+" · "+c.mid:""}</small></td>
+      <td><button class="ce c-s pickbtn" data-act="pick" data-v="row:${i}" data-fk="e-${i}-s" data-col="xs">${esc(e.s)}<small>${c?esc(c.big)+" › "+esc(c.mid):""}</small></button></td>
       <td><input class="ce c-a num" inputmode="numeric" value="${e.a.toLocaleString()}" ${k("a")}></td>
       <td><select class="ce c-p" ${k("p")}>${opt(e.p)}</select></td>
       <td><select class="ce c-st" ${k("st")}>${stOpt(e.st)}</select></td>
@@ -714,7 +798,7 @@ function vExp(){
       <td class="pad"><input type="checkbox" ${e.r?"checked":""} ${k("r")}></td>
       <td class="num pad ${l<0?'red b':''}">${l==null?'<span class="mut">예산 없음</span>':man(l)}</td>
       <td><button class="x" data-act="delexp" data-i="${i}" title="이 줄 지우기">×</button></td></tr>`}).join("");
-    body=`<div class="hint" id="fH" style="margin:0 0 8px">칸을 눌러 바로 고치세요. <b>Enter</b>나 <b>↓</b>를 누르면 아래 줄로 내려가요. 맨 위 레몬 줄에 적고 Enter를 누르면 새 지출이 추가돼요.</div>
+    body=`<div class="hint" id="fH" style="margin:0 0 8px">칸을 눌러 바로 고치세요. <b>Enter</b>나 <b>↓</b>를 누르면 아래 줄로 내려가요. 맨 위 레몬 줄에서 <b>항목 고르기</b>를 누르고 금액을 적은 뒤 Enter를 누르면 새 지출이 추가돼요.</div>
     <div class="tw"><table class="xl"><thead><tr><th>날짜</th><th>항목</th><th class="num">금액 (원)</th><th>결제 수단</th><th>상태</th><th>업체</th><th>메모</th><th>현금영수증</th><th class="num">이 항목 남은 예산</th><th></th></tr></thead><tbody>${newRow}${rows}</tbody></table></div>`;
   } else {
     const byM={};[...fl].sort((a,b)=>a.d<b.d?1:-1).forEach(e=>{(byM[e.d.slice(0,7)]=byM[e.d.slice(0,7)]||[]).push(e)});
@@ -847,7 +931,7 @@ function render(){
     <div class="mtabs">${NAV.map(([k,l])=>`<button class="${S.view===k?'on':''}" data-go="${k}">${l}</button>`).join("")}<a href="./">남들 평균</a></div>`;
   document.getElementById("main").innerHTML=(P.demo?`<div class="demo"><span><b>예시 가계부</b>를 보고 있어요. 숫자는 모두 예시예요.</span><button class="btn" data-act="enddemo" style="padding:6px 12px">예시 지우고 내 가계부 시작</button></div>`:"")+VIEWS[S.view]();
   document.getElementById("catlist").innerHTML=CATS.map(c=>`<option value="${esc(c.small)}">${c.big} · ${c.mid}</option>`).join("");
-  if(S.focusNew){S.focusNew=false;const f=document.getElementById("fS");if(f)f.focus();}
+  if(S.focusNew){S.focusNew=false;const f=document.getElementById("fSbtn")||document.getElementById("fS");if(f)f.focus();}
   else if(fk){const el=document.querySelector(`[data-fk="${fk}"]`);if(el&&el!==document.activeElement){el.focus();try{el.select()}catch(e){}}}
   save();
 }
@@ -864,7 +948,7 @@ function toast(t){const h=document.querySelector("#dlg #fH")||document.getElemen
 function readExp(){
   const g=id=>document.querySelector("#dlg #"+id)||document.getElementById(id);
   const s=g("fS").value.trim(),am=parseInt((g("fA").value||"").replace(/[^0-9]/g,""));
-  if(!cat(s)){toast('<span class="red">항목을 목록에서 골라 주세요. 글자를 치면 찾아줘요.</span>');g("fS").focus();return null}
+  if(!cat(s)){toast('<span class="red">어디에 쓴 돈인지 대분류 › 중분류 › 항목을 골라 주세요.</span>');const b=g("fSbtn");if(b)b.focus();return null}
   if(!am){toast('<span class="red">금액을 적어 주세요.</span>');g("fA").focus();return null}
   const pSel=g("fP"),stSel=g("fStS");
   return {d:g("fD").value||todayISO(),s,a:am,p:pSel?pSel.value:S.pay,st:stSel?stSel.value:S.st,v:g("fV").value,m:g("fM").value,r:g("fR").checked};
@@ -882,11 +966,20 @@ document.addEventListener("click",e=>{
     case"ef":S.ef=v;render();break;
     case"st":S.st=v;document.querySelectorAll("#fSt button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));break;
     case"pay":S.pay=v;a.parentNode.querySelectorAll("button").forEach(b=>b.classList.toggle("on",b===a));break;
-    case"mexp":openDlg(`<h3>지출 적기</h3>`+expForm(true),true);break;
-    case"texp":{openDlg(`<h3>지출 적기</h3>`+expForm(true),S.mode==="mo");const f=document.getElementById("fS");f.value=a.dataset.s;f.dispatchEvent(new Event("input",{bubbles:true}));document.getElementById("fA").focus();break;}
+    case"mexp":S.pkTarget="form";pkFrom(cat(S.newS)?S.newS:"");openDlg(`<h3>지출 적기</h3>`+expForm(true),true);break;
+    case"texp":{S.pkTarget="form";pkFrom(a.dataset.s);openDlg(`<h3>지출 적기</h3>`+expForm(true),S.mode==="mo");document.getElementById("fA").focus();break;}
+    case"pick":dlgPick(v==="new"||v==="cat"?v:v,v==="new"?S.newS:v.startsWith("row:")?(EXP[+v.slice(4)]||{}).s:"");break;
+    case"pkbig":{S.pk={big:v,mid:null,small:null};const ms=[...new Set(CATS.filter(c=>c.big===v).map(c=>c.mid))];if(ms.length===1)S.pk.mid=ms[0];pkClearForm();pkRefresh();break;}
+    case"pkmid":S.pk.mid=v;S.pk.small=null;pkClearForm();pkRefresh();break;
+    case"pksm":pkChoose(v);break;
+    case"pkopen":{const box=a.closest(".pkadd");box.classList.add("open");const i=box.querySelector("input");if(i)i.focus();break;}
+    case"pkaddbig":case"pkaddmid":case"pkaddsm":pkAdd(a.dataset.act);break;
+    case"delcat":{const c=CATS.find(x=>String(x.id)===a.dataset.id);if(!c)break;const n=EXP.filter(x=>x.s===c.small).length;
+      if(n){alert(`'${c.small}' 항목으로 적은 지출이 ${n}건 있어요. 그 지출의 항목을 먼저 바꿔 주세요.`);break}
+      if(!confirm(`직접 만든 '${c.small}' 항목을 지울까요?`))break;CATS.splice(CATS.indexOf(c),1);delete MY[c.small];if(S.newS===c.small)S.newS="";render();break;}
     case"addexp":{const x=readExp();if(!x)return;S.pay=x.p;S.st=x.st;EXP.unshift(x);const inDlg=!!a.closest("#dlg");closeDlg();S.focusNew=!inDlg;render();toast(`<b>${x.s} ${man(x.a)}</b> 추가했어요. 홈·예산·할일에 바로 반영됐어요.`);break;}
     case"saveexp":{const x=readExp();if(!x)return;Object.assign(EXP[+a.dataset.i],x);closeDlg();render();break;}
-    case"editexp":{const i=+a.dataset.i,e=EXP[i];S.st=e.st;S.pay=e.p;openDlg(`<h3>지출 고치기</h3>`+expForm(true),true);
+    case"editexp":{const i=+a.dataset.i,e=EXP[i];S.st=e.st;S.pay=e.p;S.pkTarget="form";pkFrom(e.s);openDlg(`<h3>지출 고치기</h3>`+expForm(true),true);
       const set=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v};set("fA",e.a.toLocaleString());set("fS",e.s);set("fD",e.d);set("fV",e.v);set("fM",e.m);document.getElementById("fR").checked=e.r;
       const b=document.querySelector('#dlg [data-act="addexp"]');b.dataset.act="saveexp";b.dataset.i=i;b.textContent="고치기";
       b.insertAdjacentHTML("afterend",`<button class="btn wide" data-act="delexp2" data-i="${i}" style="position:static;box-shadow:none;margin-top:8px;background:#fff;border:1px solid var(--line);color:var(--red)">이 지출 지우기</button>`);break;}
@@ -921,7 +1014,10 @@ document.addEventListener("change",e=>{
   else if(t.dataset.gf!=null){const g=GUESTS[+t.dataset.gi],f=t.dataset.gf;
     if(f==="plus"||f==="day")g[f]=parseInt(t.value)||0; else if(f==="gift")g.gift=parseInt(t.value.replace(/[^0-9]/g,""))||0; else g[f]=t.value;
     later();}
-  else if(t.dataset.ren!=null){const c=CATS.find(c=>c.id==t.dataset.ren);const old=c.small;c.small=t.value||old;if(MY[old]!=null){MY[c.small]=MY[old];if(c.small!==old)delete MY[old]}render();}
+  else if(t.dataset.ren!=null){const c=CATS.find(c=>c.id==t.dataset.ren);const old=c.small,nv=t.value.trim();
+    if(!nv||nv===old){t.value=old;return}
+    if(cat(nv)){alert(`'${nv}' 항목이 이미 있어요. 다른 이름을 적어 주세요.`);t.value=old;return}
+    c.small=nv;if(MY[old]!=null){MY[nv]=MY[old];delete MY[old]}EXP.forEach(x=>{if(x.s===old)x.s=nv});if(S.newS===old)S.newS=nv;render();}
   else if(t.dataset.hs!=null){const[k,r]=t.dataset.hs.split(",");HALLS[k].sc[r]=+t.value;render();}
   else if(t.dataset.hn!=null){HALLS[+t.dataset.hn].name=t.value;save();}
   else if(t.dataset.pf!=null){P[t.dataset.pf]=t.value;later();}
@@ -930,6 +1026,7 @@ document.addEventListener("change",e=>{
 });
 document.addEventListener("input",e=>{
   const t=e.target;
+  if(t.id==="pkq"){S.pkq=t.value;pkRefresh();return}
   if(t.id==="fS"){const c=cat(t.value.trim());if(c){const b=MY[c.small]||0,l=b-paid(c.small)-plan(c.small);toast(`<b>${c.big} · ${c.mid}</b> 항목이에요. ${b?`이 항목 남은 예산 <b class="${l<0?'red':''}">${man(l)}</b>`:"아직 예산을 안 적었어요"}${avgOf(c)!=null?` · 남들 평균 ${man(avgOf(c))}`:""}`)}}
   if(t.dataset.hv!=null){}
 });
@@ -937,6 +1034,9 @@ document.addEventListener("focusout",e=>{const t=e.target;if(t.dataset&&t.datase
 addEventListener("keydown",e=>{
   if(e.key==="Escape"){closeDlg();return}
   const t=e.target;if(!t||!t.dataset)return;
+  if(e.key==="Enter"&&t.dataset.pkadd){e.preventDefault();pkAdd(t.dataset.pkadd);return}
+  if(e.key==="Enter"&&t.id==="pkq"){e.preventDefault();const f=document.querySelector('#pk [data-act="pksm"]');if(f)f.click();return}
+  if(e.key==="Enter"&&t.classList&&t.classList.contains("pickbtn"))return;
   if(e.key==="Enter"&&t.closest&&t.closest("tr.newrow")){e.preventDefault();document.querySelector('tr.newrow [data-act="addexp"]').click();return}
   const col=t.dataset.col;if(!col){if(e.key==="Enter"&&t.classList.contains("ly"))t.blur();return}
   let dir=0;if(e.key==="Enter")dir=e.shiftKey?-1:1;else if(e.key==="ArrowDown")dir=1;else if(e.key==="ArrowUp")dir=-1;else return;
