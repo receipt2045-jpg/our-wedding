@@ -1,0 +1,955 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OUR WEDDING · 우리 결혼 가계부</title>
+<meta name="description" content="회원가입 없이 바로 쓰는 결혼 가계부. 예산·지출·하객·할 일·웨딩홀 비교를 한곳에서.">
+<meta name="theme-color" content="#FFF0A6">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{
+  --acc:#FFF0A6; --acc2:#FFF6C9; --accs:#FFFCEC; --accl:#F1DC6E; --accd:#D9B300; --acct:#3A3200;
+  --r:0px; --rb:0px; --rp:0px; --rbar:0px; --hf:Pretendard,-apple-system,sans-serif; --ink:#1C1F26; --sub:#4F5563; --muted:#8B909B;
+  --line:#EEEEEE; --bg:#FFFFFF; --track:#F2F2F2; --stripe:repeating-linear-gradient(135deg,#FFF0A6 0 4px,#FFF6C9 4px 8px); --card:#fff; --red:#DC4449; --rsoft:#FFF0F0; --green:#1C9A57; 
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);font-family:Pretendard,-apple-system,sans-serif;color:var(--ink);font-size:15px;line-height:1.5;font-variant-numeric:tabular-nums}
+button,input,select{font-family:inherit;font-size:inherit;color:inherit}
+button{cursor:pointer}
+a{color:inherit}
+.num{text-align:right;white-space:nowrap}
+.mut{color:var(--muted)} .red{color:var(--red)} .grn{color:var(--green)}
+.b{font-weight:700}
+
+/* ---------- 목업 조작부 ---------- */
+#ctrl{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:10px 16px;background:#fff;color:var(--sub);font-size:13px;border-bottom:1px solid var(--line)}
+#ctrl b{font-size:14px}
+#ctrl .g{display:flex;gap:4px;align-items:center}
+#ctrl button{border:1px solid var(--line);background:#fff;color:var(--sub);border-radius:8px;padding:5px 10px;font-size:13px}
+#ctrl button.on{background:var(--ink);border-color:var(--ink);color:#fff;font-weight:700}
+
+/* ---------- 앱 골격 ---------- */
+#app{margin:0 auto}
+#app.pc{display:grid;grid-template-columns:208px minmax(0,1fr);min-height:calc(100vh - 44px);max-width:1360px}
+#app.mo{max-width:400px;background:var(--bg);border-left:1px solid var(--line);border-right:1px solid var(--line);min-height:calc(100vh - 44px)}
+#side{background:#fff;border-right:1px solid var(--line);padding:22px 14px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column}
+#app.mo #side{display:none}
+.logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:16px;letter-spacing:.05em;padding:0 8px;white-space:nowrap}
+.logo i{flex:0 0 22px;width:22px;height:22px;border-radius:calc(var(--rb) * .7);background:var(--acc);display:inline-block}
+.logo small{font-size:11px;font-weight:600;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:0 5px}
+.couple{margin:18px 8px 16px;padding:12px;border-radius:var(--rb);background:var(--accs)}
+.couple .n{font-size:14px;font-weight:700}
+.couple .d{font-size:22px;font-weight:800;letter-spacing:-.5px}
+.couple .s{font-size:12px;color:var(--sub)}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav button{display:flex;justify-content:space-between;align-items:center;text-align:left;border:0;background:none;padding:11px 12px;border-radius:var(--rb);font-size:16px;color:var(--sub)}
+.nav button:hover{background:var(--accs)}
+.nav button.on{background:var(--acc);color:var(--ink);font-weight:700}
+.nav button .lk{font-size:12px;color:var(--muted)}
+.nav .sep{height:1px;background:var(--line);margin:8px 6px}
+.side-foot{margin-top:auto;font-size:12px;color:var(--muted);padding:0 8px}
+.side-foot button{width:100%;border:1px dashed #DDDDDD;background:#fff;border-radius:10px;padding:10px;font-size:14px;margin-bottom:10px;color:var(--ink)}
+
+#mhead{display:none}
+#app.mo #mhead{display:block;position:sticky;top:0;z-index:20;background:var(--bg)}
+.mtop{display:flex;justify-content:space-between;align-items:center;padding:14px 16px 8px}
+.mtop .r{font-size:13px;color:var(--sub);text-align:right;line-height:1.3}
+.mtop .r b{font-size:16px;color:var(--ink)}
+.mtabs{display:flex;gap:6px;overflow-x:auto;padding:4px 16px 10px;scrollbar-width:none;border-bottom:1px solid var(--line)}
+.mtabs::-webkit-scrollbar{display:none}
+.mtabs button{flex:0 0 auto;border:1px solid var(--line);background:#fff;border-radius:var(--rp);padding:7px 14px;font-size:15px;color:var(--sub)}
+.mtabs button.on{background:var(--acc);border-color:var(--acc);color:var(--ink);font-weight:700}
+
+main{padding:28px 32px 60px;min-width:0}
+#app.mo main{padding:16px 16px 20px}
+.ph{margin-bottom:18px}
+.ph h1{font-size:26px;margin:0;letter-spacing:-.6px}
+#app.mo .ph h1{font-size:22px}
+.ph p{margin:4px 0 0;color:var(--sub);font-size:15px}
+.ph p b{background:linear-gradient(transparent 55%,var(--acc2) 55%);font-weight:700;color:var(--ink)}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px}
+#app.mo .card{padding:16px}
+.card h2{font-size:17px;margin:0 0 12px;display:flex;justify-content:space-between;align-items:baseline}
+.card h2 .more{font-size:13px;font-weight:500;color:var(--sub);background:none;border:0;padding:0;text-decoration:underline;text-underline-offset:3px}
+.grid{display:grid;gap:14px}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+#app.mo .g4{grid-template-columns:repeat(2,minmax(0,1fr))}
+#app.mo .g2,#app.mo .g3{grid-template-columns:1fr}
+.mt{margin-top:14px}
+
+.kpi .l{font-size:13px;color:var(--sub)}
+.kpi .v{font-size:26px;font-weight:800;letter-spacing:-.6px;line-height:1.25}
+#app.mo .kpi .v{font-size:21px}
+.kpi .s{font-size:12px;color:var(--muted)}
+.kpi.hl{background:var(--acc);border-color:var(--acc)}
+.kpi.hl .l,.kpi.hl .s{color:var(--acct)}
+
+.bar{height:10px;border-radius:var(--rbar);background:var(--track);overflow:hidden;display:flex}
+.bar i{display:block;height:100%}
+.bar .p{background:var(--acc)} .bar .q{background:var(--stripe)} .bar .o{background:var(--red)}
+.legend{display:flex;gap:12px;font-size:12px;color:var(--sub);margin-top:6px}
+.legend span:before{content:"";display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:4px;vertical-align:-1px;background:var(--c)}.legend .lp{--c:var(--acc)} .legend .lq{--c:var(--stripe)} .legend .lo{--c:var(--red)}
+
+.brow{padding:10px 0;border-bottom:1px solid var(--line)}
+.brow:last-child{border-bottom:0}
+.brow .t{display:flex;justify-content:space-between;font-size:15px;margin-bottom:6px}
+.brow .t b{font-size:15px}
+
+.list .it{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);gap:10px}
+.list .it:last-child{border-bottom:0}
+.list .it small{display:block;color:var(--muted);font-size:12px}
+.tag{display:inline-block;font-size:12px;border-radius:6px;padding:0 6px;background:#fff;border:1px solid var(--line);color:var(--sub);white-space:nowrap}
+.tag.y{background:var(--acc);border-color:var(--acc);color:var(--ink);font-weight:700}
+.tag.r{color:var(--red);font-weight:700}
+.tag.g{background:#E9F7EF;color:var(--green)}
+.aff{font-size:12px;color:var(--sub);text-decoration:underline;text-underline-offset:2px;white-space:nowrap;cursor:pointer}
+.aff:after{content:" 제휴";font-size:10px;text-decoration:none;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:0 3px;margin-left:3px;display:inline-block}
+
+.guide{display:flex;gap:14px;align-items:center;background:#fff;border:1.5px solid var(--acc)}
+.guide img{width:84px;height:84px;object-fit:contain;flex:0 0 auto}
+.guide ol{margin:6px 0 0;padding-left:18px;font-size:14px;color:var(--sub)}
+.guide ol li{margin:2px 0}
+.guide ol b{color:var(--ink)}
+.warn{display:flex;gap:12px;align-items:center;background:#fff;border:1.5px solid var(--acc)}
+.warn img{width:64px;height:64px;object-fit:contain}
+.warn .h{font-size:13px;color:var(--red);font-weight:700}
+
+.pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+#app.mo .pills{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-right:-16px;padding-right:16px}
+.pills button{flex:0 0 auto;border:1px solid var(--line);background:#fff;border-radius:var(--rp);padding:6px 13px;font-size:14px;color:var(--sub)}
+.pills button.on{background:var(--acc);color:var(--ink);border-color:var(--acc);font-weight:700}
+.pills button small{opacity:.7;margin-left:4px}
+.basis{display:inline-flex;gap:6px;align-items:center;font-size:14px;color:var(--sub);background:#fff;border:1px solid var(--line);border-radius:10px;padding:6px 10px;margin-bottom:12px;cursor:pointer}
+.basis b{color:var(--ink);border-bottom:2px solid var(--acc)}
+
+/* 표 */
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:#fff}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th{font-size:13px;font-weight:600;color:var(--muted);text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);background:#fff;white-space:nowrap;position:sticky;top:0}
+td{padding:8px 12px;border-bottom:1px solid #F4F4F4;vertical-align:middle;white-space:nowrap}
+td.wrap{white-space:normal;min-width:150px}
+td small.cat{display:block;font-size:12px;color:var(--muted);font-weight:400}
+tr:last-child td{border-bottom:0}
+tr.big td{background:#fff;font-weight:800;font-size:16px;padding:14px 12px 10px;border-bottom:2px solid var(--acc)}
+tr.grp td{background:#fff;font-weight:700;color:var(--sub);font-size:14px}
+tr.plan td{background:var(--accs)}
+td.nm{font-weight:500}
+input.ly{width:96px;text-align:right;border:1px solid var(--accl);background:var(--accs);border-radius:8px;padding:6px 8px;font-weight:700}
+input.ly:focus{outline:2px solid var(--acc);background:#fff}
+.u{font-size:12px;color:var(--muted);margin-left:3px}
+.pb{display:flex;align-items:center;gap:8px;min-width:120px}
+.pb .bar{flex:1;height:8px}
+.pb span{font-size:12px;color:var(--muted);width:34px;text-align:right}
+.soon{font-size:12px;color:#B3B6BE}
+.addrow{border:1px dashed #DDDDDD;background:#fff;border-radius:10px;padding:7px 12px;font-size:13px;color:var(--sub)}
+input.nmin{border:1px solid var(--line);border-radius:8px;padding:5px 8px;width:140px}
+.x{border:0;background:none;color:#B8BBC2;font-size:16px}
+
+/* 입력 폼 */
+.form{display:grid;grid-template-columns:150px minmax(0,2fr) minmax(0,1.2fr) minmax(0,1.2fr);gap:10px 10px;align-items:end}
+.form .last{display:flex;gap:10px;align-items:center;justify-content:flex-end}
+.form .last .chk{padding:0}
+.form label{display:block;font-size:12px;color:var(--muted);margin-bottom:3px}
+.form input,.form select{width:100%;border:1px solid #DAD9D2;border-radius:10px;padding:9px 10px;background:#fff}
+.form input:focus,.form select:focus{outline:2px solid var(--acc);border-color:var(--acc)}
+.seg{display:flex;background:#fff;border:1px solid var(--line);border-radius:10px;padding:3px}
+.seg button{flex:1;border:0;background:none;border-radius:8px;padding:6px 0;font-size:14px;white-space:nowrap}
+.seg button.on{background:var(--acc);font-weight:700}
+.btn{border:0;background:var(--acc);border-radius:var(--rb);padding:10px 18px;font-weight:800;white-space:nowrap}
+.btn.dk{background:var(--acc);color:var(--ink)}
+.btn.wide{width:100%;padding:14px;font-size:16px}
+.chk{display:flex;align-items:center;gap:5px;font-size:13px;color:var(--sub);white-space:nowrap;padding-bottom:10px}
+.hint{font-size:13px;color:var(--sub);margin-top:8px;min-height:20px}
+.hint b{color:var(--ink)}
+.mform label{display:block;font-size:13px;color:var(--sub);margin:12px 0 4px;font-weight:600}
+.mform input,.mform select{width:100%;border:1px solid #DAD9D2;border-radius:12px;padding:12px;font-size:16px;background:#fff}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.mform .btn.wide{position:sticky;bottom:-26px;box-shadow:0 -10px 16px #fff}
+.chips button{border:1px solid var(--line);background:#fff;border-radius:var(--rp);padding:7px 12px;font-size:14px}
+.chips button.on{background:var(--acc);color:var(--ink);border-color:var(--acc);font-weight:700}
+
+/* 모바일 카드 행 */
+.mrow{padding:12px 0;border-bottom:1px solid var(--line)}
+.mrow:last-child{border-bottom:0}
+.mrow .a{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.mrow .a .n{font-size:16px;font-weight:600}
+.mrow .s{font-size:13px;color:var(--muted);margin-top:4px;display:flex;justify-content:space-between;gap:8px}
+.mrow .bar{height:6px;margin-top:6px}
+.mgh{display:flex;justify-content:space-between;align-items:baseline;margin:18px 2px 6px;font-size:14px;font-weight:700;color:var(--sub)}
+.fabw{position:sticky;bottom:16px;display:flex;justify-content:flex-end;pointer-events:none;margin-top:16px}
+.fab{pointer-events:auto;border:0;background:var(--acc);color:var(--acct);border-radius:var(--rp);padding:14px 20px;font-size:16px;font-weight:800;box-shadow:0 6px 18px rgba(0,0,0,.18)}
+.fab i{color:var(--ink);font-style:normal;margin-right:4px}
+
+/* 차트 */
+.cols{display:flex;align-items:flex-end;gap:6px;height:150px;padding-top:10px}
+.cols .c{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;min-width:0}
+.cols .c i{display:block;width:100%;max-width:28px;border-radius:4px 4px 0 0}
+.cols .c i.q{background:var(--stripe)} .cols .c i.p{background:var(--acc);border-radius:0}
+.cols .c i.p:first-child{border-radius:4px 4px 0 0}
+.cols .c span{font-size:11px;color:var(--muted);margin-top:4px;white-space:nowrap}
+.cols .c em{font-size:10px;color:var(--sub);font-style:normal;margin-bottom:2px}
+.split{display:flex;height:28px;border-radius:8px;overflow:hidden;font-size:12px;font-weight:700}
+.split div{display:flex;align-items:center;justify-content:center;white-space:nowrap;overflow:hidden}
+
+/* 하객 */
+.tg{border:1.5px solid var(--line);background:#fff;border-radius:8px;width:34px;height:30px;font-size:15px;color:#C9CBD1}
+.tg.on{background:var(--acc);border-color:var(--accl);color:var(--ink);font-weight:800}
+input.sm{width:64px;border:1px solid var(--line);border-radius:8px;padding:5px 7px;text-align:right}
+input.md{width:110px;border:1px solid var(--line);border-radius:8px;padding:5px 7px}
+select.sm{border:1px solid var(--line);border-radius:8px;padding:5px 6px;background:#fff}
+.switch{display:inline-flex;align-items:center;gap:8px;font-size:14px;color:var(--sub);cursor:pointer;user-select:none}
+.switch i{width:38px;height:22px;border-radius:12px;background:#E6E6E6;position:relative;transition:.15s}
+.switch i:after{content:"";position:absolute;left:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:.15s}
+.switch.on i{background:var(--acc)} .switch.on i:after{left:19px}
+.mg{display:flex;gap:5px;margin-top:8px;flex-wrap:wrap}
+.mg .tg{width:auto;padding:0 10px;font-size:13px;height:30px}
+
+/* 할일 */
+.stages{display:flex;flex-direction:column;gap:4px}
+.stages button{display:block;text-align:left;border:1px solid transparent;background:none;border-radius:12px;padding:10px 12px}
+.stages button.on{background:#fff;border:1.5px solid var(--acc)}
+.stages .t{display:flex;justify-content:space-between;font-size:15px;font-weight:600}
+.stages .bar{height:6px;margin-top:6px}
+.todo .it{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid var(--line)}
+.todo .it:last-child{border-bottom:0}
+.todo .cb{width:26px;height:26px;border-radius:8px;border:2px solid #DDDDDD;background:#fff;flex:0 0 auto;font-size:15px;font-weight:900;line-height:1;color:var(--ink)}
+.todo .cb.on{background:var(--acc);border-color:var(--accl)}
+.todo .cb.auto{background:var(--acc);border-color:var(--accl);color:var(--ink)}
+.todo .tx{flex:1;font-size:16px}
+.todo .tx small{display:block;font-size:12px;color:var(--muted)}
+.todo .it.done .tx>span{color:var(--muted);text-decoration:line-through}
+
+
+.mcell{width:330px;flex:0 0 auto;font-size:13px;color:var(--sub)}
+#app.mo .mcell{width:auto;margin-top:8px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.mcell .mh{display:flex;justify-content:space-between;gap:8px;margin-bottom:4px;font-weight:600;color:var(--ink)}
+.mcell .mr{display:flex;align-items:center;gap:10px;flex-wrap:nowrap;margin-bottom:5px;white-space:nowrap}
+#app.mo .mcell .mr{flex-wrap:wrap}
+.mcell .mr .mini{margin-left:auto}
+.mcell .mr b{color:var(--ink)}
+.mcell input.ly{width:70px;padding:4px 6px}
+.mcell .bar{height:6px}
+#app.mo .tsum{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+#app.mo .tsum .card{padding:10px}
+#app.mo .tsum .v{font-size:17px}
+#app.mo .tsum .v span{display:block;font-size:12px!important}
+#app.mo .tsum .s{display:none}
+#app.mo .tsum .l{font-size:12px}
+.mini{border:1px solid var(--line);background:#fff;border-radius:8px;padding:3px 8px;font-size:12px;font-weight:700}
+.mini:hover{background:var(--acc);border-color:var(--acc)}
+.todo .it{align-items:flex-start}
+.todo .cb{margin-top:2px}
+
+/* ---------- 테마 공통 ---------- */
+.ph h1,.logo,.card h2,.headline,#dlg h3,.couple .d{font-family:var(--hf)}
+.nav button.on,.mtabs button.on,.pills button.on,.chips button.on,.seg button.on,.btn,.btn.dk,.tag.y,.kpi.hl,.tg.on,.todo .cb.on,.todo .cb.auto,.opts button.on{color:var(--acct)}
+.kpi.hl .l,.kpi.hl .s{color:var(--acct);opacity:.75}
+.pick,.basis b{border-bottom-color:var(--accd)}
+.wi{flex:0 0 auto;width:40px;height:40px;border-radius:50%;border:2px solid var(--red);color:var(--red);font-weight:900;font-size:20px;display:flex;align-items:center;justify-content:center}
+#dlg .mk{width:64px;height:64px;border-radius:var(--r);background:var(--acc);margin:0 auto 14px}
+/* 시안 비교 */
+.th-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.th-grid.th5{grid-template-columns:repeat(5,minmax(0,1fr))}
+@media (max-width:900px){.th-grid,.th-grid.th5{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:620px){.th-grid,.th-grid.th5{grid-template-columns:1fr}.th .ds{min-height:0}}
+#ctrl .g{flex-wrap:wrap}
+#ctrl span,#ctrl button{white-space:nowrap}
+.th{border:1px solid var(--line);border-radius:14px;padding:14px;cursor:pointer;background:#fff;text-align:left;font:inherit;color:var(--ink)}
+.th:hover{box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.th.on{outline:3px solid var(--ink)}
+.th .nm{font-size:15px;font-weight:800;margin-bottom:2px}
+.th .ds{font-size:12px;color:var(--muted);margin-bottom:10px;min-height:34px}
+.th .mini{border:1px solid #EEE;border-radius:var(--r);padding:10px;font-size:12px;background:#fff}
+.th .mlogo{display:flex;align-items:center;gap:6px;font-family:var(--hf);font-weight:800;letter-spacing:.08em;font-size:12px;margin-bottom:8px}
+.th .mlogo i{width:12px;height:12px;border-radius:calc(var(--rb) * .4);background:var(--acc)}
+.th .mnav{display:flex;gap:4px;margin-bottom:8px}
+.th .mnav span{padding:3px 8px;border-radius:var(--rp);border:1px solid #EEE;color:var(--sub)}
+.th .mnav span.on{background:var(--acc);border-color:var(--acc);color:var(--acct);font-weight:700}
+.th .mk2{background:var(--acc);color:var(--acct);border-radius:var(--rb);padding:8px 10px;margin-bottom:8px}
+.th .mk2 b{display:block;font-size:17px;font-family:var(--hf)}
+.th .mbar{height:8px;border-radius:var(--rbar);background:#F2F2F2;display:flex;overflow:hidden;margin-bottom:8px}
+.th .mbar i:first-child{background:var(--acc);width:45%}
+.th .mbar i:last-child{background:var(--stripe);width:25%}
+.th .mrow2{display:flex;justify-content:space-between;align-items:center}
+.th .mtag{background:var(--acc);color:var(--acct);border-radius:6px;padding:0 6px;font-weight:700}
+.th .mbtn{background:var(--acc);color:var(--acct);border-radius:var(--rb);padding:5px 10px;font-weight:800}
+.th .mrow3{display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding:6px 8px;border-radius:var(--rb);background:var(--accs);border:1px solid var(--accl)}
+.th .mrow3 em{font-style:normal;border-bottom:2px solid var(--accd)}
+
+/* ---------- 직각 모서리 (2026-09-30 결영) ---------- */
+*,*::before,*::after{border-radius:0!important}
+/* ---------- 엑셀처럼 바로 고치는 표 ---------- */
+table.xl td{padding:3px 4px}
+table.xl td.pad{padding:8px 10px}
+.ce{border:1px solid transparent;background:transparent;padding:6px 7px;font:inherit;color:inherit;min-width:0}
+.ce:hover{border-color:var(--line);background:#fff}
+.ce:focus{outline:2px solid var(--accd);outline-offset:-2px;background:#fff;border-color:transparent}
+select.ce{cursor:pointer}
+.ce.num{text-align:right;font-weight:700}
+.ce.bad{outline:2px solid var(--red)!important;background:#FFF0F0!important}
+.xl .c-d{width:136px}.xl .c-s{width:150px}.xl .c-a{width:118px}.xl .c-p{width:118px}.xl .c-st{width:96px}.xl .c-v{width:110px}.xl .c-m{width:180px}
+tr.newrow td{background:var(--accs);border-bottom:2px solid var(--accl)}
+tr.newrow .ce{border-color:var(--line);background:#fff}
+tr.plan .ce{background:transparent}
+.mrow.tap{cursor:pointer}
+
+/* ---------- 실제 가계부 ---------- */
+a.logo{text-decoration:none;color:inherit}
+.navlink{display:block;padding:11px 12px;font-size:15px;color:var(--sub);text-decoration:none}
+.navlink:hover{background:var(--accs)}
+.mtabs a{flex:0 0 auto;border:1px solid var(--line);background:#fff;padding:7px 14px;font-size:15px;color:var(--sub);text-decoration:none}
+.start label,.set label{display:block;font-size:14px;font-weight:600;margin:14px 0 6px}
+.start label .mut,.set label .mut{font-weight:400;font-size:12px}
+.start input,.start select,.set input,.set select{width:100%;border:1px solid #DAD9D2;padding:11px 12px;font-size:16px;background:#fff}
+.start input:focus,.start select:focus,.set input:focus,.set select:focus{outline:2px solid var(--accd);outline-offset:-2px}
+.set .btn.wide{margin-top:8px}
+.btn.ghost{background:#fff;border:1px solid var(--line)}
+.demo{background:var(--acc2);border:1px solid var(--accl);padding:10px 14px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-size:14px}
+.empty{color:var(--muted);font-size:14px;padding:6px 0}
+.foot a,.foot .linkb{color:var(--sub);font-size:12px}
+/* 웨딩홀 */
+.hall td,.hall th{white-space:nowrap}
+.hall td.st,.hall th.st{position:sticky;left:0;background:#fff;z-index:1;border-right:1px solid var(--line)}
+.hall th.st{background:#fff;z-index:2}
+.hall tr.grp td.st{background:#fff}
+.hall td.best{color:var(--muted);font-size:13px}
+.hall td.v{min-width:96px}
+.hall [contenteditable]{outline:0;border-bottom:1px dashed transparent}
+.hall [contenteditable]:focus{border-bottom-color:var(--acc)}
+.hall .top{background:var(--accs)!important}
+.hall select{border:1px solid var(--line);border-radius:6px;padding:3px 2px;background:#fff}
+.hall tr.sum td{font-weight:800;background:#fff;font-size:16px;border-top:1px solid var(--line)}
+.hall th input{border:0;background:transparent;font-weight:700;font-size:14px;color:var(--ink);width:120px}
+
+/* 평균 */
+.headline{font-size:26px;font-weight:700;line-height:1.5;letter-spacing:-.5px;margin:0}
+#app.mo .headline{font-size:21px}
+.pick{border-bottom:3px solid var(--acc);cursor:pointer;font-weight:800;padding:0 2px}
+.pick:after{content:" ▾";font-size:14px;color:var(--muted)}
+.bignum{font-size:56px;font-weight:800;letter-spacing:-2px;line-height:1.1;margin:8px 0 4px}
+#app.mo .bignum{font-size:44px}
+.bignum small{font-size:24px;letter-spacing:-.5px}
+.linkb{border:0;background:none;padding:0;font-size:14px;color:var(--sub);text-decoration:underline;text-underline-offset:3px}
+.cmp .t{display:flex;justify-content:space-between;align-items:baseline;font-size:16px}
+.cmp .t b{font-size:17px}
+.cmp .bar{height:12px;margin:8px 0 4px;position:relative;overflow:visible;background:var(--track)}
+.cmp .bar i{background:var(--acc);border-radius:6px}
+.cmp .mk{position:absolute;top:-4px;width:3px;height:20px;background:var(--ink);border-radius:2px}
+.cmp .s{font-size:13px;color:var(--muted)}
+
+/* 오버레이 */
+#ov{position:fixed;inset:0;background:rgba(20,22,28,.4);display:none;z-index:100;align-items:center;justify-content:center}
+#ov.open{display:flex}
+#dlg{background:#fff;border-radius:var(--r);padding:24px;width:min(440px,calc(100% - 32px));max-height:90vh;overflow:auto}
+#ov.sheet{align-items:flex-end}
+#ov.sheet #dlg{width:min(400px,100%);border-radius:22px 22px 0 0;padding:22px 18px 26px}
+#dlg h3{margin:0 0 14px;font-size:19px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.opts button{border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:13px 8px;font-size:16px}
+.opts button.on{background:var(--acc);border-color:var(--ink);font-weight:700}
+.sns{display:flex;align-items:center;justify-content:center;border-radius:12px;padding:14px;font-size:16px;font-weight:700;margin-bottom:8px;border:1px solid var(--line);width:100%;background:#fff}
+.sns.k{background:#FEE500;border-color:#FEE500}
+.sns.n{background:#03C75A;border-color:#03C75A;color:#fff}
+.foot{font-size:12px;color:var(--muted);margin-top:30px;border-top:1px solid var(--line);padding-top:14px}
+.locked{text-align:center;padding:40px 20px}
+.locked img{width:120px}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <aside id="side"></aside>
+  <div id="mhead"></div>
+  <main id="main"></main>
+</div>
+<div id="ov"><div id="dlg"></div></div>
+<datalist id="catlist"></datalist>
+
+<script src="data.js"></script>
+<script>
+/* ================= 데이터 ================= */
+const RAW = [["결혼식", "인사", "첫인사 식사"], ["결혼식", "인사", "첫인사 선물"], ["결혼식", "인사", "상견례 식사"], ["결혼식", "인사", "상견례 선물"], ["결혼식", "인사", "청첩장"], ["결혼식", "인사", "청첩장 모임"], ["결혼식", "인사", "주선자"], ["결혼식", "웨딩홀", "대관료"], ["결혼식", "웨딩홀", "식대"], ["결혼식", "웨딩홀", "와인"], ["결혼식", "웨딩홀", "꽃장식"], ["결혼식", "스드메", "패키지"], ["결혼식", "스드메", "스튜디오 추가금"], ["결혼식", "스드메", "드레스 추가금"], ["결혼식", "스드메", "메이크업 추가금"], ["결혼식", "스드메", "예복"], ["결혼식", "스드메", "구두"], ["결혼식", "스드메", "부케"], ["결혼식", "본식진행", "헬퍼비"], ["결혼식", "본식진행", "사회자"], ["결혼식", "본식진행", "축하 무대"], ["결혼식", "본식진행", "스냅"], ["결혼식", "본식진행", "영상"], ["결혼식", "혼주", "한복"], ["결혼식", "혼주", "양복"], ["결혼식", "혼주", "메이크업"], ["결혼식", "예물", "반지"], ["결혼식", "예물", "가방"], ["결혼식", "예물", "시계"], ["결혼식", "관리", "마사지"], ["결혼식", "관리", "시술"], ["결혼식", "관리", "네일"], ["결혼식", "관리", "머리"], ["결혼식", "하객", "교통비"], ["결혼식", "하객", "답례품"], ["신혼여행", "신혼여행", "여행사 패키지"], ["신혼여행", "신혼여행", "항공권"], ["신혼여행", "신혼여행", "숙소"], ["신혼여행", "신혼여행", "경비"], ["신혼여행", "신혼여행", "선물"], ["혼수", "가전", "가전 패키지"], ["혼수", "가구", "침실"], ["혼수", "가구", "거실"], ["혼수", "가구", "서재"], ["혼수", "가구", "주방"], ["혼수", "가구", "생활용품"], ["혼수", "가구", "침구"], ["혼수", "가구", "식기류"], ["신혼집", "인테리어", "벽지"], ["신혼집", "인테리어", "타일"], ["신혼집", "인테리어", "샷시"], ["신혼집", "집", "계약금"], ["신혼집", "집", "중도금"], ["신혼집", "집", "잔금"], ["신혼집", "집", "보증금"], ["신혼집", "집", "세금"], ["신혼집", "집", "법무사비"], ["신혼집", "집", "부동산중개비"]];  // [대분류, 중분류, 소분류]
+const TODO = [["가장 먼저", "인사", "결혼 허락 받기", ""], ["가장 먼저", "웨딩홀", "웨딩홀 투어 예약", ""], ["가장 먼저", "웨딩홀", "홀 투어", ""], ["가장 먼저", "웨딩홀", "홀 계약", "대관료"], ["가장 먼저", "본식진행", "(홀 계약 후)스냅 계약", "스냅"], ["가장 먼저", "본식진행", "(홀 계약 후)DVD 계약", "영상"], ["가장 먼저", "본식진행", "(홀 계약 후)사회자 섭외", "사회자"], ["가장 먼저", "집", "신혼집 매물 검색", ""], ["가장 먼저", "집", "부동산 연락", ""], ["가장 먼저", "집", "신혼집 계약", "계약금"], ["D-365", "인사", "첫인사 선물 구입", "첫인사 선물"], ["D-365", "인사", "신랑집 첫인사", ""], ["D-365", "인사", "신부집 첫인사", ""], ["D-365", "스드메", "웨딩 박람회 투어", ""], ["D-365", "스드메", "플래너 알아보기", ""], ["D-365", "스드메", "스드메 계약", "패키지"], ["D-365", "예물", "웨딩링 투어", ""], ["D-365", "예물", "웨딩링 계약", "반지"], ["D-365", "집", "대출 알아보기", ""], ["D-365", "집", "인테리어 계약", "벽지"], ["D-365", "집", "잔금 치루기", "잔금"], ["D-365", "집", "기타 비용 처리", ""], ["5~6개월 전", "인사", "상견례 식당 예약", "상견례 식사"], ["5~6개월 전", "인사", "상견례 선물 구입", "상견례 선물"], ["5~6개월 전", "스드메", "드레스 투어", ""], ["5~6개월 전", "스드메", "촬영 가봉", ""], ["5~6개월 전", "스드메", "헤어변형 예약", ""], ["5~6개월 전", "스드메", "스튜디오 촬영", ""], ["5~6개월 전", "예물", "웨딩링 수령", ""], ["5~6개월 전", "관리", "다이어트", ""], ["5~6개월 전", "관리", "촬영 네일", ""], ["5~6개월 전", "신혼여행", "여행사 투어", ""], ["5~6개월 전", "신혼여행", "항공권 예약", "항공권"], ["5~6개월 전", "신혼여행", "호텔 예약", "숙소"], ["5~6개월 전", "신혼여행", "일정 짜기", ""], ["5~6개월 전", "집", "인테리어 시공", ""], ["5~6개월 전", "집", "입주 청소", ""], ["5~6개월 전", "집", "이사", ""], ["4개월 전", "인사", "청첩장 샘플 수령", ""], ["4개월 전", "인사", "청첩장 주문", "청첩장"], ["4개월 전", "인사", "모바일 청첩장 제작", ""], ["4개월 전", "스드메", "예복 투어", ""], ["4개월 전", "스드메", "예복 구매", "예복"], ["4개월 전", "스드메", "사진 셀렉 및 보정", ""], ["4개월 전", "본식진행", "축가,축사 부탁", ""], ["4개월 전", "본식진행", "가방순이", ""], ["4개월 전", "본식진행", "부케순이", ""], ["4개월 전", "혼주", "혼주 메이크업 예약", "메이크업"], ["4개월 전", "혼주", "여자 혼주 한복 가봉", "한복"], ["4개월 전", "혼주", "남자 혼주 양복 구매", "양복"], ["4개월 전", "혼주", "액세서리 구매", ""], ["2~3개월 전", "인사", "청첩장 모임", "청첩장 모임"], ["2~3개월 전", "본식진행", "축의대", ""], ["2~3개월 전", "본식진행", "웨딩카", ""], ["2~3개월 전", "예물", "예단 준비", ""], ["2~3개월 전", "예물", "예단 전달", ""], ["2~3개월 전", "관리", "피부과 관리", ""], ["2~3개월 전", "관리", "피부과 시술", ""], ["2~3개월 전", "하객", "하객 버스 대절", "교통비"], ["2~3개월 전", "하객", "버스 도우미 섭외", ""], ["D-30", "웨딩홀", "웨딩홀 뷔페 시식", ""], ["D-30", "스드메", "본식 드레스 가봉", ""], ["D-30", "스드메", "부케 주문", "부케"], ["D-30", "본식진행", "식순 정하기", ""], ["D-30", "본식진행", "배경음악 선정", ""], ["D-30", "본식진행", "식전 영상 제작", ""], ["D-30", "예물", "이바지 음식 예약", ""], ["D-30", "관리", "미용실 가기", ""], ["D-30", "하객", "버스 도시락 주문", ""], ["D-30", "신혼여행", "환전하기", ""], ["D-7", "웨딩홀", "웨딩홀 최종 점검", ""], ["D-7", "웨딩홀", "웨딩홀에 파일 전달", ""], ["D-7", "스드메", "부케 예약 확인", ""], ["D-7", "스드메", "드레스샵 예약 확인", ""], ["D-7", "스드메", "메이크업샵 예약 확인", ""], ["D-7", "본식진행", "헬퍼비 준비", "헬퍼비"], ["D-7", "본식진행", "사례비 준비", ""], ["D-7", "본식진행", "스냅, DVD 예약 확인", ""], ["D-7", "혼주", "혼주 한복 수령", ""], ["D-7", "관리", "본식 네일 받기", ""], ["D-7", "신혼여행", "짐싸기", ""], ["D-1", "본식진행", "행진 연습", ""], ["본식 후", "웨딩홀", "예식 비용 정산", "식대"], ["본식 후", "하객", "감사 인사 전하기", ""], ["본식 후", "하객", "회사 답례품 주문", "답례품"], ["입주 전", "가전", "TV", ""], ["입주 전", "가전", "에어컨", ""], ["입주 전", "가전", "냉장고", ""], ["입주 전", "가전", "식기세척기", ""], ["입주 전", "가전", "밥솥", ""], ["입주 전", "가전", "정수기", ""], ["입주 전", "가전", "세탁기", ""], ["입주 전", "가전", "건조기", ""], ["입주 전", "가전", "청소기", ""], ["입주 전", "가전", "공기청정기", ""], ["입주 전", "가구", "소파", ""], ["입주 전", "가구", "거실장 or 소파테이블", ""], ["입주 전", "가구", "식탁", ""], ["입주 전", "가구", "매트리스", ""], ["입주 전", "가구", "프레임", ""], ["입주 전", "가구", "서랍", ""], ["입주 전", "가구", "책상,의자", ""], ["입주 전", "생활용품", "러그", ""], ["입주 전", "생활용품", "식기", ""], ["입주 전", "생활용품", "식기 건조대", ""], ["입주 전", "생활용품", "이불", ""], ["입주 전", "생활용품", "옷걸이", ""], ["입주 전", "생활용품", "쓰레기통", ""], ["입주 전", "생활용품", "분리수거함", ""], ["입주 전", "인테리어", "도배", ""], ["입주 전", "인테리어", "장판", ""], ["입주 전", "인테리어", "싱크대", ""], ["입주 전", "인테리어", "화장실", ""], ["입주 전", "인테리어", "샤시", ""], ["입주 전", "인테리어", "조명", ""], ["입주 전", "인테리어", "콘센트", ""], ["입주 전", "인테리어", "타일", ""], ["입주 전", "인테리어", "중문", ""], ["입주 전", "인테리어", "필름", ""], ["입주 전", "인테리어", "몰딩", ""]];  // [단계, 분야, 할 일, 연결 소분류]
+const PAY = ["예랑 카드","예랑 현금","예랑 상품권","예신 카드","예신 현금","예신 상품권","공동 계좌"];
+const BIGS = ["결혼식","신혼여행","혼수","신혼집"];
+const STAGES = ["가장 먼저","D-365","5~6개월 전","4개월 전","2~3개월 전","D-30","D-7","D-1","본식 후","입주 전"];
+// 제휴 링크: 제휴 가입 후 {항목: "문구"} 로 채우면 예산·할일 화면에 나타남
+const AFF = {}, TODO_AFF = {};
+const HALLROWS = [["기본정보","월","4,5,6,10,11월"],["","요일","토요일"],["","시간","점심시간대"],["","예식 간격","70분 이상"],
+ ["비용","대관료","저렴할수록 좋아요"],["","계약금",""],["","식대",""],["","소인 식대",""],["","최소 보증 인원","적을수록 좋아요"],["","카드 결제","가능"],["","부가세","없음"],["","현금영수증","가능"],["","지역 화폐 사용","가능"],
+ ["부대비용","꽃장식","생화"],["","플라워샤워","20만원"],["","예도","20만원"],["","기타 추가금","없음"],
+ ["홀","단독홀 여부","단독홀"],["","홀 분위기","개인취향"],["","버진로드 길이","긴편"],["","층고","높음"],["","예식 전 스냅 촬영","가능"],
+ ["신부대기실","크기","넓음"],["","화장실","있음"],["","서브 대기실","없음"],
+ ["로비","하객 대기 공간","넓음"],["","포토 테이블","5개"],["","포토 부스","가능"],["","ATM기 개수","3개 이상"],
+ ["연회장","음식 종류 수","많을수록 좋음"],["","음료(주류 포함)","주류 포함"],["","맛(상/중/하)","상"],["","시식 인원","많을수록 좋음"],
+ ["교통","주차 대수","1500대 이상"],["","혼잡도","여유로움"],["","무료 주차 시간","3시간 이상"],["","대중교통 접근성","역 10분 내"],["","셔틀 제공 여부","있음"],["","혼주 가족 주차","가능"],["","대절 버스 주차장","있음"]];
+
+
+/* ================= 저장 (로그인 전: 이 브라우저에만) ================= */
+const R = window.OW;   // 평균 데이터 (data.js)
+const KEY = "ourwedding-ledger-v1";
+const todayISO = () => { const d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); };
+const TODAY = new Date(todayISO());
+const SIDES = ["예신","예랑","예신 부모","예랑 부모"];
+const BASE_CATS = RAW.map(([big, mid, small], i) => ({ id: i, big, mid, small }));
+const blankHall = n => ({ name: "홀 " + n + " 이름", v: HALLROWS.map(() => ""), sc: HALLROWS.map(() => 3) });
+let P, CATS, MY, EXP, DONE, GUESTS, HALLS;
+function fresh() {
+  return { v: 1, profile: { wed: "", region: "all", bride: "", groom: "", started: false, demo: false },
+    cats: BASE_CATS.map(c => ({ ...c })), budget: {}, exp: [], done: [], guests: [], halls: [blankHall(1), blankHall(2)] };
+}
+function use(d) {
+  const f = fresh();
+  d = Object.assign(f, d || {}); d.profile = Object.assign(fresh().profile, d.profile || {});
+  P = d.profile; CATS = d.cats; MY = d.budget; EXP = d.exp; DONE = new Set(d.done); GUESTS = d.guests; HALLS = d.halls;
+}
+const snapshot = () => ({ v: 1, profile: P, cats: CATS, budget: MY, exp: EXP, done: [...DONE], guests: GUESTS, halls: HALLS, saved: new Date().toISOString() });
+let storeOK = true, _st;
+function load() {
+  try { const t = localStorage.getItem(KEY); if (t) { use(JSON.parse(t)); return; } } catch (e) { storeOK = false; }
+  use(fresh());
+}
+function save() { clearTimeout(_st); _st = setTimeout(() => { try { localStorage.setItem(KEY, JSON.stringify(snapshot())); storeOK = true; } catch (e) { storeOK = false; } }, 200); }
+
+// 예시 가계부 (처음 온 사람이 둘러보는 용도)
+function demoData() {
+  let seed = 11; const rnd = () => (seed = seed * 16807 % 2147483647) / 2147483647;
+  const d = fresh();
+  d.profile = { wed: "2027-04-10", region: "seoul", bride: "예신", groom: "예랑", started: true, demo: true };
+  d.budget = {"첫인사 식사":300000,"첫인사 선물":300000,"상견례 식사":600000,"상견례 선물":200000,"청첩장":150000,"대관료":5000000,"식대":13000000,"꽃장식":1000000,"패키지":2500000,"스튜디오 추가금":500000,"드레스 추가금":300000,"메이크업 추가금":100000,"예복":800000,"구두":200000,"부케":200000,"헬퍼비":250000,"사회자":300000,"스냅":1200000,"영상":500000,"한복":1000000,"양복":1000000,"메이크업":400000,"반지":3000000,"항공권":2500000,"숙소":3000000,"경비":2000000,"가전 패키지":15000000,"침실":3000000,"거실":2000000,"주방":500000,"침구":500000};
+  d.exp = [
+   {d:"2026-06-02",s:"첫인사 선물",a:300000,p:"예신 카드",st:"완료",v:"백화점",m:"과일 바구니",r:false},
+   {d:"2026-06-14",s:"상견례 식사",a:640000,p:"예랑 카드",st:"완료",v:"한정식집",m:"",r:false},
+   {d:"2026-07-05",s:"대관료",a:1000000,p:"공동 계좌",st:"완료",v:"A웨딩홀",m:"계약금",r:true},
+   {d:"2026-08-20",s:"패키지",a:1000000,p:"예신 카드",st:"완료",v:"B스드메",m:"계약금",r:false},
+   {d:"2026-08-30",s:"반지",a:3200000,p:"예랑 카드",st:"완료",v:"C주얼리",m:"커플링 2개",r:false},
+   {d:"2026-09-12",s:"스냅",a:500000,p:"공동 계좌",st:"완료",v:"D스냅",m:"계약금",r:true},
+   {d:"2026-09-28",s:"드레스 추가금",a:400000,p:"예신 현금",st:"완료",v:"B스드메",m:"실크 드레스 업그레이드",r:true},
+   {d:"2026-10-05",s:"가전 패키지",a:3000000,p:"공동 계좌",st:"예정",v:"E가전",m:"계약금",r:false},
+   {d:"2026-10-15",s:"패키지",a:1500000,p:"예신 카드",st:"예정",v:"B스드메",m:"잔금",r:false},
+   {d:"2026-10-20",s:"항공권",a:2400000,p:"예랑 카드",st:"예정",v:"",m:"발리 왕복 2인",r:false},
+   {d:"2027-03-10",s:"대관료",a:4000000,p:"공동 계좌",st:"예정",v:"A웨딩홀",m:"잔금",r:true},
+   {d:"2027-04-10",s:"스냅",a:1000000,p:"공동 계좌",st:"예정",v:"D스냅",m:"잔금 (당일)",r:true},
+   {d:"2027-04-10",s:"식대",a:13000000,p:"공동 계좌",st:"예정",v:"A웨딩홀",m:"보증 200명 × 6.5만",r:true}
+  ].sort((a, b) => a.d < b.d ? 1 : -1);
+  d.done = ["결혼 허락 받기","웨딩홀 투어 예약","홀 투어","신랑집 첫인사","신부집 첫인사","웨딩 박람회 투어","웨딩링 투어","신혼집 매물 검색","부동산 연락"];
+  const SUR = "김이박최정강조윤장임한오서신권황안송류홍".split(""), MEMOS = ["","","","회사 동기","대학 동아리","사촌","","고등학교 친구"];
+  [["예신",18],["예랑",16],["예신 부모",12],["예랑 부모",10]].forEach(([side, n]) => { for (let i = 0; i < n; i++) d.guests.push({ name: SUR[Math.floor(rnd() * SUR.length)] + "○○", side, prev: rnd() < .45, inv: rnd() < .35, close: rnd() < .5, plus: rnd() < .18 ? 1 : 0, memo: MEMOS[Math.floor(rnd() * MEMOS.length)] }); });
+  d.halls = [
+   {name:"A홀 그랜드볼룸",v:["4월","토요일","12:30","90분","300만","100만","6.5만","3.5만","200명","가능","없음","가능","불가","생화","20만","포함","없음","단독홀","화사함","긴편","높음","가능","넓음","있음","있음","넓음","3개","가능","2개","60종","주류 포함","상","4명","800대","보통","2시간","역 5분","없음","가능","있음"]},
+   {name:"B홀 채플홀",v:["5월","토요일","13:00","60분","0원","50만","7.2만","4만","250명","가능","있음","가능","가능","조화","15만","30만","있음","단독홀","어두운 편","보통","보통","불가","보통","없음","없음","좁음","2개","불가","1개","45종","주류 별도","중","2명","300대","혼잡","1.5시간","역 10분","있음","가능","없음"]},
+   {name:"C홀 가든홀",v:["10월","일요일","11:00","100분","500만","200만","5.8만","3만","180명","가능","없음","가능","불가","생화","포함","포함","없음","단독홀","야외 느낌","긴편","높음","가능","넓음","있음","있음","넓음","4개","가능","3개","70종","주류 포함","상","4명","1,200대","여유","3시간","역 15분","있음","가능","있음"]}
+  ];
+  d.halls.forEach((h, k) => { const base = [4, 3, 4][k]; h.sc = HALLROWS.map(() => Math.max(1, Math.min(5, base + Math.round((rnd() - .45) * 2.4)))); });
+  return d;
+}
+load();
+const wedDate = () => P.wed ? new Date(P.wed) : null;
+const dday = () => { const w = wedDate(); return w ? Math.round((w - TODAY) / 864e5) : null; };
+const S = {mode: innerWidth<760?"mo":"pc", view:"home", big:"전체", ef:"전체", gside:"전체", gshow:30, stage:null, st:"완료", pay:"공동 계좌"};
+
+/* ================= 계산 ================= */
+const sum=(a,f)=>a.reduce((t,x)=>t+f(x),0);
+const cat=s=>CATS.find(c=>c.small===s);
+const paid=s=>sum(EXP.filter(e=>e.s===s&&e.st==="완료"),e=>e.a);
+const plan=s=>sum(EXP.filter(e=>e.s===s&&e.st==="예정"),e=>e.a);
+// 남들 평균: 실제 통계가 있는 항목만 (선택한 지역 기준)
+const reg=()=>R.regions.find(r=>r.id===P.region)||R.regions[0];
+const OPT=n=>{const o=R.options.find(x=>x[0]===n);return o?o[1+R.zoneOrder.indexOf(reg().zone)]:null};
+const AVG_MAP={"대관료":()=>reg().rental,"식대":()=>reg().meal,"패키지":()=>reg().sdm,"꽃장식":()=>OPT("생화 꽃장식"),"사회자":()=>OPT("본식 사회자"),"부케":()=>OPT("부케"),"헬퍼비":()=>OPT("본식 드레스 도우미"),"스냅":()=>OPT("본식 촬영"),"한복":()=>OPT("한복 대여"),"메이크업":()=>OPT("혼주 헤어·메이크업"),"축하 무대":()=>OPT("축가·축하공연")};
+const avgOf=c=>{if(!c||c.custom)return null;const f=AVG_MAP[c.small];if(!f)return null;const v=f();return v==null?null:Math.round(v)*10000};
+const GROUP_AVG={big:{"혼수":1445,"신혼여행":1030},mid:{"예물":588}};  // 듀오 2026 전국 평균(만원)
+const gavg=(k,n)=>GROUP_AVG[k][n]?man(GROUP_AVG[k][n]*10000):"";
+const man=n=>{ if(n==null)return"–"; const neg=n<0; n=Math.abs(n); if(n>0&&n<10000)return(neg?"-":"")+n.toLocaleString()+"원"; const m=Math.round(n/10000); let t; if(m>=10000){const e=Math.floor(m/10000),r=m%10000;t=e+"억"+(r?" "+r.toLocaleString()+"만":"")}else t=m.toLocaleString()+"만"; return(neg?"-":"")+t;};
+const exp=g=>(g.prev||g.inv||g.close)?1+g.plus:0;
+const hasAfter=()=>GUESTS.some(g=>g.day||g.gift||g.how);
+const gDay=g=>g.day||0, gGift=g=>g.gift||0, gHow=g=>g.how||"";
+const stageNow=()=>{const DDAY=dday();if(DDAY==null)return "가장 먼저";return DDAY>330?"가장 먼저":DDAY>180?"D-365":DDAY>120?"5~6개월 전":DDAY>90?"4개월 전":DDAY>30?"2~3개월 전":DDAY>7?"D-30":DDAY>1?"D-7":DDAY>=0?"D-1":"본식 후"};
+const isAuto=t=>t[3]&&EXP.some(e=>e.s===t[3]&&e.st==="완료");
+const isPlanned=t=>t[3]&&!isAuto(t)&&EXP.some(e=>e.s===t[3]&&e.st==="예정");
+const isDone=t=>isAuto(t)||DONE.has(t[2]);
+// 냈어요(포인트색) · 낼 예정(빗금) · 예산을 넘은 만큼(빨강)
+const bar=(b,p,q)=>{const m=Math.max(b,p+q)||1; if(!b||p+q<=b) return `<div class="bar"><i class="p" style="width:${p/m*100}%"></i><i class="q" style="width:${q/m*100}%"></i></div>`;
+  const pin=Math.min(p,b), qin=Math.max(0,Math.min(q,b-p)), over=p+q-b;
+  return `<div class="bar"><i class="p" style="width:${pin/m*100}%"></i><i class="q" style="width:${qin/m*100}%"></i><i class="o" style="width:${over/m*100}%"></i></div>`};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ================= 화면: 홈 ================= */
+const DAYS="일월화수목금토";
+function wedText(){const w=wedDate();if(!w)return "예식일 미정";return `${w.getFullYear()}년 ${w.getMonth()+1}월 ${w.getDate()}일 ${DAYS[w.getDay()]}요일`}
+function ddText(){const d=dday();if(d==null)return "D-?";return d>0?`D-${d}`:d===0?"D-DAY":`D+${-d}`}
+const names=()=>`${esc(P.bride||"예신")} ♥ ${esc(P.groom||"예랑")}`;
+function monthsRange(){
+  const now=todayISO().slice(0,7), keys=EXP.map(e=>(e.d||"").slice(0,7)).filter(Boolean);
+  const start=[now,...keys].sort()[0], end=[now,...keys,(P.wed||"").slice(0,7)].filter(Boolean).sort().pop();
+  const out=[];let [y,m]=start.split("-").map(Number);
+  while(out.length<36){const k=`${y}-${String(m).padStart(2,"0")}`;out.push(k);if(k>=end)break;m++;if(m>12){m=1;y++}}
+  return out.slice(-18);
+}
+function vHome(){
+  if(!P.started) return vStart();
+  const tb=sum(CATS,c=>MY[c.small]||0), tp=sum(EXP.filter(e=>e.st==="완료"),e=>e.a), tq=sum(EXP.filter(e=>e.st==="예정"),e=>e.a), left=tb-tp-tq;
+  const up=EXP.filter(e=>e.st==="예정").sort((a,b)=>a.d<b.d?-1:1).slice(0,5);
+  const st=stageNow(), si=STAGES.indexOf(st);
+  const todo=TODO.filter(t=>STAGES.indexOf(t[0])<=si&&!isDone(t)).slice(0,5);
+  const gExp=sum(GUESTS,exp);
+  const over=CATS.map(c=>({c,u:paid(c.small)+plan(c.small),b:MY[c.small]||0})).filter(x=>x.b&&x.u>x.b).sort((a,b)=>(b.u-b.b)-(a.u-a.b));
+  const mv=monthsRange().map(k=>({k,p:sum(EXP.filter(e=>(e.d||"").startsWith(k)&&e.st==="완료"),e=>e.a),q:sum(EXP.filter(e=>(e.d||"").startsWith(k)&&e.st==="예정"),e=>e.a)}));
+  const mmax=Math.max(1,...mv.map(x=>x.p+x.q));
+  const who=k=>sum(EXP.filter(e=>k==="공동"?e.p==="공동 계좌":e.p.startsWith(k)),e=>e.a);
+  const wt=who("예랑")+who("예신")+who("공동")||1;
+  const payv=PAY.map(p=>[p,sum(EXP.filter(e=>e.p===p),e=>e.a)]).filter(x=>x[1]);
+  const pmax=Math.max(1,...payv.map(x=>x[1]));
+  const ddOf=d=>{const n=Math.round((new Date(d)-TODAY)/864e5);return n>0?`D-${n}`:n===0?"오늘":`${-n}일 지남`};
+  return `
+  <div class="ph"><h1>${names()}의 결혼 준비</h1><p>${wedText()} · <b>${ddText()}</b> · 지금은 <b>${st}</b> 단계예요${P.wed?"":' · <button class="linkb" data-go="set">예식일 적기</button>'}</p></div>
+
+  <div class="grid g4">
+    <div class="card kpi"><div class="l">우리 예산</div><div class="v">${man(tb)}</div><div class="s">${tb?"예산 탭 항목 합계":'<button class="linkb" data-go="budget">예산 적으러 가기 ›</button>'}</div></div>
+    <div class="card kpi"><div class="l">냈어요</div><div class="v">${man(tp)}</div><div class="s">${EXP.filter(e=>e.st==="완료").length}건</div></div>
+    <div class="card kpi"><div class="l">낼 예정 (잔금 등)</div><div class="v">${man(tq)}</div><div class="s">${EXP.filter(e=>e.st==="예정").length}건</div></div>
+    <div class="card kpi hl"><div class="l">남은 예산</div><div class="v">${man(left)}</div><div class="s">예산 − 냈어요 − 낼 예정</div></div>
+  </div>
+
+  <div class="grid g2 mt">
+    <div class="card">
+      <h2>항목별 예산 <button class="more" data-go="budget">예산 탭 ›</button></h2>
+      ${BIGS.map(g=>{const cs=CATS.filter(c=>c.big===g);const b=sum(cs,c=>MY[c.small]||0),p=sum(cs,c=>paid(c.small)),q=sum(cs,c=>plan(c.small));
+        return `<div class="brow"><div class="t"><span>${g}</span><span><b>${man(p+q)}</b> <span class="mut">/ ${man(b)}</span></span></div>${bar(b,p,q)}</div>`}).join("")}
+      <div class="legend"><span class="lp">냈어요</span><span class="lq">낼 예정</span><span class="lo">예산 넘음</span></div>
+    </div>
+    <div class="card">
+      <h2>곧 낼 돈 <button class="more" data-go="exp">지출 탭 ›</button></h2>
+      ${up.length?`<div class="list">${up.map(e=>{const dd=ddOf(e.d);return `<div class="it"><span>${esc(e.s)} <span class="mut">${esc(e.m)}</span><small>${e.d.slice(5).replace("-","/")} · ${esc(e.v)||"업체 미정"} · ${e.p}</small></span><span class="num"><b>${man(e.a)}</b><br><span class="tag ${/^D-([0-9]|[12][0-9]|30)$|오늘/.test(dd)?'y':''}">${dd}</span></span></div>`}).join("")}</div>`
+        :'<p class="empty">아직 낼 예정인 돈이 없어요. 계약금을 내고 잔금이 남았다면 지출에 <b>낼 예정</b>으로 적어 두세요.</p>'}
+    </div>
+  </div>
+
+  ${over.length?`<div class="card warn mt"><span class="wi">!</span><div><div class="h">예산을 넘은 항목이 있어요</div><div style="font-size:16px">${over.slice(0,2).map(x=>`<b>${esc(x.c.small)}</b> ${man(x.u-x.b)} 넘음`).join(" · ")}</div><div class="mut" style="font-size:13px">다른 항목 예산을 줄이거나 예산 탭에서 늘려 주세요</div></div></div>`:""}
+
+  <div class="grid g3 mt">
+    <div class="card">
+      <h2>지금 할 일 <button class="more" data-go="todo">할일 탭 ›</button></h2>
+      ${todo.length?`<div class="todo">${todo.map(t=>`<div class="it"><button class="cb" data-act="todo" data-t="${esc(t[2])}"></button><div class="tx"><span>${t[2]}</span><small>${t[0]} · ${t[1]}${(()=>{const m=moneyOf(t);if(!m||!cat(m))return"";const b=MY[m]||0,u=paid(m)+plan(m);return ` · ${m} ${man(u)}${b?" / "+man(b):""}`})()}</small></div></div>`).join("")}</div>`:'<p class="empty">지금 단계 할 일을 다 끝냈어요.</p>'}
+    </div>
+    <div class="card">
+      <h2>하객 <button class="more" data-go="guest">하객 탭 ›</button></h2>
+      ${GUESTS.length?`<div class="kpi"><div class="l">참석 예상</div><div class="v">${gExp}명</div><div class="s">명단 ${GUESTS.length}명 + 동행 포함</div></div>
+      <div class="kpi mt"><div class="l">보증 인원 추천</div><div class="v">${Math.floor(gExp*.9)}~${gExp}명</div><div class="s">참석 예상의 90~100%로 계약</div></div>
+      ${hasAfter()?`<div class="kpi mt"><div class="l">축의금</div><div class="v">${man(sum(GUESTS,gGift))}</div></div>`:""}`:'<p class="empty">하객 명단을 적으면 참석 예상 인원과 보증 인원을 계산해 드려요.</p>'}
+    </div>
+    <div class="card guide">
+      <div><b>처음이면 이 순서로 해요</b>
+        <ol><li><b>예산</b> 탭 색칠된 칸에 예산 적기</li><li>돈 낼 때마다 <b>지출</b>에 한 줄</li><li><b>하객·할일</b>은 시간 날 때</li><li>가끔 <b>설정·백업</b>에서 백업 파일 받기</li></ol>
+      </div>
+    </div>
+  </div>
+
+  <div class="ph" style="margin-top:34px"><h1 style="font-size:20px">결산</h1><p>지출을 적으면 알아서 모여요</p></div>
+  <div class="grid g3">
+    <div class="card" style="grid-column:span ${S.mode==="pc"?2:1}">
+      <h2>월별 지출</h2>
+      ${EXP.length?`<div class="cols">${mv.map(x=>`<div class="c">${x.p+x.q?`<em>${man(x.p+x.q)}</em>`:""}<i class="q" style="height:${x.q/mmax*110}px"></i><i class="p" style="height:${x.p/mmax*110}px"></i><span>${x.k.endsWith("-01")||x===mv[0]?x.k.slice(2,4)+".":""}${+x.k.slice(5)}월</span></div>`).join("")}</div>
+      <div class="legend"><span class="lp">냈어요</span><span class="lq">낼 예정</span></div>`:'<p class="empty">지출을 적으면 달마다 얼마 썼는지 보여드려요.</p>'}
+    </div>
+    <div class="card">
+      <h2>누가 냈나</h2>
+      ${EXP.length?`<div class="split"><div style="width:${who("예신")/wt*100}%;background:var(--acc)">예신</div><div style="width:${who("예랑")/wt*100}%;background:var(--acc2)">예랑</div><div style="width:${who("공동")/wt*100}%;background:var(--accs);border:1px solid var(--accl)">같이</div></div>
+      <div class="list mt">${[["예신",who("예신")],["예랑",who("예랑")],["공동 계좌",who("공동")]].map(x=>`<div class="it"><span>${x[0]}</span><b>${man(x[1])}</b></div>`).join("")}</div>
+      <h2 class="mt">결제 수단별</h2>
+      ${payv.map(x=>`<div class="brow"><div class="t"><span>${x[0]}</span><b>${man(x[1])}</b></div><div class="bar" style="height:6px"><i class="p" style="width:${x[1]/pmax*100}%"></i></div></div>`).join("")}`:'<p class="empty">아직 지출이 없어요.</p>'}
+    </div>
+  </div>
+  ${foot()}`;
+}
+
+/* ================= 화면: 시작 ================= */
+const regionOpts=()=>R.regions.map(r=>`<option value="${r.id}" ${r.id===P.region?"selected":""}>${r.name}</option>`).join("");
+function vStart(){
+  return `<div class="ph"><h1>우리 결혼 가계부를 시작해요</h1><p>회원가입 없이 바로 써요. 적은 내용은 <b>이 브라우저에만</b> 저장돼요.</p></div>
+  <div class="card start" style="max-width:560px">
+    <label>예식일 <span class="mut">아직 몰라도 괜찮아요</span></label><input type="date" id="stW" value="${P.wed}">
+    <label>결혼식 지역 <span class="mut">예산 탭의 남들 평균을 이 지역 기준으로 보여줘요</span></label><select id="stR">${regionOpts()}</select>
+    <div class="grid g2"><div><label>예신 호칭</label><input id="stB" placeholder="예신" value="${esc(P.bride)}"></div><div><label>예랑 호칭</label><input id="stG" placeholder="예랑" value="${esc(P.groom)}"></div></div>
+    <button class="btn wide" data-act="start" style="margin-top:20px">시작하기</button>
+    <button class="btn wide ghost" data-act="demo" style="margin-top:8px">예시 가계부로 먼저 둘러보기</button>
+    <p class="mut" style="font-size:13px;margin:14px 0 0">예산 항목 ${BASE_CATS.length}개와 할 일 ${TODO.length}개가 미리 들어 있어요. 금액만 채우면 돼요.</p>
+  </div>${foot()}`;
+}
+
+/* ================= 화면: 설정·백업 ================= */
+function vSet(){
+  let last=null;try{const d=JSON.parse(localStorage.getItem(KEY)||"null");if(d&&d.saved)last=new Date(d.saved)}catch(e){}
+  return `<div class="ph"><h1>설정 · 백업</h1><p>로그인 없이 쓰는 동안 기록은 <b>이 브라우저에만</b> 저장돼요. 브라우저 기록을 지우면 함께 지워지니 가끔 백업 파일을 받아 두세요.</p></div>
+  <div class="grid g2" style="align-items:start">
+    <div class="card set"><h2>결혼 정보</h2>
+      <label>예식일</label><input type="date" data-pf="wed" value="${P.wed}">
+      <label>결혼식 지역 <span class="mut">남들 평균 기준</span></label><select data-pf="region">${regionOpts()}</select>
+      <label>예신 호칭</label><input data-pf="bride" value="${esc(P.bride)}" placeholder="예신">
+      <label>예랑 호칭</label><input data-pf="groom" value="${esc(P.groom)}" placeholder="예랑">
+    </div>
+    <div class="card set"><h2>백업 · 옮기기</h2>
+      <p class="mut" style="font-size:14px;margin:0 0 6px">${storeOK?`자동 저장 중이에요.${last?` 마지막 저장 ${last.toLocaleString("ko-KR")}`:""}`:'<span class="red">이 브라우저에서는 자동 저장이 안 돼요. 꼭 백업 파일을 받아 두세요.</span>'}</p>
+      <button class="btn wide" data-act="backup">백업 파일 내려받기</button>
+      <button class="btn wide ghost" data-act="restore">백업 파일 불러오기</button><input type="file" id="restoreFile" accept=".json,application/json" hidden>
+      <p class="mut" style="font-size:13px">다른 폰·PC에서 이어 쓰거나 예랑·예신이 같이 보려면 백업 파일을 보내서 불러오면 돼요. 불러오면 지금 기록은 백업 내용으로 바뀌어요.</p>
+      <h2 class="mt">엑셀로 내보내기</h2>
+      <div class="chips"><button data-act="csv" data-v="exp">지출 내역</button><button data-act="csv" data-v="budget">예산</button><button data-act="csv" data-v="guest">하객</button></div>
+      <h2 class="mt">처음부터 다시</h2>
+      <button class="btn wide ghost" data-act="wipe" style="color:var(--red)">모든 기록 지우기</button>
+      <p id="setMsg" class="hint"></p>
+    </div>
+  </div>${foot()}`;
+}
+function download(text,name,type){const b=new Blob([text],{type});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000)}
+function csv(kind){
+  const q=v=>{v=v==null?"":String(v);return /[",\r\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};
+  let rows;
+  if(kind==="exp")rows=[["날짜","대분류","중분류","항목","금액","결제 수단","상태","업체","메모","현금영수증"],...EXP.map(e=>{const c=cat(e.s)||{};return[e.d,c.big,c.mid,e.s,e.a,e.p,e.st==="완료"?"냈어요":"낼 예정",e.v,e.m,e.r?"O":""]})];
+  else if(kind==="budget")rows=[["대분류","중분류","항목","우리 예산","냈어요","낼 예정","남은 돈"],...CATS.map(c=>{const b=MY[c.small]||0,p=paid(c.small),pl=plan(c.small);return[c.big,c.mid,c.small,b,p,pl,b-p-pl]})];
+  else rows=[["이름","측","이전 경조사","청첩장 모임","친분","동행","참석 예상","당일 참석","축의금","방법","메모"],...GUESTS.map(g=>[g.name,g.side,g.prev?"O":"",g.inv?"O":"",g.close?"O":"",g.plus,exp(g),g.day||"",g.gift||"",g.how||"",g.memo])];
+  download("﻿"+rows.map(r=>r.map(q).join(",")).join("\r\n"),`ourwedding_${{exp:"지출",budget:"예산",guest:"하객"}[kind]}_${todayISO()}.csv`,"text/csv;charset=utf-8");
+}
+const setMsg=t=>{const m=document.getElementById("setMsg");if(m)m.innerHTML=t};
+
+/* ================= 화면: 예산 ================= */
+function vBudget(){
+  const bigs=["전체",...BIGS];
+  const cs=CATS.filter(c=>S.big==="전체"||c.big===S.big);
+  let rows="",mob="";
+  const groups=[];cs.forEach(c=>{const k=c.big+"|"+c.mid;let g=groups.find(x=>x.k===k);if(!g)groups.push(g={k,big:c.big,mid:c.mid,items:[]});g.items.push(c)});
+  let lastBig="";
+  groups.forEach(g=>{
+    const gb=sum(g.items,c=>MY[c.small]||0),gp=sum(g.items,c=>paid(c.small)),gq=sum(g.items,c=>plan(c.small));
+    if(g.big!==lastBig){lastBig=g.big;const all=CATS.filter(c=>c.big===g.big);rows+=`<tr class="big"><td>${g.big}</td><td class="num mut" style="font-size:13px;font-weight:600">${gavg("big",g.big)}</td><td class="num">${man(sum(all,c=>MY[c.small]||0))}</td><td class="num">${man(sum(all,c=>paid(c.small)))}</td><td class="num">${man(sum(all,c=>plan(c.small)))}</td><td colspan="3"></td></tr>`}
+    rows+=`<tr class="grp"><td>${g.mid}</td><td class="num mut" style="font-weight:600">${gavg("mid",g.mid)}</td><td class="num">${man(gb)}</td><td class="num">${man(gp)}</td><td class="num">${man(gq)}</td><td class="num ${gb-gp-gq<0?'red':''}">${gb?man(gb-gp-gq):""}</td><td colspan="2"></td></tr>`;
+    mob+=`<div class="mgh"><span>${S.big==="전체"?g.big+" · ":""}${g.mid}</span><span>${man(gp+gq)} / ${man(gb)}</span></div><div class="card" style="padding:4px 16px">`;
+    g.items.forEach(c=>{
+      const b=MY[c.small]||0,p=paid(c.small),q=plan(c.small),l=b-p-q,a=avgOf(c),pct=b?Math.round((p+q)/b*100):0;
+      const nm=c.custom?`<input class="nmin" data-ren="${c.id}" value="${esc(c.small)}">`:c.small;
+      const af=(!p&&!q&&AFF[c.small])?`<span class="aff">${AFF[c.small]}</span>`:"";
+      rows+=`<tr><td class="nm">${nm}</td><td class="num mut">${a!=null?man(a):'<span class="soon">–</span>'}</td>
+        <td class="num"><input class="ly" data-bud="${esc(c.small)}" data-fk="b-${c.id}" data-col="bud" value="${b?(b/10000).toLocaleString():""}" placeholder="0" inputmode="numeric"><span class="u">만</span></td>
+        <td class="num">${p?man(p):'<span class="mut">0</span>'}</td><td class="num">${q?man(q):'<span class="mut">0</span>'}</td>
+        <td class="num b ${l<0?'red':''}">${b?man(l):'<span class="mut">–</span>'}</td>
+        <td><div class="pb">${bar(b,p,q)}<span>${b?pct+"%":""}</span></div></td><td>${af}</td></tr>`;
+      mob+=`<div class="mrow"><div class="a"><span class="n">${nm}</span><span><input class="ly" data-bud="${esc(c.small)}" data-fk="b-${c.id}" data-col="bud" value="${b?(b/10000).toLocaleString():""}" placeholder="예산" inputmode="numeric"><span class="u">만</span></span></div>
+        <div class="s"><span>${a!=null?"평균 "+man(a)+" · ":""}냈어요 ${man(p)}${q?" · 예정 "+man(q):""}</span><span class="b ${l<0?'red':''}">${b?"남은 "+man(l):""}</span></div>
+        ${b||p||q?bar(b,p,q):""}${af?`<div style="margin-top:6px">${af}</div>`:""}</div>`;
+    });
+    rows+=`<tr><td colspan="8"><button class="addrow" data-act="addcat" data-big="${g.big}" data-mid="${g.mid}">+ ${g.mid}에 항목 추가</button></td></tr>`;
+    mob+=`<div class="mrow"><button class="addrow" data-act="addcat" data-big="${g.big}" data-mid="${g.mid}">+ 항목 추가</button></div></div>`;
+  });
+  const tb=sum(cs,c=>MY[c.small]||0),tp=sum(cs,c=>paid(c.small)),tq=sum(cs,c=>plan(c.small));
+  return `
+  <div class="ph"><h1>예산</h1><p><b>색칠된 칸</b>에 우리 예산만 적으세요. 냈어요·남은 돈은 지출 탭에서 자동으로 채워져요.</p></div>
+  <div class="pills">${bigs.map(b=>`<button class="${S.big===b?'on':''}" data-act="big" data-v="${b}">${b}<small>${man(sum(CATS.filter(c=>b==="전체"||c.big===b),c=>MY[c.small]||0))}</small></button>`).join("")}</div>
+  <div class="basis" data-act="basis">남들 평균 기준 <b>${reg().name}</b> ▾ <span style="font-size:12px;color:var(--muted)">소비자원 2026.8 · 듀오 2026</span></div>
+  <div class="grid g4" style="margin-bottom:14px">
+    <div class="card kpi"><div class="l">예산</div><div class="v">${man(tb)}</div></div>
+    <div class="card kpi"><div class="l">냈어요</div><div class="v">${man(tp)}</div></div>
+    <div class="card kpi"><div class="l">낼 예정</div><div class="v">${man(tq)}</div></div>
+    <div class="card kpi hl"><div class="l">남은 돈</div><div class="v">${man(tb-tp-tq)}</div></div>
+  </div>
+  ${S.mode==="pc"?`<div class="tw"><table><thead><tr><th>항목</th><th class="num">남들 평균</th><th class="num">우리 예산</th><th class="num">냈어요</th><th class="num">낼 예정</th><th class="num">남은 돈</th><th>진행</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`:mob}
+  ${S.mode==="mo"?fab():""}${foot()}`;
+}
+
+/* ================= 화면: 지출 ================= */
+function expForm(m){
+  const opt=PAY.map(p=>`<option ${p===S.pay?"selected":""}>${p}</option>`).join("");
+  if(m) return `<div class="mform">
+    <label>금액 (원)</label><input id="fA" inputmode="numeric" placeholder="예: 1500000">
+    <label>항목 <span class="mut" style="font-weight:400">글자 치면 찾아줘요</span></label><input id="fS" list="catlist" placeholder="예: 스냅">
+    <div class="hint" id="fH"></div>
+    <label>상태</label><div class="seg" id="fSt"><button class="${S.st==="완료"?"on":""}" data-act="st" data-v="완료">냈어요</button><button class="${S.st==="예정"?"on":""}" data-act="st" data-v="예정">낼 예정</button></div>
+    <label>결제 수단</label><div class="chips">${PAY.map(p=>`<button class="${p===S.pay?'on':''}" data-act="pay" data-v="${p}">${p}</button>`).join("")}</div>
+    <label>날짜</label><input id="fD" type="date" value="${todayISO()}">
+    <label>업체</label><input id="fV" placeholder="선택">
+    <label>메모</label><input id="fM" placeholder="계약금, 잔금 등">
+    <label class="chk" style="margin-top:12px"><input type="checkbox" id="fR" style="width:auto"> 현금영수증 받았어요</label>
+    <button class="btn wide" data-act="addexp" style="margin-top:6px">저장</button></div>`;
+  return `<div class="card" style="margin-bottom:14px"><div class="form">
+    <div><label>날짜</label><input id="fD" type="date" value="${todayISO()}"></div>
+    <div><label>항목 (글자 치면 검색)</label><input id="fS" list="catlist" placeholder="예: 스냅"></div>
+    <div><label>금액 (원)</label><input id="fA" inputmode="numeric" placeholder="1500000"></div>
+    <div><label>결제 수단</label><select id="fP">${opt}</select></div>
+    <div><label>상태</label><div class="seg" id="fSt"><button class="${S.st==="완료"?"on":""}" data-act="st" data-v="완료">냈어요</button><button class="${S.st==="예정"?"on":""}" data-act="st" data-v="예정">낼 예정</button></div></div>
+    <div><label>업체</label><input id="fV"></div>
+    <div><label>메모</label><input id="fM" placeholder="계약금·잔금"></div>
+    <div class="last"><label class="chk"><input type="checkbox" id="fR" style="width:auto">현금영수증</label><button class="btn" data-act="addexp">추가</button></div>
+  </div><div class="hint" id="fH">항목을 고르면 대분류·중분류와 이 항목 남은 예산이 바로 보여요.</div></div>`;
+}
+function vExp(){
+  const fl=EXP.map((e,i)=>({...e,i})).filter(e=>S.ef==="전체"||(S.ef==="냈어요"?e.st==="완료":e.st==="예정"));
+  const tp=sum(EXP.filter(e=>e.st==="완료"),e=>e.a),tq=sum(EXP.filter(e=>e.st==="예정"),e=>e.a);
+  const leftOf=s=>{const b=MY[s]||0;return b?b-paid(s)-plan(s):null};
+  let body;
+  if(S.mode==="pc"){
+    const opt=v=>PAY.map(p=>`<option ${p===v?"selected":""}>${p}</option>`).join("");
+    const stOpt=v=>`<option value="완료" ${v==="완료"?"selected":""}>냈어요</option><option value="예정" ${v==="예정"?"selected":""}>낼 예정</option>`;
+    const newRow=`<tr class="newrow"><td><input class="ce c-d" id="fD" type="date" value="${todayISO()}" data-fk="n-d"></td>
+      <td><input class="ce c-s" id="fS" list="catlist" placeholder="+ 새 지출 항목" data-fk="n-s"></td>
+      <td><input class="ce c-a num" id="fA" inputmode="numeric" placeholder="금액" data-fk="n-a"></td>
+      <td><select class="ce c-p" id="fP" data-fk="n-p">${opt(S.pay)}</select></td>
+      <td><select class="ce c-st" id="fStS" data-fk="n-st">${stOpt(S.st)}</select></td>
+      <td><input class="ce c-v" id="fV" placeholder="업체" data-fk="n-v"></td>
+      <td><input class="ce c-m" id="fM" placeholder="메모" data-fk="n-m"></td>
+      <td class="pad"><input type="checkbox" id="fR"></td>
+      <td class="pad" colspan="2"><button class="btn" data-act="addexp" style="padding:6px 14px">추가</button></td></tr>`;
+    const rows=fl.map(e=>{const c=cat(e.s),l=leftOf(e.s),i=e.i,k=f=>`data-xi="${i}" data-xf="${f}" data-fk="e-${i}-${f}" data-col="x${f}"`;
+      return `<tr class="${e.st==="예정"?"plan":""}"><td><input class="ce c-d" type="date" value="${e.d}" ${k("d")}></td>
+      <td><input class="ce c-s" list="catlist" value="${esc(e.s)}" ${k("s")}><small class="cat" style="padding-left:8px">${c?c.big+" · "+c.mid:""}</small></td>
+      <td><input class="ce c-a num" inputmode="numeric" value="${e.a.toLocaleString()}" ${k("a")}></td>
+      <td><select class="ce c-p" ${k("p")}>${opt(e.p)}</select></td>
+      <td><select class="ce c-st" ${k("st")}>${stOpt(e.st)}</select></td>
+      <td><input class="ce c-v" value="${esc(e.v)}" placeholder="–" ${k("v")}></td>
+      <td><input class="ce c-m" value="${esc(e.m)}" ${k("m")}></td>
+      <td class="pad"><input type="checkbox" ${e.r?"checked":""} ${k("r")}></td>
+      <td class="num pad ${l<0?'red b':''}">${l==null?'<span class="mut">예산 없음</span>':man(l)}</td>
+      <td><button class="x" data-act="delexp" data-i="${i}" title="이 줄 지우기">×</button></td></tr>`}).join("");
+    body=`<div class="hint" id="fH" style="margin:0 0 8px">칸을 눌러 바로 고치세요. <b>Enter</b>나 <b>↓</b>를 누르면 아래 줄로 내려가요. 맨 위 레몬 줄에 적고 Enter를 누르면 새 지출이 추가돼요.</div>
+    <div class="tw"><table class="xl"><thead><tr><th>날짜</th><th>항목</th><th class="num">금액 (원)</th><th>결제 수단</th><th>상태</th><th>업체</th><th>메모</th><th>현금영수증</th><th class="num">이 항목 남은 예산</th><th></th></tr></thead><tbody>${newRow}${rows}</tbody></table></div>`;
+  } else {
+    const byM={};[...fl].sort((a,b)=>a.d<b.d?1:-1).forEach(e=>{(byM[e.d.slice(0,7)]=byM[e.d.slice(0,7)]||[]).push(e)});
+    body='<p class="mut" style="font-size:13px;margin:0 0 4px">줄을 누르면 고칠 수 있어요.</p>'+Object.keys(byM).map(k=>`<div class="mgh"><span>${k.slice(0,4)}년 ${+k.slice(5)}월</span><span>${man(sum(byM[k],e=>e.a))}</span></div><div class="card" style="padding:4px 16px">${byM[k].map(e=>`<div class="mrow tap" data-act="editexp" data-i="${e.i}"><div class="a"><span class="n">${e.s}</span><b>${man(e.a)}</b></div><div class="s"><span>${+e.d.slice(8)}일 · ${e.v||"업체 미정"} · ${e.p}${e.m?" · "+e.m:""}</span>${e.st==="예정"?'<span class="tag y">낼 예정</span>':""}</div></div>`).join("")}</div>`).join("")+fab();
+  }
+  return `<div class="ph"><h1>지출</h1><p>돈 낼 때마다 <b>한 줄</b>. 계약금·잔금처럼 아직 안 낸 돈은 <b>낼 예정</b>으로 적어 두세요.</p></div>
+  <div class="grid g3" style="margin-bottom:14px">
+    <div class="card kpi"><div class="l">냈어요</div><div class="v">${man(tp)}</div></div>
+    <div class="card kpi"><div class="l">낼 예정</div><div class="v">${man(tq)}</div></div>
+    <div class="card kpi hl"><div class="l">전부 합치면</div><div class="v">${man(tp+tq)}</div></div>
+  </div>
+  <div class="pills">${["전체","냈어요","낼 예정"].map(x=>`<button class="${S.ef===x?'on':''}" data-act="ef" data-v="${x}">${x}</button>`).join("")}<button data-act="sortexp" style="margin-left:auto">날짜순으로 다시 정렬</button></div>
+  ${body}${foot()}`;
+}
+
+/* ================= 화면: 하객 ================= */
+function vGuest(){
+  const list=GUESTS.map((g,i)=>({g,i})).filter(x=>S.gside==="전체"||x.g.side===S.gside);
+  const side=s=>{const gs=GUESTS.filter(g=>g.side===s);return{e:sum(gs,exp),d:sum(gs,gDay),m:sum(gs,gGift),t:sum(gs.filter(g=>gHow(g)==="계좌이체"),gGift),c:sum(gs.filter(g=>gHow(g)==="현금"),gGift)}};
+  const tot=sum(GUESTS,exp);
+  const sh=list.slice(0,S.gshow);
+  const tg=(i,k,on)=>`<button class="tg ${on?'on':''}" data-act="gt" data-i="${i}" data-k="${k}">${on?"✔":""}</button>`;
+  let body;
+  if(S.mode==="pc"){
+    const gk=(i,f)=>`data-gi="${i}" data-gf="${f}" data-fk="g-${i}-${f}" data-col="g${f}"`;
+    body=`<div class="tw"><table class="xl"><thead><tr><th>이름</th><th>측</th><th>이전 경조사</th><th>청첩장 모임</th><th>친분</th><th>동행</th><th class="num">참석 예상</th><th>당일 참석</th><th>축의금 (원)</th><th>방법</th><th>답례 · 메모</th></tr></thead><tbody>
+    ${sh.map(({g,i})=>`<tr><td><input class="ce" style="width:92px;font-weight:600" value="${esc(g.name)}" ${gk(i,"name")}></td>
+      <td><select class="ce" style="width:104px" ${gk(i,"side")}>${SIDES.map(x=>`<option ${x===g.side?"selected":""}>${x}</option>`).join("")}</select></td>
+      <td class="pad">${tg(i,"prev",g.prev)}</td><td class="pad">${tg(i,"inv",g.inv)}</td><td class="pad">${tg(i,"close",g.close)}</td>
+      <td><input class="ce num" style="width:52px" value="${g.plus}" ${gk(i,"plus")}></td><td class="num b pad">${exp(g)||'<span class="mut">0</span>'}</td>
+      <td><input class="ce num" style="width:72px" value="${gDay(g)||""}" placeholder="예식 후" ${gk(i,"day")}></td>
+      <td><input class="ce num" style="width:104px" value="${gGift(g)?gGift(g).toLocaleString():""}" ${gk(i,"gift")}></td>
+      <td><select class="ce" style="width:96px" ${gk(i,"how")}><option></option><option ${gHow(g)==="계좌이체"?"selected":""}>계좌이체</option><option ${gHow(g)==="현금"?"selected":""}>현금</option></select></td>
+      <td><input class="ce" style="width:190px" value="${esc(g.memo)}" ${gk(i,"memo")}></td></tr>`).join("")}
+    </tbody></table></div>`;
+  } else {
+    body=`<div class="card" style="padding:4px 16px">${sh.map(({g,i})=>`<div class="mrow"><div class="a"><span class="n">${g.name} <span class="tag">${g.side}</span></span><span class="b">${exp(g)?exp(g)+"명":'<span class="mut">미정</span>'}</span></div>
+      <div class="mg">${[["prev","이전 경조사"],["inv","청첩장 모임"],["close","친분"]].map(([k,l])=>`<button class="tg ${g[k]?'on':''}" data-act="gt" data-i="${i}" data-k="${k}">${g[k]?"✔ ":""}${l}</button>`).join("")}<span class="mut" style="font-size:13px;align-self:center">동행 +${g.plus}</span></div>
+      ${gGift(g)?`<div class="s"><span>당일 ${gDay(g)}명 · ${gHow(g)}</span><b>${man(gGift(g))}</b></div>`:""}</div>`).join("")}</div>`;
+  }
+  return `<div class="ph"><h1>하객 · 보증 인원 · 축의금</h1><p>이름과 측만 적고, 이전 경조사·청첩장 모임·친분 중 <b>하나라도 ✔</b>하면 참석 예상으로 세요.</p></div>
+  <div class="grid g4">${SIDES.map(s=>{const x=side(s);return `<div class="card kpi"><div class="l">${s}</div><div class="v">${x.e}명</div><div class="s">${hasAfter()?`당일 ${x.d}명 · 축의금 ${man(x.m)}<br>계좌 ${man(x.t)} · 현금 ${man(x.c)}`:`명단 ${GUESTS.filter(g=>g.side===s).length}명`}</div></div>`}).join("")}</div>
+  <div class="card guide mt" style="display:block"><b>보증 인원 정하는 법</b><div style="font-size:14px;color:var(--sub);margin-top:4px">참석 예상 합계 <b style="color:var(--ink)">${tot}명</b> → 웨딩홀 최소 보증 인원은 <b style="color:var(--ink)">${Math.floor(tot*.9)}~${tot}명</b>으로 계약하고, 예식 2주 전에 최종 조정하세요.</div></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin:18px 0 10px;flex-wrap:wrap;gap:10px">
+    <div class="pills" style="margin:0">${["전체",...SIDES].map(s=>`<button class="${S.gside===s?'on':''}" data-act="gside" data-v="${s}">${s}<small>${s==="전체"?GUESTS.length:GUESTS.filter(g=>g.side===s).length}</small></button>`).join("")}</div>
+  </div>
+  <div class="card" style="margin-bottom:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:12px 14px"><input id="gN" class="md" placeholder="이름" style="flex:1;min-width:100px;padding:9px"><select id="gS" class="sm" style="padding:9px">${SIDES.map(s=>`<option>${s}</option>`).join("")}</select><button class="btn" data-act="addg">추가</button></div>
+  ${body}
+  ${list.length>S.gshow?`<div style="text-align:center;margin-top:12px"><button class="addrow" data-act="gmore">${list.length-S.gshow}명 더 보기</button></div>`:""}
+  ${foot()}`;
+}
+
+/* ================= 화면: 할일 ================= */
+// 엑셀에 연결 소분류가 없는 할 일도 돈을 볼 수 있게 이어 줌 (자동 완료에는 안 씀)
+const MONEY_LINK = {"여행사 투어":"여행사 패키지","호텔 예약":"숙소","환전하기":"경비","일정 짜기":"경비",
+ "TV":"가전 패키지","에어컨":"가전 패키지","냉장고":"가전 패키지","식기세척기":"가전 패키지","밥솥":"가전 패키지","정수기":"가전 패키지","세탁기":"가전 패키지","건조기":"가전 패키지","청소기":"가전 패키지","공기청정기":"가전 패키지",
+ "소파":"거실","거실장 or 소파테이블":"거실","식탁":"주방","매트리스":"침실","프레임":"침실","서랍":"침실","책상,의자":"서재",
+ "러그":"생활용품","옷걸이":"생활용품","쓰레기통":"생활용품","분리수거함":"생활용품","식기":"식기류","식기 건조대":"식기류","이불":"침구",
+ "도배":"벽지","타일":"타일","샤시":"샷시","스드메 계약":"패키지","플래너 알아보기":"패키지","드레스 투어":"드레스 추가금","촬영 가봉":"스튜디오 추가금","웨딩링 투어":"반지","웨딩홀 투어 예약":"대관료","홀 투어":"대관료","웨딩홀 뷔페 시식":"식대","신혼집 매물 검색":"보증금","부동산 연락":"부동산중개비","대출 알아보기":"보증금"};
+const moneyOf = t => t[3] || MONEY_LINK[t[2]] || "";
+function moneyCell(t, compact){
+  const s = moneyOf(t); if(!s || !cat(s)) return compact ? "" : `<div class="mcell"></div>`;
+  const b = MY[s]||0, p = paid(s), q = plan(s), l = b-p-q, shared = TODO.filter(x=>moneyOf(x)===s).length>1;
+  return `<div class="mcell">
+    <div class="mh"><span>${s}${shared?' <span class="mut">(같이 쓰는 항목)</span>':''}</span>${b?`<span class="${l<0?'red':''} b">${l<0?man(-l)+' 넘음':'남은 '+man(l)}</span>`:""}</div>
+    <div class="mr"><label>예산 <input class="ly" data-bud="${esc(s)}" data-fk="t-${esc(t[2])}" data-col="tb" value="${b?(b/10000).toLocaleString():""}" placeholder="0" inputmode="numeric"><span class="u">만</span></label>
+      <span>냈어요 <b>${man(p)}</b></span>${q?`<span>예정 <b>${man(q)}</b></span>`:""}
+      <button class="mini" data-act="texp" data-s="${esc(s)}">+ 지출</button></div>
+    ${b||p||q?bar(b,p,q):""}</div>`;
+}
+function vTodo(){
+  const now=stageNow(); const cur=S.stage||now;
+  const items=TODO.filter(t=>t[0]===cur);
+  const doneN=TODO.filter(isDone).length;
+  const uniq=[...new Set(items.map(moneyOf).filter(s=>s&&cat(s)))];
+  const sb=sum(uniq,s=>MY[s]||0), sp=sum(uniq,paid), sq=sum(uniq,plan);
+  const stageBtn=s=>{const it=TODO.filter(t=>t[0]===s),d=it.filter(isDone).length;const u=[...new Set(it.map(moneyOf).filter(x=>x&&cat(x)))];const mb=sum(u,x=>MY[x]||0),mu=sum(u,x=>paid(x)+plan(x));
+    return `<button class="${s===cur?'on':''}" data-act="stage" data-v="${s}"><div class="t"><span>${s} ${s===now?'<span class="tag y">지금</span>':""}</span><span class="mut" style="font-weight:400">${d}/${it.length}</span></div><div class="bar"><i class="p" style="width:${d/it.length*100}%"></i></div>${mb||mu?`<div class="mut" style="font-size:12px;margin-top:4px">${man(mu)} / 예산 ${man(mb)}</div>`:""}</button>`};
+  const sumCard=`<div class="grid g3 tsum" style="margin-bottom:12px">
+    <div class="card kpi"><div class="l">${cur} 단계 예산</div><div class="v">${man(sb)}</div><div class="s">연결된 항목 ${uniq.length}개</div></div>
+    <div class="card kpi"><div class="l">냈어요 · 낼 예정</div><div class="v">${man(sp)} <span style="font-size:15px;color:var(--muted);font-weight:600">+ ${man(sq)}</span></div><div class="s">${bar(sb,sp,sq)}</div></div>
+    <div class="card kpi ${sb-sp-sq<0?"warn":"hl"}" style="display:block"><div class="l">${sb-sp-sq<0?"예산 넘음":"남은 돈"}</div><div class="v ${sb-sp-sq<0?"red":""}">${man(Math.abs(sb-sp-sq))}</div><div class="s">이 단계 항목만</div></div></div>`;
+  const list=`<div class="card todo">${items.map(t=>{const a=isAuto(t),d=isDone(t);const af=TODO_AFF[t[2]];
+    return `<div class="it ${d?'done':''}"><button class="cb ${a?'auto':d?'on':''}" data-act="todo" data-t="${esc(t[2])}" ${a?"disabled":""}>${d?"✔":""}</button>
+      <div class="tx"><span>${t[2]}</span><small>${t[1]}${a?" · 냈어요 기록돼서 자동 완료":isPlanned(t)?" · 낼 예정 지출 있음":""}${af&&!d?` · <span class="aff">${af}</span>`:""}</small>${S.mode==="mo"?moneyCell(t,true):""}</div>
+      ${S.mode==="pc"?moneyCell(t,false):""}</div>`}).join("")}</div>`;
+  const head=`<div class="ph"><h1>할 일</h1><p>체크하면서 옆에서 <b>예산·쓴 돈</b>까지 같이 봐요. 예산 칸을 고치면 예산 탭에도 그대로 반영돼요. 전체 ${TODO.length}개 중 ${doneN}개 끝.</p></div>`;
+  if(S.mode==="pc") return head+`<div style="display:grid;grid-template-columns:240px minmax(0,1fr);gap:16px;align-items:start"><div class="stages">${STAGES.map(stageBtn).join("")}</div><div>${sumCard}${list}</div></div>${foot()}`;
+  return head+`<div class="pills">${STAGES.map(s=>{const it=TODO.filter(t=>t[0]===s),d=it.filter(isDone).length;return `<button class="${s===cur?'on':''}" data-act="stage" data-v="${s}">${s}<small>${d}/${it.length}</small></button>`}).join("")}</div>${sumCard}${list}${fab()}${foot()}`;
+}
+
+/* ================= 화면: 웨딩홀 ================= */
+function vHall(){
+  const tot=HALLS.map(h=>sum(h.sc,x=>+x));
+  const rank=tot.map(t=>1+tot.filter(x=>x>t).length);
+  const best=rank.indexOf(1);
+  const n=s=>parseFloat(String(s).replace(/[^0-9.]/g,""))||0;
+  const cost=HALLS.map(h=>n(h.v[4])+n(h.v[6])*n(h.v[8]));
+  let body="";let lastG="";
+  HALLROWS.forEach((r,ri)=>{
+    if(r[0]){lastG=r[0];body+=`<tr class="grp"><td class="st">${r[0]}</td><td></td>${HALLS.map(()=>`<td></td><td></td>`).join("")}</tr>`}
+    body+=`<tr><td class="st">${r[1]}</td><td class="best">${r[2]}</td>${HALLS.map((h,k)=>`<td class="v ${k===best?'top':''}"><span contenteditable data-hv="${k},${ri}">${esc(h.v[ri]||"")}</span></td><td class="${k===best?'top':''}"><select data-hs="${k},${ri}">${[1,2,3,4,5].map(x=>`<option ${h.sc[ri]==x?"selected":""}>${x}</option>`).join("")}</select></td>`).join("")}</tr>`;
+  });
+  body+=`<tr class="sum"><td class="st">점수 합계</td><td></td>${HALLS.map((h,k)=>`<td colspan="2" class="${k===best?'top':''}">${tot[k]}점</td>`).join("")}</tr>`;
+  body+=`<tr class="sum"><td class="st">순위</td><td></td>${HALLS.map((h,k)=>`<td colspan="2" class="${k===best?'top':''}">${rank[k]}위 ${k===best?'<span class="tag y">추천</span>':""}</td>`).join("")}</tr>`;
+  body+=`<tr class="sum"><td class="st">총 비용</td><td class="best" style="font-weight:400">대관료+식대×보증</td>${HALLS.map((h,k)=>`<td colspan="2" class="${k===best?'top':''}">${cost[k].toLocaleString()}만</td>`).join("")}</tr>`;
+  return `<div class="ph"><h1>웨딩홀 비교</h1><p>투어 전에 홀 이름을 적고, 다녀와서 <b>내용과 점수(1~5)</b>만 채우세요. 점수 합이 제일 높은 홀에 표시돼요.</p></div>
+  ${S.mode==="mo"?'<p class="mut" style="font-size:13px;margin:-8px 0 10px">표를 옆으로 밀면 다른 홀이 보여요 →</p>':""}
+  <div class="tw hall"><table><thead><tr><th class="st">항목</th><th>좋은 기준</th>${HALLS.map((h,k)=>`<th class="${k===best?'top':''}"><input data-hn="${k}" value="${esc(h.name)}"></th><th class="${k===best?'top':''}">점수</th>`).join("")}</tr></thead><tbody>${body}</tbody></table></div>
+  ${HALLS.length<5?`<div style="margin-top:12px"><button class="addrow" data-act="addhall">+ 홀 추가 (최대 5곳)</button></div>`:""}
+  ${foot()}`;
+}
+
+/* ================= 공통 ================= */
+const fab=()=>`<div class="fabw"><button class="fab" data-act="mexp"><i>+</i>지출 적기</button></div>`;
+const foot=()=>`<div class="foot">기록은 이 브라우저에만 저장돼요. <button class="linkb" data-go="set">설정·백업</button>에서 가끔 백업해 두세요. · 남들 평균 출처: 한국소비자원 참가격(2026년 8월), 듀오 2026 결혼비용 보고서 · <a href="./">남들은 얼마 쓸까</a></div>`;
+const NAV=[["home","홈"],["budget","예산"],["exp","지출"],["guest","하객"],["todo","할일"],["hall","웨딩홀"],["set","설정·백업"]];
+const VIEWS={home:vHome,budget:vBudget,exp:vExp,guest:vGuest,todo:vTodo,hall:vHall,set:vSet};
+
+let _rt;const later=()=>{clearTimeout(_rt);_rt=setTimeout(render,0)};
+function render(){
+  const ae=document.activeElement,fk=ae&&ae.dataset?ae.dataset.fk:null;
+  const app=document.getElementById("app");app.className=S.mode;
+  document.getElementById("side").innerHTML=`<a class="logo" href="./"><i></i>OUR WEDDING</a>
+    <div class="couple"><div class="n">${names()}</div><div class="d">${ddText()}</div><div class="s">${wedText()}</div></div>
+    <div class="nav">${NAV.map(([k,l],i)=>`${i===6?'<div class="sep"></div>':""}<button class="${S.view===k?'on':''}" data-go="${k}">${l}</button>`).join("")}
+      <a class="navlink" href="./">남들은 얼마 쓸까 ›</a></div>
+    <div class="side-foot">기록은 이 브라우저에만 저장돼요</div>`;
+  document.getElementById("mhead").innerHTML=`<div class="mtop"><a class="logo" href="./" style="padding:0;font-size:16px"><i></i>OUR WEDDING</a><div class="r">${names()}<br><b>${ddText()}</b></div></div>
+    <div class="mtabs">${NAV.map(([k,l])=>`<button class="${S.view===k?'on':''}" data-go="${k}">${l}</button>`).join("")}<a href="./">남들 평균</a></div>`;
+  document.getElementById("main").innerHTML=(P.demo?`<div class="demo"><span><b>예시 가계부</b>를 보고 있어요. 숫자는 모두 예시예요.</span><button class="btn" data-act="enddemo" style="padding:6px 12px">예시 지우고 내 가계부 시작</button></div>`:"")+VIEWS[S.view]();
+  document.getElementById("catlist").innerHTML=CATS.map(c=>`<option value="${esc(c.small)}">${c.big} · ${c.mid}</option>`).join("");
+  if(S.focusNew){S.focusNew=false;const f=document.getElementById("fS");if(f)f.focus();}
+  else if(fk){const el=document.querySelector(`[data-fk="${fk}"]`);if(el&&el!==document.activeElement){el.focus();try{el.select()}catch(e){}}}
+  save();
+}
+
+/* ================= 오버레이 ================= */
+function openDlg(html,sheet){document.getElementById("dlg").style.width="";const ov=document.getElementById("ov");ov.className="open"+(sheet||S.mode==="mo"?" sheet":"");document.getElementById("dlg").innerHTML=html}
+function closeDlg(){document.getElementById("ov").className=""}
+document.getElementById("ov").addEventListener("click",e=>{if(e.target.id==="ov")closeDlg()});
+function dlgBasis(){openDlg(`<h3>어느 지역 평균과 비교할까요?</h3><div class="opts">${R.regions.map(r=>`<button class="${r.id===P.region?'on':''}" data-act="setr" data-v="${r.id}">${r.name}</button>`).join("")}</div>
+  <p class="mut" style="font-size:13px;margin:12px 0 0">대관료·식대·스드메·꽃장식 등은 한국소비자원 2026년 8월 실제 계약 금액, 혼수·신혼여행·예물은 듀오 2026 전국 평균이에요. 통계가 없는 항목은 비워 둬요.</p>`)}
+
+/* ================= 이벤트 ================= */
+function toast(t){const h=document.querySelector("#dlg #fH")||document.getElementById("fH");if(h)h.innerHTML=t}
+function readExp(){
+  const g=id=>document.querySelector("#dlg #"+id)||document.getElementById(id);
+  const s=g("fS").value.trim(),am=parseInt((g("fA").value||"").replace(/[^0-9]/g,""));
+  if(!cat(s)){toast('<span class="red">항목을 목록에서 골라 주세요. 글자를 치면 찾아줘요.</span>');g("fS").focus();return null}
+  if(!am){toast('<span class="red">금액을 적어 주세요.</span>');g("fA").focus();return null}
+  const pSel=g("fP"),stSel=g("fStS");
+  return {d:g("fD").value||todayISO(),s,a:am,p:pSel?pSel.value:S.pay,st:stSel?stSel.value:S.st,v:g("fV").value,m:g("fM").value,r:g("fR").checked};
+}
+document.addEventListener("click",e=>{
+  const g=e.target.closest("[data-go]");
+  if(g){const v=g.dataset.go;S.view=v;S.stage=null;closeDlg();render();window.scrollTo(0,0);return}
+  const a=e.target.closest("[data-act]");if(!a)return;
+  const v=a.dataset.v;
+  switch(a.dataset.act){
+    case"big":S.big=v;render();break;
+    case"basis":dlgBasis();break;
+    case"setr":P.region=v;closeDlg();render();break;
+    case"close":closeDlg();break;
+    case"ef":S.ef=v;render();break;
+    case"st":S.st=v;document.querySelectorAll("#fSt button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));break;
+    case"pay":S.pay=v;a.parentNode.querySelectorAll("button").forEach(b=>b.classList.toggle("on",b===a));break;
+    case"mexp":openDlg(`<h3>지출 적기</h3>`+expForm(true),true);break;
+    case"texp":{openDlg(`<h3>지출 적기</h3>`+expForm(true),S.mode==="mo");const f=document.getElementById("fS");f.value=a.dataset.s;f.dispatchEvent(new Event("input",{bubbles:true}));document.getElementById("fA").focus();break;}
+    case"addexp":{const x=readExp();if(!x)return;S.pay=x.p;S.st=x.st;EXP.unshift(x);const inDlg=!!a.closest("#dlg");closeDlg();S.focusNew=!inDlg;render();toast(`<b>${x.s} ${man(x.a)}</b> 추가했어요. 홈·예산·할일에 바로 반영됐어요.`);break;}
+    case"saveexp":{const x=readExp();if(!x)return;Object.assign(EXP[+a.dataset.i],x);closeDlg();render();break;}
+    case"editexp":{const i=+a.dataset.i,e=EXP[i];S.st=e.st;S.pay=e.p;openDlg(`<h3>지출 고치기</h3>`+expForm(true),true);
+      const set=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v};set("fA",e.a.toLocaleString());set("fS",e.s);set("fD",e.d);set("fV",e.v);set("fM",e.m);document.getElementById("fR").checked=e.r;
+      const b=document.querySelector('#dlg [data-act="addexp"]');b.dataset.act="saveexp";b.dataset.i=i;b.textContent="고치기";
+      b.insertAdjacentHTML("afterend",`<button class="btn wide" data-act="delexp2" data-i="${i}" style="position:static;box-shadow:none;margin-top:8px;background:#fff;border:1px solid var(--line);color:var(--red)">이 지출 지우기</button>`);break;}
+    case"delexp":EXP.splice(+a.dataset.i,1);render();break;
+    case"delexp2":EXP.splice(+a.dataset.i,1);closeDlg();render();break;
+    case"sortexp":EXP.sort((x,y)=>x.d<y.d?1:-1);render();break;
+    case"addcat":{const id=CATS.length;const idx=CATS.map(c=>c.mid===a.dataset.mid&&c.big===a.dataset.big).lastIndexOf(true);CATS.splice(idx+1,0,{id:Date.now(),big:a.dataset.big,mid:a.dataset.mid,small:"새 항목 "+(CATS.filter(c=>c.custom).length+1),avg:null,custom:true});render();break;}
+    case"gt":{const g=GUESTS[+a.dataset.i];g[a.dataset.k]=!g[a.dataset.k];render();break;}
+    case"gside":S.gside=v;S.gshow=15;render();break;
+    case"gmore":S.gshow+=30;render();break;
+    case"addg":{const n=document.getElementById("gN").value.trim();if(!n)return;GUESTS.unshift({name:n,side:document.getElementById("gS").value,prev:false,inv:false,close:false,plus:0,memo:"",aDay:0,aGift:0,aHow:""});S.gside="전체";render();break;}
+    case"todo":{const t=a.dataset.t;DONE.has(t)?DONE.delete(t):DONE.add(t);render();break;}
+    case"stage":S.stage=v;render();break;
+    case"start":{P.wed=document.getElementById("stW").value;P.region=document.getElementById("stR").value;P.bride=document.getElementById("stB").value.trim();P.groom=document.getElementById("stG").value.trim();P.started=true;P.demo=false;render();window.scrollTo(0,0);break;}
+    case"demo":use(demoData());S.view="home";render();window.scrollTo(0,0);break;
+    case"enddemo":if(confirm("예시를 지우고 빈 가계부로 시작할까요?")){use(fresh());S.view="home";render();window.scrollTo(0,0)}break;
+    case"backup":download(JSON.stringify(snapshot()),`ourwedding_백업_${todayISO()}.json`,"application/json");setMsg("백업 파일을 내려받았어요. 카톡 나에게 보내기나 드라이브에 올려 두면 안전해요.");break;
+    case"restore":document.getElementById("restoreFile").click();break;
+    case"csv":csv(v);setMsg("엑셀에서 열 수 있는 파일(CSV)을 내려받았어요.");break;
+    case"wipe":if(confirm("정말 모든 기록을 지울까요? 되돌릴 수 없어요.")&&confirm("백업 파일이 없으면 복구할 수 없어요. 그래도 지울까요?")){try{localStorage.removeItem(KEY)}catch(e){}use(fresh());S.view="home";render();window.scrollTo(0,0)}break;
+    case"addhall":HALLS.push({name:"홀 "+(HALLS.length+1)+" 이름",v:HALLROWS.map(()=>""),sc:HALLROWS.map(()=>3)});render();break;
+  }
+});
+document.addEventListener("change",e=>{
+  const t=e.target;
+  if(t.dataset.bud!=null){const n=parseFloat(t.value.replace(/,/g,""));MY[t.dataset.bud]=isNaN(n)?0:Math.round(n*10000);later();}
+  else if(t.dataset.xf!=null){const e=EXP[+t.dataset.xi],f=t.dataset.xf;
+    if(f==="s"){const v=t.value.trim();if(!cat(v)){t.classList.add("bad");toast('<span class="red">목록에 있는 항목만 쓸 수 있어요. 글자를 치면 찾아줘요.</span>');t.value=e.s;setTimeout(()=>t.classList.remove("bad"),1500);return}e.s=v}
+    else if(f==="a"){const n=parseInt(t.value.replace(/[^0-9]/g,""));if(!n){t.value=e.a.toLocaleString();return}e.a=n}
+    else if(f==="r")e.r=t.checked; else e[f]=t.value;
+    later();}
+  else if(t.dataset.gf!=null){const g=GUESTS[+t.dataset.gi],f=t.dataset.gf;
+    if(f==="plus"||f==="day")g[f]=parseInt(t.value)||0; else if(f==="gift")g.gift=parseInt(t.value.replace(/[^0-9]/g,""))||0; else g[f]=t.value;
+    later();}
+  else if(t.dataset.ren!=null){const c=CATS.find(c=>c.id==t.dataset.ren);const old=c.small;c.small=t.value||old;if(MY[old]!=null){MY[c.small]=MY[old];if(c.small!==old)delete MY[old]}render();}
+  else if(t.dataset.hs!=null){const[k,r]=t.dataset.hs.split(",");HALLS[k].sc[r]=+t.value;render();}
+  else if(t.dataset.hn!=null){HALLS[+t.dataset.hn].name=t.value;save();}
+  else if(t.dataset.pf!=null){P[t.dataset.pf]=t.value;later();}
+  else if(t.id==="restoreFile"&&t.files[0]){const fr=new FileReader();fr.onload=()=>{try{const d=JSON.parse(fr.result);if(!d||d.v!==1||!Array.isArray(d.exp)||!Array.isArray(d.cats))throw 0;
+      if(!confirm("지금 기록을 이 백업 파일 내용으로 바꿀까요?"))return;use(d);P.started=true;P.demo=false;S.view="home";render();window.scrollTo(0,0);}catch(err){setMsg('<span class="red">OUR WEDDING 백업 파일이 아니에요.</span>')}};fr.readAsText(t.files[0]);t.value="";}
+});
+document.addEventListener("input",e=>{
+  const t=e.target;
+  if(t.id==="fS"){const c=cat(t.value.trim());if(c){const b=MY[c.small]||0,l=b-paid(c.small)-plan(c.small);toast(`<b>${c.big} · ${c.mid}</b> 항목이에요. ${b?`이 항목 남은 예산 <b class="${l<0?'red':''}">${man(l)}</b>`:"아직 예산을 안 적었어요"}${avgOf(c)!=null?` · 남들 평균 ${man(avgOf(c))}`:""}`)}}
+  if(t.dataset.hv!=null){}
+});
+document.addEventListener("focusout",e=>{const t=e.target;if(t.dataset&&t.dataset.hv!=null){const[k,r]=t.dataset.hv.split(",");HALLS[k].v[r]=t.textContent;render();}});
+addEventListener("keydown",e=>{
+  if(e.key==="Escape"){closeDlg();return}
+  const t=e.target;if(!t||!t.dataset)return;
+  if(e.key==="Enter"&&t.closest&&t.closest("tr.newrow")){e.preventDefault();document.querySelector('tr.newrow [data-act="addexp"]').click();return}
+  const col=t.dataset.col;if(!col){if(e.key==="Enter"&&t.classList.contains("ly"))t.blur();return}
+  let dir=0;if(e.key==="Enter")dir=e.shiftKey?-1:1;else if(e.key==="ArrowDown")dir=1;else if(e.key==="ArrowUp")dir=-1;else return;
+  if(e.key!=="Enter"&&(t.tagName==="SELECT"||t.type==="date"))return;
+  e.preventDefault();
+  const scope=t.closest("table")||document.getElementById("main");
+  const all=[...scope.querySelectorAll(`[data-col="${col}"]`)];const n=all[all.indexOf(t)+dir];
+  if(n){n.focus();try{n.select()}catch(e){}}else t.blur();
+});
+
+addEventListener("resize",()=>{const m=innerWidth<760?"mo":"pc";if(m!==S.mode){S.mode=m;render()}});
+addEventListener("storage",e=>{if(e.key===KEY&&e.newValue){try{use(JSON.parse(e.newValue));render()}catch(err){}}});
+render();
+</script>
+</body>
+</html>

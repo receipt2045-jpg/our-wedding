@@ -30,6 +30,7 @@ header .wrap{display:flex;justify-content:space-between;align-items:center;heigh
 .logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:16px;letter-spacing:.05em;text-decoration:none}
 .logo i{width:20px;height:20px;background:var(--acc);border:1px solid var(--accl);display:inline-block}
 .soon{font-size:13px;color:var(--sub);border:1px solid var(--line);padding:4px 10px;white-space:nowrap}
+.soon.go{background:var(--acc);border-color:var(--accl);color:var(--acct);font-weight:700;text-decoration:none;padding:7px 12px}
 @media (max-width:480px){.soon .lg{display:none}}
 
 main{padding:28px 0 20px}
@@ -103,6 +104,7 @@ td.hl{background:var(--accs);font-weight:700}
 .cta h2{font-size:21px}
 .cta ul{margin:10px 0 0;padding-left:18px;color:var(--sub)}
 .cta li{margin:4px 0}
+.gobtn{display:inline-block;margin-top:18px;background:var(--acc);border:1px solid var(--accd);color:var(--acct);font-weight:800;font-size:16px;padding:13px 22px;text-decoration:none}
 
 footer{border-top:1px solid var(--line);margin-top:48px;padding:22px 0 40px;font-size:13px;color:var(--muted);line-height:1.8}
 footer a{color:var(--sub)}
@@ -122,7 +124,7 @@ footer a{color:var(--sub)}
 <body>
 <header><div class="wrap">
   <a class="logo" href="./"><i></i>OUR WEDDING</a>
-  <span class="soon"><span class="lg">둘이 쓰는 </span>결혼 가계부 준비 중</span>
+  <a class="soon go" href="app.html"><span class="lg">우리 </span>결혼 가계부 쓰기 ›</a>
 </div></header>
 
 <main class="wrap">
@@ -181,12 +183,14 @@ footer a{color:var(--sub)}
 
   <section>
     <div class="cta">
-      <h2>둘이 같이 쓰는 결혼 가계부, 곧 열려요</h2>
+      <h2>우리 결혼 가계부, 지금 바로 써 보세요</h2>
       <ul>
-        <li>항목마다 우리 예산을 적고, 돈 낼 때마다 한 줄씩 적으면 남은 돈이 바로 계산돼요.</li>
-        <li>예랑·예신이 한 가계부를 같이 써요. 계약금·잔금도 따로 챙겨줘요.</li>
-        <li>하객 명단·보증 인원·축의금, 시기별 할 일, 웨딩홀 비교표까지 한곳에서 관리해요.</li>
+        <li>회원가입 없이 바로 시작해요. 항목마다 예산을 적고 돈 낼 때마다 한 줄씩 적으면 남은 돈이 바로 계산돼요.</li>
+        <li>계약금·잔금은 "낼 예정"으로 적어 두면 언제 얼마 나가는지 챙겨줘요.</li>
+        <li>하객 명단·보증 인원·축의금, 시기별 할 일 120개, 웨딩홀 비교표까지 한곳에서 관리해요.</li>
       </ul>
+      <a class="gobtn" href="app.html">가계부 쓰러 가기</a>
+      <p style="font-size:13px;color:var(--muted);margin:12px 0 0">지금은 적은 내용이 쓰는 기기의 브라우저에만 저장돼요. 백업 파일로 다른 기기에 옮길 수 있어요.</p>
     </div>
   </section>
 </main>
