@@ -346,6 +346,15 @@ tr.newrow .pickbtn{background:#fff}
 .pkopen{display:none}
 .pk.inline .pkadd:not(.open) input,.pk.inline .pkadd:not(.open) [data-act^="pkadd"],#ov.sheet .pkadd:not(.open) input,#ov.sheet .pkadd:not(.open) [data-act^="pkadd"]{display:none}
 .pk.inline .pkadd:not(.open) .pkopen,#ov.sheet .pkadd:not(.open) .pkopen{display:inline-block;border:1px dashed var(--accl);background:#fff;color:var(--sub);padding:7px 12px;font-size:13px;cursor:pointer}
+/* ---------- 계정 ---------- */
+.acct{font-size:12px;color:var(--sub);margin-bottom:10px;line-height:1.5}
+.acct b{color:var(--ink)}
+.acct .dot{display:inline-block;width:7px;height:7px;background:var(--green);margin-right:5px;vertical-align:1px}
+.acct .dot.wait{background:var(--accd)} .acct .dot.bad{background:var(--red)}
+.loginbtn{width:100%;border:1px solid var(--accd);background:var(--acc);padding:10px;font-weight:800;font-size:14px;cursor:pointer;margin-bottom:10px}
+.mtabs .mlogin{flex:0 0 auto;border:1px solid var(--accd);background:var(--acc);padding:7px 14px;font-size:15px;font-weight:800}
+.invite{display:flex;gap:6px;margin:6px 0}
+.invite input{flex:1;min-width:0}
 /* 웨딩홀 */
 .hall td,.hall th{white-space:nowrap}
 .hall td.st,.hall th.st{position:sticky;left:0;background:#fff;z-index:1;border-right:1px solid var(--line)}
@@ -404,6 +413,8 @@ tr.newrow .pickbtn{background:#fff}
 <div id="ov"><div id="dlg"></div></div>
 <datalist id="catlist"></datalist>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
 <script src="data.js"></script>
 <script>
 /* ================= 데이터 ================= */
@@ -448,7 +459,7 @@ function load() {
   try { const t = localStorage.getItem(KEY); if (t) { use(JSON.parse(t)); return; } } catch (e) { storeOK = false; }
   use(fresh());
 }
-function save() { clearTimeout(_st); _st = setTimeout(() => { try { localStorage.setItem(KEY, JSON.stringify(snapshot())); storeOK = true; } catch (e) { storeOK = false; } }, 200); }
+function save() { clearTimeout(_st); _st = setTimeout(() => { try { localStorage.setItem(KEY, JSON.stringify(snapshot())); storeOK = true; } catch (e) { storeOK = false; } }, 200); if (typeof cloudSave === "function") cloudSave(); }
 
 // 예시 가계부 (처음 온 사람이 둘러보는 용도)
 function demoData() {
@@ -619,7 +630,7 @@ function vStart(){
 /* ================= 화면: 설정·백업 ================= */
 function vSet(){
   let last=null;try{const d=JSON.parse(localStorage.getItem(KEY)||"null");if(d&&d.saved)last=new Date(d.saved)}catch(e){}
-  return `<div class="ph"><h1>설정 · 백업</h1><p>로그인 없이 쓰는 동안 기록은 <b>이 브라우저에만</b> 저장돼요. 브라우저 기록을 지우면 함께 지워지니 가끔 백업 파일을 받아 두세요.</p></div>
+  return `<div class="ph"><h1>설정 · 백업</h1><p>${CL.id?"로그인되어 있어서 기록은 <b>계정에</b> 저장돼요. 백업 파일도 가끔 받아 두면 더 안전해요.":"로그인 없이 쓰는 동안 기록은 <b>이 브라우저에만</b> 저장돼요. 브라우저 기록을 지우면 함께 지워지니 가끔 백업 파일을 받아 두세요."}</p></div>
   <div class="grid g2" style="align-items:start">
     <div class="card set"><h2>결혼 정보</h2>
       <label>예식일</label><input type="date" data-pf="wed" value="${P.wed}">
@@ -627,6 +638,7 @@ function vSet(){
       <label>예신 호칭</label><input data-pf="bride" value="${esc(P.bride)}" placeholder="예신">
       <label>예랑 호칭</label><input data-pf="groom" value="${esc(P.groom)}" placeholder="예랑">
     </div>
+    ${acctCard()}
     <div class="card set"><h2>백업 · 옮기기</h2>
       <p class="mut" style="font-size:14px;margin:0 0 6px">${storeOK?`자동 저장 중이에요.${last?` 마지막 저장 ${last.toLocaleString("ko-KR")}`:""}`:'<span class="red">이 브라우저에서는 자동 저장이 안 돼요. 꼭 백업 파일을 받아 두세요.</span>'}</p>
       <button class="btn wide" data-act="backup">백업 파일 내려받기</button>
@@ -914,7 +926,7 @@ function vHall(){
 
 /* ================= 공통 ================= */
 const fab=()=>`<div class="fabw"><button class="fab" data-act="mexp"><i>+</i>지출 적기</button></div>`;
-const foot=()=>`<div class="foot">기록은 이 브라우저에만 저장돼요. <button class="linkb" data-go="set">설정·백업</button>에서 가끔 백업해 두세요. · 남들 평균 출처: 한국소비자원 참가격(2026년 8월), 듀오 2026 결혼비용 보고서 · <a href="./">남들은 얼마 쓸까</a></div>`;
+const foot=()=>`<div class="foot">${CL.id?"기록은 계정에 저장돼요. 로그인하면 폰·PC 어디서든 이어서 써요.":`기록은 이 브라우저에만 저장돼요. <button class="linkb" data-go="set">설정·백업</button>에서 가끔 백업해 두세요.`} · 남들 평균 출처: 한국소비자원 참가격(2026년 8월), 듀오 2026 결혼비용 보고서 · <a href="./">남들은 얼마 쓸까</a> · <a href="privacy.html">개인정보처리방침</a></div>`;
 const NAV=[["home","홈"],["budget","예산"],["exp","지출"],["guest","하객"],["todo","할일"],["hall","웨딩홀"],["set","설정·백업"]];
 const VIEWS={home:vHome,budget:vBudget,exp:vExp,guest:vGuest,todo:vTodo,hall:vHall,set:vSet};
 
@@ -926,9 +938,9 @@ function render(){
     <div class="couple"><div class="n">${names()}</div><div class="d">${ddText()}</div><div class="s">${wedText()}</div></div>
     <div class="nav">${NAV.map(([k,l],i)=>`${i===6?'<div class="sep"></div>':""}<button class="${S.view===k?'on':''}" data-go="${k}">${l}</button>`).join("")}
       <a class="navlink" href="./">남들은 얼마 쓸까 ›</a></div>
-    <div class="side-foot">기록은 이 브라우저에만 저장돼요</div>`;
+    <div class="side-foot">${acctBox()}</div>`;
   document.getElementById("mhead").innerHTML=`<div class="mtop"><a class="logo" href="./" style="padding:0;font-size:16px"><i></i>OUR WEDDING</a><div class="r">${names()}<br><b>${ddText()}</b></div></div>
-    <div class="mtabs">${NAV.map(([k,l])=>`<button class="${S.view===k?'on':''}" data-go="${k}">${l}</button>`).join("")}<a href="./">남들 평균</a></div>`;
+    <div class="mtabs">${!CL.id&&SB?'<button class="mlogin" data-act="login">로그인</button>':""}${NAV.map(([k,l])=>`<button class="${S.view===k?'on':''}" data-go="${k}">${l}</button>`).join("")}<a href="./">남들 평균</a></div>`;
   document.getElementById("main").innerHTML=(P.demo?`<div class="demo"><span><b>예시 가계부</b>를 보고 있어요. 숫자는 모두 예시예요.</span><button class="btn" data-act="enddemo" style="padding:6px 12px">예시 지우고 내 가계부 시작</button></div>`:"")+VIEWS[S.view]();
   document.getElementById("catlist").innerHTML=CATS.map(c=>`<option value="${esc(c.small)}">${c.big} · ${c.mid}</option>`).join("");
   if(S.focusNew){S.focusNew=false;const f=document.getElementById("fSbtn")||document.getElementById("fS");if(f)f.focus();}
@@ -942,6 +954,112 @@ function closeDlg(){document.getElementById("ov").className=""}
 document.getElementById("ov").addEventListener("click",e=>{if(e.target.id==="ov")closeDlg()});
 function dlgBasis(){openDlg(`<h3>어느 지역 평균과 비교할까요?</h3><div class="opts">${R.regions.map(r=>`<button class="${r.id===P.region?'on':''}" data-act="setr" data-v="${r.id}">${r.name}</button>`).join("")}</div>
   <p class="mut" style="font-size:13px;margin:12px 0 0">대관료·식대·스드메·꽃장식 등은 한국소비자원 2026년 8월 실제 계약 금액, 혼수·신혼여행·예물은 듀오 2026 전국 평균이에요. 통계가 없는 항목은 비워 둬요.</p>`)}
+
+
+/* ================= 계정: 로그인하면 둘이 같이 · 어느 기기에서든 ================= */
+const CONF=window.OW_CONF||{};
+let SB=null;try{if(window.supabase&&CONF.supabaseUrl)SB=window.supabase.createClient(CONF.supabaseUrl,CONF.supabaseKey,{auth:{flowType:"pkce",persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}})}catch(e){SB=null}
+const CL={providers:[],user:null,id:null,invite:"",members:0,state:"",last:"",ch:null,t:null};
+const PNAME={kakao:"카카오",naver:"네이버",google:"구글"};
+const coreOf=d=>{const c=Object.assign({},d);delete c.saved;return JSON.stringify(c)};
+const getJoin=()=>{try{return sessionStorage.getItem("ow-join")}catch(e){return null}};
+const userName=()=>{const u=CL.user;if(!u)return"";const m=u.user_metadata||{};return m.full_name||m.name||m.nickname||m.user_name||u.email||"내 계정"};
+const inviteLink=()=>location.origin+location.pathname+"?join="+CL.invite;
+function acctBox(){
+  if(CL.id)return `<div class="acct"><span class="dot ${/실패/.test(CL.state)?"bad":/중/.test(CL.state)?"wait":""}"></span><b>${esc(userName())}</b><br><span id="cloudState">${esc(CL.state||"저장됨")}</span> · <button class="linkb" data-go="set">계정</button></div>`;
+  if(SB)return `<button class="loginbtn" data-act="login">로그인하고 둘이 같이 쓰기</button><div class="acct">지금은 이 브라우저에만 저장돼요</div>`;
+  return "기록은 이 브라우저에만 저장돼요";
+}
+function acctCard(){
+  if(!SB)return "";
+  if(!CL.id)return `<div class="card set"><h2>계정 · 둘이 같이 쓰기</h2>
+    <p class="mut" style="font-size:14px">로그인하면 예랑·예신이 한 가계부를 같이 쓰고, 폰·PC 어디서든 이어서 적어요. 지금 이 브라우저에 적은 기록은 계정으로 옮겨져요.</p>
+    <button class="btn wide" data-act="login">로그인하기</button></div>`;
+  const two=CL.members>=2;
+  return `<div class="card set"><h2>계정 · 둘이 같이 쓰기</h2>
+    <p class="mut" style="font-size:14px;margin:0 0 6px"><b style="color:var(--ink)">${esc(userName())}</b> 계정으로 로그인했어요 · <span id="cloudState2">${esc(CL.state||"저장됨")}</span></p>
+    ${two?'<p style="font-size:15px;margin:10px 0">두 사람이 이 가계부를 같이 쓰고 있어요. 한 사람이 적으면 상대 화면에도 바로 반영돼요.</p>'
+      :`<label>상대방 초대 링크 <span class="mut">카톡으로 보내면 같은 가계부로 들어와요</span></label>
+      <div class="invite"><input readonly value="${esc(inviteLink())}" id="invLink"><button class="btn" data-act="copyinv" style="padding:0 14px">복사</button></div>
+      <button class="linkb" data-act="newinv">링크 새로 만들기</button> <span class="mut" style="font-size:12px">(예전 링크는 못 쓰게 돼요)</span>`}
+    <button class="btn wide ghost" data-act="logout" style="margin-top:14px">로그아웃</button>
+    <button class="btn wide ghost" data-act="delme" style="color:var(--red)">탈퇴하기</button>
+    <p class="mut" style="font-size:12px">로그아웃하면 이 기기에서는 기록이 지워지고, 다시 로그인하면 불러와요. 탈퇴하면 계정과 기록이 바로 지워져요(같이 쓰던 상대의 가계부는 남아요).</p></div>`;
+}
+function setState(t){CL.state=t;["cloudState","cloudState2"].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=t})}
+function dlgLogin(fromInvite){
+  if(!CL.providers.length){openDlg(`<h3>로그인 준비 중이에요</h3><p class="mut">곧 카카오·네이버·구글로 로그인할 수 있어요. 그 전까지는 설정·백업 탭의 백업 파일로 기기를 옮기거나 상대와 나눠 주세요.</p><button class="btn wide" data-act="close">알겠어요</button>`);return}
+  openDlg(`<div style="text-align:center"><div class="mk"></div><h3 style="font-size:21px;margin:6px 0 8px">${fromInvite?"초대받은 가계부에 들어가려면<br>로그인해 주세요":"로그인하고 둘이 같이 쓰기"}</h3>
+    <p class="mut" style="margin:0 0 18px;font-size:14px">예랑·예신이 한 가계부를 같이 쓰고, 폰·PC 어디서든 이어서 적어요.<br>지금 이 브라우저에 적은 기록은 계정으로 옮겨져요.</p></div>
+    ${CL.providers.map(k=>`<button class="sns ${k==="kakao"?"k":k==="naver"?"n":""}" data-act="oauth" data-v="${k}">${PNAME[k]}로 시작하기</button>`).join("")}
+    <p class="mut" style="font-size:12px;text-align:center;margin:12px 0 0">로그인하면 <a href="privacy.html" target="_blank">개인정보처리방침</a>에 동의하게 돼요.</p>`);
+}
+async function cloudInit(){
+  if(!SB)return;
+  try{const r=await fetch(CONF.supabaseUrl+"/auth/v1/settings",{headers:{apikey:CONF.supabaseKey}});const j=await r.json();CL.providers=["kakao","google"].filter(k=>j.external&&j.external[k])}catch(e){}
+  if(CONF.naver)CL.providers.splice(CL.providers.indexOf("kakao")+1,0,"naver");
+  const q=new URLSearchParams(location.search);const jc=q.get("join");
+  if(jc){try{sessionStorage.setItem("ow-join",jc)}catch(e){}}
+  const nv=q.get("nv");
+  if(jc||nv||q.get("code")||q.get("error"))history.replaceState(null,"",location.pathname);
+  if(nv){const {error}=await SB.auth.verifyOtp({token_hash:nv,type:"magiclink"});if(error)setTimeout(()=>alert("네이버 로그인을 마치지 못했어요. 다시 시도해 주세요."),300)}
+  if(q.get("error"))setTimeout(()=>alert("로그인하지 못했어요. 다시 시도해 주세요.\n("+(q.get("error_description")||q.get("error"))+")"),300);
+  SB.auth.onAuthStateChange((ev,ses)=>{
+    if(ses&&ses.user&&(!CL.user||CL.user.id!==ses.user.id)){CL.user=ses.user;setTimeout(cloudStart,0)}
+    if(ev==="SIGNED_OUT"&&CL.id){CL.user=null;CL.id=null;render()}
+  });
+  const {data}=await SB.auth.getSession();
+  if(data&&data.session){if(!CL.user){CL.user=data.session.user;await cloudStart()}}
+  else{render();if(getJoin())dlgLogin(true)}
+}
+let _starting=false;
+async function cloudStart(){
+  if(_starting||!SB)return;_starting=true;
+  try{
+    setState("불러오는 중");
+    const code=getJoin();
+    if(code){try{sessionStorage.removeItem("ow-join")}catch(e){}
+      if(confirm("초대받은 가계부에 들어갈까요?\n들어가면 둘이 같은 가계부를 함께 써요.\n(이 계정에 따로 적던 가계부가 있었다면 초대받은 가계부로 바뀌어요.)")){
+        const {error}=await SB.rpc("join_ledger",{p_code:code});
+        if(error)alert(/full/.test(error.message)?"이 가계부에는 이미 두 사람이 들어가 있어요.":/invalid/.test(error.message)?"초대 링크가 바뀌었거나 잘못됐어요. 새 링크를 받아 주세요.":"합류하지 못했어요. 다시 시도해 주세요.");
+      }}
+    let r=await SB.rpc("my_ledger");if(r.error)throw r.error;
+    let row=(r.data||[])[0];
+    const local=(P.started&&!P.demo)?snapshot():null;
+    if(!row){
+      const c=await SB.rpc("create_ledger",{p_data:local||fresh()});if(c.error)throw c.error;
+      row=((await SB.rpc("my_ledger")).data||[])[0];
+    }else if(local&&row.data&&row.data.profile&&row.data.profile.started&&coreOf(local)!==coreOf(row.data)){
+      if(confirm("이 계정에 저장된 가계부가 있어요.\n\n[확인] 계정 가계부 불러오기 (이 브라우저 기록은 백업 파일로 내려받아 둘게요)\n[취소] 이 브라우저 기록으로 계정 가계부 덮어쓰기")){
+        download(JSON.stringify(local),`ourwedding_이브라우저기록_${todayISO()}.json`,"application/json");
+      }else{const w=await SB.rpc("save_ledger",{p_id:row.id,p_data:local});if(!w.error)row.data=local}
+    }
+    CL.id=row.id;CL.invite=row.invite_code;CL.members=row.members;
+    if(row.data&&row.data.v)use(row.data);
+    P.demo=false;CL.last=coreOf(snapshot());CL.state="저장됨";
+    subscribe();render();
+  }catch(e){CL.state="연결 실패 · 이 브라우저에 저장 중";render()}
+  finally{_starting=false}
+}
+function subscribe(){
+  if(CL.ch)SB.removeChannel(CL.ch);
+  CL.ch=SB.channel("ledger-"+CL.id).on("postgres_changes",{event:"UPDATE",schema:"public",table:"ledgers",filter:"id=eq."+CL.id},pl=>{
+    const n=pl.new;if(!n||!n.data||!n.data.v)return;const c=coreOf(n.data);if(c===CL.last)return;
+    CL.last=c;use(n.data);P.demo=false;CL.state=(CL.user&&n.updated_by&&n.updated_by!==CL.user.id)?"상대가 방금 고쳤어요":"저장됨";render();
+  }).subscribe();
+}
+function cloudSave(){
+  if(!SB||!CL.id)return;
+  clearTimeout(CL.t);
+  CL.t=setTimeout(async()=>{
+    const d=snapshot(),c=coreOf(d);if(c===CL.last)return;
+    setState("저장 중");
+    const {error}=await SB.rpc("save_ledger",{p_id:CL.id,p_data:d});
+    if(error){setState("저장 실패 · 다시 시도 중");setTimeout(cloudSave,5000);return}
+    CL.last=c;setState("저장됨");
+  },800);
+}
+async function signOutAll(){try{if(CL.ch)SB.removeChannel(CL.ch);await SB.auth.signOut()}catch(e){}CL.user=null;CL.id=null;CL.ch=null;try{localStorage.removeItem(KEY)}catch(e){}use(fresh());S.view="home";render();window.scrollTo(0,0)}
 
 /* ================= 이벤트 ================= */
 function toast(t){const h=document.querySelector("#dlg #fH")||document.getElementById("fH");if(h)h.innerHTML=t}
@@ -996,6 +1114,13 @@ document.addEventListener("click",e=>{
     case"start":{P.wed=document.getElementById("stW").value;P.region=document.getElementById("stR").value;P.bride=document.getElementById("stB").value.trim();P.groom=document.getElementById("stG").value.trim();P.started=true;P.demo=false;render();window.scrollTo(0,0);break;}
     case"demo":use(demoData());S.view="home";render();window.scrollTo(0,0);break;
     case"enddemo":if(confirm("예시를 지우고 빈 가계부로 시작할까요?")){use(fresh());S.view="home";render();window.scrollTo(0,0)}break;
+    case"login":dlgLogin(false);break;
+    case"oauth":if(v==="naver"){location.href=CONF.supabaseUrl+"/functions/v1/naver-login?redirect="+encodeURIComponent(location.origin+location.pathname);break}
+      SB.auth.signInWithOAuth({provider:v,options:{redirectTo:location.origin+location.pathname}});break;
+    case"copyinv":{const l=inviteLink();(navigator.clipboard?navigator.clipboard.writeText(l):Promise.reject()).then(()=>setMsg("초대 링크를 복사했어요. 카톡으로 보내 주세요."),()=>{const i=document.getElementById("invLink");i.select();document.execCommand("copy");setMsg("초대 링크를 복사했어요.")});break;}
+    case"newinv":(async()=>{const {data,error}=await SB.rpc("new_invite_code",{p_id:CL.id});if(!error){CL.invite=data;render();setMsg("새 링크를 만들었어요. 예전 링크는 이제 못 써요.")}})();break;
+    case"logout":if(confirm("로그아웃할까요? 이 기기에서는 기록이 지워지고, 다시 로그인하면 불러와요."))signOutAll();break;
+    case"delme":if(confirm("탈퇴하면 계정과 가계부 기록이 바로 지워져요. 같이 쓰던 상대의 가계부는 남아요.\n탈퇴할까요?")&&confirm("되돌릴 수 없어요. 정말 탈퇴할까요?")){(async()=>{const {error}=await SB.rpc("delete_me");if(error){alert("탈퇴하지 못했어요. 다시 시도해 주세요.");return}await signOutAll();alert("탈퇴했어요. 그동안 써 주셔서 고마워요.")})()}break;
     case"backup":download(JSON.stringify(snapshot()),`ourwedding_백업_${todayISO()}.json`,"application/json");setMsg("백업 파일을 내려받았어요. 카톡 나에게 보내기나 드라이브에 올려 두면 안전해요.");break;
     case"restore":document.getElementById("restoreFile").click();break;
     case"csv":csv(v);setMsg("엑셀에서 열 수 있는 파일(CSV)을 내려받았어요.");break;
@@ -1050,6 +1175,7 @@ addEventListener("keydown",e=>{
 addEventListener("resize",()=>{const m=innerWidth<760?"mo":"pc";if(m!==S.mode){S.mode=m;render()}});
 addEventListener("storage",e=>{if(e.key===KEY&&e.newValue){try{use(JSON.parse(e.newValue));render()}catch(err){}}});
 render();
+cloudInit();
 </script>
 </body>
 </html>
