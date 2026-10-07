@@ -402,6 +402,44 @@ tr.newrow .pickbtn{background:#fff}
 .vlist .pp{display:inline-block;border:1px solid var(--line);padding:2px 7px;margin:4px 4px 0 0;font-size:13px;cursor:pointer;background:#fff}
 .vlist .pp:hover{background:var(--acc);border-color:var(--accd)}
 /* 웨딩홀 */
+.hxw{margin-bottom:14px}
+.hxtabs{display:flex;border-bottom:1px solid var(--line);margin:-4px 0 12px;overflow-x:auto;scrollbar-width:none}
+.hxtabs::-webkit-scrollbar{display:none}
+.hxtabs button{border:0;border-bottom:3px solid transparent;background:none;padding:9px 12px;font-size:14px;color:var(--sub);cursor:pointer;white-space:nowrap}
+.hxtabs button.on{border-bottom-color:var(--accd);color:var(--ink);font-weight:800}
+.hxpr{display:flex;gap:6px;flex-wrap:wrap;align-items:center;background:#FAFAF7;padding:9px 12px;margin-bottom:12px;font-size:13px}
+.hxpr button{border:1px solid var(--line);background:#fff;padding:5px 10px;font-size:13px;cursor:pointer}
+.hxpr button.on{background:var(--acc);border-color:var(--accd);font-weight:700}
+.hxg{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:22px;align-items:start}
+#app.mo .hxg{grid-template-columns:1fr}
+.hxg svg{width:100%;height:auto;display:block;overflow:visible;max-width:460px;margin:0 auto}
+.hxchips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.hxchips button{display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:#fff;padding:5px 9px;font-size:13px;cursor:pointer;color:var(--sub)}
+.hxchips button i{width:10px;height:10px;display:inline-block}
+.hxchips button.on{border-color:var(--ink);color:var(--ink);font-weight:700}
+.hxchips button:not(.on) i{opacity:.25}
+.hxt{width:100%;border-collapse:collapse;font-size:14px}
+.hxt th,.hxt td{padding:7px 6px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+.hxt th:first-child,.hxt td:first-child{text-align:left}
+.hxt th{font-size:12px;color:var(--muted);font-weight:600}
+.hxt th i{width:8px;height:8px;display:inline-block;margin-right:4px}
+.hxt td.best{background:var(--accs);font-weight:800}
+.hxt tr.tot td{font-weight:800;border-top:2px solid var(--ink)}
+.hxt tr.wt td{font-weight:800;background:var(--acc)}
+.hxsay{margin-top:10px;font-size:14px;background:#FAFAF7;padding:10px 12px;border-left:3px solid var(--accd)}
+.hxbars div{display:grid;grid-template-columns:78px 1fr 34px;gap:8px;align-items:center;font-size:14px;margin:7px 0}
+.hxbars .tr{height:10px;background:var(--track);position:relative}
+.hxbars .tr i{position:absolute;left:0;top:0;bottom:0}
+.hxbars .tr u{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink)}
+.hxbars b{text-align:right}
+.hxlg{font-size:12px;color:var(--sub);display:flex;gap:14px;margin-top:4px;justify-content:center}
+.hxlg span{display:flex;align-items:center;gap:5px}
+.hxmini{display:grid;grid-template-columns:96px 1fr;gap:10px;align-items:center;border:1px solid var(--line);padding:8px 10px;margin-bottom:8px;cursor:pointer;background:#fff;width:100%;text-align:left}
+.hxmini.top{border:2px solid var(--accd)}
+.hxmini svg{width:96px;height:88px}
+.hxmini .sc{font-size:20px;font-weight:800}
+.hxmini .sm{font-size:12px;color:var(--sub);line-height:1.5}
+.star{color:var(--accd)}
 .cstart{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;margin:0 0 14px}
 .cstart button{display:flex;justify-content:space-between;align-items:center;gap:8px;border:1px solid var(--accl);background:var(--accs);padding:12px 14px;font-size:15px;font-weight:700;cursor:pointer;text-align:left}
 .cstart button:hover{background:var(--acc)}
@@ -503,6 +541,7 @@ tr.newrow .pickbtn{background:#fff}
 <script src="data.js"></script>
 <script src="sdm.js"></script>
 <script src="vendors.js"></script>
+<script src="hex.js"></script>
 <script>
 /* ================= 데이터 ================= */
 const RAW = [["결혼식", "인사", "첫인사 식사"], ["결혼식", "인사", "첫인사 선물"], ["결혼식", "인사", "상견례 식사"], ["결혼식", "인사", "상견례 선물"], ["결혼식", "인사", "청첩장"], ["결혼식", "인사", "청첩장 모임"], ["결혼식", "인사", "주선자"], ["결혼식", "웨딩홀", "대관료"], ["결혼식", "웨딩홀", "식대"], ["결혼식", "웨딩홀", "와인"], ["결혼식", "웨딩홀", "꽃장식"], ["결혼식", "스드메", "패키지"], ["결혼식", "스드메", "스튜디오 추가금"], ["결혼식", "스드메", "드레스 추가금"], ["결혼식", "스드메", "메이크업 추가금"], ["결혼식", "스드메", "예복"], ["결혼식", "스드메", "구두"], ["결혼식", "스드메", "부케"], ["결혼식", "본식진행", "헬퍼비"], ["결혼식", "본식진행", "사회자"], ["결혼식", "본식진행", "축하 무대"], ["결혼식", "본식진행", "스냅"], ["결혼식", "본식진행", "영상"], ["결혼식", "혼주", "한복"], ["결혼식", "혼주", "양복"], ["결혼식", "혼주", "메이크업"], ["결혼식", "예물", "반지"], ["결혼식", "예물", "가방"], ["결혼식", "예물", "시계"], ["결혼식", "관리", "마사지"], ["결혼식", "관리", "시술"], ["결혼식", "관리", "네일"], ["결혼식", "관리", "머리"], ["결혼식", "하객", "교통비"], ["결혼식", "하객", "답례품"], ["신혼여행", "신혼여행", "여행사 패키지"], ["신혼여행", "신혼여행", "항공권"], ["신혼여행", "신혼여행", "숙소"], ["신혼여행", "신혼여행", "경비"], ["신혼여행", "신혼여행", "선물"], ["혼수", "가전", "가전 패키지"], ["혼수", "가구", "침실"], ["혼수", "가구", "거실"], ["혼수", "가구", "서재"], ["혼수", "가구", "주방"], ["혼수", "가구", "생활용품"], ["혼수", "가구", "침구"], ["혼수", "가구", "식기류"], ["신혼집", "인테리어", "벽지"], ["신혼집", "인테리어", "타일"], ["신혼집", "인테리어", "샷시"], ["신혼집", "집", "계약금"], ["신혼집", "집", "중도금"], ["신혼집", "집", "잔금"], ["신혼집", "집", "보증금"], ["신혼집", "집", "세금"], ["신혼집", "집", "법무사비"], ["신혼집", "집", "부동산중개비"]];  // [대분류, 중분류, 소분류]
@@ -1190,7 +1229,7 @@ function vConsult(){
     return `<div class="ci ${val.trim()?"ok":""}"><div class="cl"><div><b>${esc(r[1])}</b>${r[2]?`<small>좋은 기준 ${esc(r[2])}</small>`:""}</div>
       <div class="csc" title="점수">${[1,2,3,4,5].map(x=>`<button class="${+h.sc[ri]===x?"on":""}" data-act="cscore" data-v="${k}|${ri}|${x}">${x}</button>`).join("")}</div></div>${chips}${inp}</div>`};
   const last=gi===HGROUPS.length-1;
-  return `<div class="chead"><div class="row"><button class="btn ghost" data-act="csexit" style="padding:7px 10px">← 비교표</button><input data-hn="${k}" value="${esc(h.name)}" aria-label="홀 이름"><span class="pg">${hFilled(h)}/${HALLROWS.length}</span><label class="pbtn" for="cphoto" style="padding:7px 10px">사진</label></div>
+  return `<div class="chead"><div class="row"><button class="btn ghost" data-act="csexit" style="padding:7px 10px">← 비교표</button><input data-hn="${k}" value="${esc(h.name)}" aria-label="홀 이름">${window.HEX?`<svg viewBox="0 0 440 400" width="44" height="40" style="flex:none" aria-label="육각형"><title>지금까지 적은 내용으로 그린 육각형</title>${HEX.svg([{name:h.name,vals:HEX.score(h,HALLROWS.map(r=>r[1])),color:HEX.COL[k%5],fill:.3}],{labels:false,dots:false,sw:10})}</svg>`:""}<span class="pg">${hFilled(h)}/${HALLROWS.length}</span><label class="pbtn" for="cphoto" style="padding:7px 10px">사진</label></div>
   <div class="cgrp">${HGROUPS.map((x,i)=>{const f=x.rows.filter(ri=>String(h.v[ri]||"").trim()).length;return `<button class="${i===gi?"on":""}" data-act="cgrp" data-v="${i}">${x.n}<small>${f}/${x.rows.length}</small></button>`}).join("")}</div></div>
   <p class="mut" style="font-size:13px;margin:2px 0 4px">상담에서 지금 나오는 이야기의 묶음을 위에서 누르세요. 오른쪽 1~5는 점수예요. 버튼을 누르면 점수도 같이 매겨지고, 나중에 바꿀 수 있어요.</p>
   ${g.rows.map(item).join("")}
@@ -1212,6 +1251,50 @@ function dlgConsultDone(k){
     <button class="btn wide" data-act="csfinish" style="margin-top:8px">비교표로 돌아가기</button>`);
 }
 
+
+/* ================= 웨딩홀 육각형 ================= */
+S.hx=S.hx??"cmp";S.hxOff=S.hxOff||new Set();
+const HXL=()=>HALLROWS.map(r=>r[1]);
+// 받침 따라 조사 고르기: jo("주차","을","를") → "주차를"
+const jo=(w,a,b)=>{const t=String(w).replace(/[^가-힣A-Za-z0-9]+$/,""),c=t.charCodeAt(t.length-1);return w+(c>=0xAC00&&c<=0xD7A3?((c-0xAC00)%28?a:b):/[136780lmnr]$/i.test(t)?a:b)};
+function vHex(){
+  const H=window.HEX;if(!H||!HALLS.length)return"";
+  const prio=P.prio||[],vals=HALLS.map(h=>H.score(h,HXL())),has=vals.map(v=>H.filledCount(v)>0);
+  const ws=vals.map(v=>H.weighted(v,prio)),pl=vals.map(v=>H.plain(v));
+  if(S.hx!=="cmp"&&!HALLS[S.hx])S.hx="cmp";
+  const f1=x=>x==null?"–":x.toFixed(1);
+  const tabs=`<div class="hxtabs"><button class="${S.hx==="cmp"?"on":""}" data-act="hxv" data-v="cmp">겹쳐 보기</button>${HALLS.map((h,k)=>`<button class="${S.hx===k?"on":""}" data-act="hxv" data-v="${k}">${esc(h.name)}</button>`).join("")}</div>`;
+  const pr=`<div class="hxpr"><b style="margin-right:4px">우리가 중요하게 보는 칸</b>${H.AX.map(a=>`<button class="${prio.includes(a)?"on":""}" data-act="hxpr" data-v="${a}">${prio.includes(a)?"★ ":""}${a}</button>`).join("")}<span class="mut">· 최대 3개, 고른 칸은 2배로 쳐요</span></div>`;
+  const head=`<div class="card hxw"><div class="mgh" style="margin:0 0 8px;flex-wrap:wrap;gap:2px 10px"><b style="font-size:16px;white-space:nowrap;color:var(--ink)">웨딩홀 육각형</b><span class="mut" style="font-size:12px;font-weight:400">가격·홀·음식·주차·교통·하객 편의 · 아래 표 점수(1~5)로 그려요</span></div>${tabs}`;
+  if(!has.some(Boolean))return head+`<p class="mut" style="margin:6px 0 2px">아직 그릴 점수가 없어요. 상담 모드에서 버튼을 누르거나 아래 표에 내용·점수를 넣으면 육각형이 그려져요.</p></div>`;
+  if(S.hx==="cmp"){
+    const show=HALLS.map((h,k)=>k).filter(k=>has[k]&&!S.hxOff.has(k));
+    const list=show.map(k=>({name:HALLS[k].name,vals:vals[k],color:H.COL[k%5]}));
+    const best=i=>Math.max(...show.map(k=>vals[k][i]??-1));
+    const rankBy=prio.length?ws:pl,top=show.length?show.reduce((b,k)=>(rankBy[k]??-1)>(rankBy[b]??-1)?k:b,show[0]):-1;
+    const plTop=show.length?show.reduce((b,k)=>(pl[k]??-1)>(pl[b]??-1)?k:b,show[0]):-1;
+    const chips=`<div class="hxchips">${HALLS.map((h,k)=>has[k]?`<button class="${S.hxOff.has(k)?"":"on"}" data-act="hxoff" data-v="${k}"><i style="background:${H.COL[k%5]}"></i>${esc(h.name)}</button>`:"").join("")}</div>`;
+    const tbl=`<table class="hxt"><tr><th>칸</th>${show.map(k=>`<th><i style="background:${H.COL[k%5]}"></i>${esc(HALLS[k].name)}</th>`).join("")}</tr>
+      ${H.AX.map((a,i)=>`<tr><td>${prio.includes(a)?'<span class="star">★</span> ':""}${a}${prio.includes(a)?' <span class="mut" style="font-size:11px">×2</span>':""}</td>${show.map(k=>`<td class="${show.length>1&&vals[k][i]!=null&&vals[k][i]===best(i)?"best":""}">${f1(vals[k][i])}</td>`).join("")}</tr>`).join("")}
+      <tr class="tot"><td>그냥 평균</td>${show.map(k=>`<td>${f1(pl[k])}</td>`).join("")}</tr>
+      ${prio.length?`<tr class="wt"><td>우리 기준 점수</td>${show.map(k=>`<td>${ws[k]==null?"–":ws[k].toFixed(2)}${k===top&&show.length>1?" · 1위":""}</td>`).join("")}</tr>`:""}</table>`;
+    const say=show.length<2?"홀을 2곳 이상 적으면 어디가 어떻게 다른지 비교해 줘요.":prio.length?`${prio.slice(0,-1).map(x=>`<b>${x}</b>·`).join("")}<b>${jo(prio[prio.length-1],"을","를")}</b> 중요하게 보면 <b>${jo(esc(HALLS[top].name),"이","가")}</b> 1위예요.${plTop!==top?` 그냥 평균으로는 ${jo(esc(HALLS[plTop].name),"이","가")} 1위라, 우선순위에 따라 결과가 바뀌어요.`:""}`:`그냥 평균으로는 <b>${jo(esc(HALLS[plTop].name),"이","가")}</b> 1위예요. 위에서 중요하게 보는 칸을 고르면 우리 기준 순위가 나와요.`;
+    const minis=S.mode==="mo"?show.slice().sort((a,b)=>(rankBy[b]??-1)-(rankBy[a]??-1)).map((k,j)=>{const hi=vals[k].map((v,i)=>[v,H.AX[i]]).filter(x=>x[0]!=null).sort((a,b)=>b[0]-a[0]);
+      return `<button class="hxmini ${j===0&&show.length>1?"top":""}" data-act="hxv" data-v="${k}"><svg viewBox="0 0 440 400">${H.svg([{name:HALLS[k].name,vals:vals[k],color:H.COL[k%5],fill:.3}],{labels:false,dots:false,sw:7})}</svg><span><b>${esc(HALLS[k].name)}</b>${j===0&&show.length>1?' <span class="tag y">1위</span>':""}<span class="sc" style="display:block">${f1(rankBy[k])}<span class="mut" style="font-size:12px;font-weight:400"> / 5</span></span><span class="sm">강점 ${hi.slice(0,2).map(x=>x[1]).join("·")}${hi.length>2?`<br>약점 ${hi[hi.length-1][1]}`:""}</span></span></button>`}).join(""):"";
+    return head+pr+minis+`<div class="hxg"><div>${chips}<svg viewBox="0 0 440 400" role="img" aria-label="웨딩홀 육각형 비교">${H.svg(list,{prio})}</svg></div><div>${tbl}<div class="hxsay">${say}</div></div></div></div>`;
+  }
+  const k=S.hx,v=vals[k],oth=HALLS.map((_,j)=>j).filter(j=>j!==k&&has[j]);
+  const av=H.AX.map((_,i)=>{const xs=oth.map(j=>vals[j][i]).filter(x=>x!=null);return xs.length?xs.reduce((a,b)=>a+b,0)/xs.length:null});
+  if(!has[k])return head+pr+`<p class="mut">'${esc(HALLS[k].name)}'에는 아직 적은 내용이 없어요.</p><button class="btn" data-act="csopen" data-v="${k}">상담 모드로 적기</button></div>`;
+  const d=H.AX.map((a,i)=>[v[i]!=null&&av[i]!=null?v[i]-av[i]:null,a]).filter(x=>x[0]!=null).sort((x,y)=>y[0]-x[0]);
+  const say=d.length?`다른 홀보다 <b>${d[1]&&d[1][0]>0.2?d[0][1]+"·"+jo(d[1][1],"이","가"):jo(d[0][1],"이","가")}</b> 좋고, <b>${jo(d[d.length-1][1],"은","는")}</b> 아쉬워요.`:"다른 홀도 적으면 어디가 더 좋은지 비교해 줘요.";
+  return head+pr+`<div class="hxg"><div><svg viewBox="0 0 440 400" role="img" aria-label="${esc(HALLS[k].name)} 육각형">${H.svg([{name:HALLS[k].name,vals:v,color:H.COL[k%5]}],{prio,under:oth.length?H.avgPoly(av.map(x=>x||0)):""})}</svg>
+    <div class="hxlg"><span><i style="width:14px;height:3px;background:${H.COL[k%5]};display:inline-block"></i>${esc(HALLS[k].name)}</span>${oth.length?'<span><i style="width:14px;border-top:2px dashed #9AA0A8;display:inline-block"></i>다른 홀 평균</span>':""}</div></div>
+    <div><div class="mut" style="font-size:12px">막대 = 이 홀 점수${oth.length?" · 검은 세로선 = 다른 홀 평균":""}</div><div class="hxbars">${H.AX.map((a,i)=>`<div><span>${prio.includes(a)?'<span class="star">★</span>':""}${a}</span><span class="tr">${v[i]!=null?`<i style="width:${v[i]/5*100}%;background:${H.COL[k%5]}"></i>`:""}${av[i]!=null?`<u style="left:${av[i]/5*100}%"></u>`:""}</span><b>${f1(v[i])}</b></div>`).join("")}</div>
+      <div class="hxsay">${say} 그냥 평균 <b>${f1(pl[k])}</b>${prio.length?` · 우리 기준 <b>${ws[k]==null?"–":ws[k].toFixed(2)}</b>`:""}</div>
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><button class="btn" data-act="csopen" data-v="${k}">상담 기록 이어서 적기</button><button class="btn ghost" data-act="hxv" data-v="cmp">다른 홀과 겹쳐 보기</button></div></div></div></div>`;
+}
+
 function vHall(){
   if(S.cs)return vConsult();
   const tot=HALLS.map(h=>sum(h.sc,x=>+x));
@@ -1229,8 +1312,10 @@ function vHall(){
   if(HALLS.some(h=>h.memo))body+=`<tr><td class="st">혜택·조건 메모</td><td></td>${HALLS.map((h,k)=>`<td colspan="2" class="${k===best?'top':''}" style="white-space:pre-wrap;font-size:13px;max-width:220px">${esc(h.memo||"")}</td>`).join("")}</tr>`;
   body+=`<tr class="sum"><td class="st">총 비용</td><td class="best" style="font-weight:400">대관료+식대×보증</td>${HALLS.map((h,k)=>`<td colspan="2" class="${k===best?'top':''}">${cost[k].toLocaleString()}만</td>`).join("")}</tr>`;
   return `<div class="ph"><h1>웨딩홀 비교</h1><p>투어 전에 홀 이름을 적고, 다녀와서 <b>내용과 점수(1~5)</b>만 채우세요. 점수 합이 제일 높은 홀에 표시돼요.</p></div>
-  <div class="card" style="margin-bottom:14px;padding:14px 16px"><div style="float:right"><a class="linkb" href="halls.html">웨딩홀 리스트·후기 보기 ›</a></div><b style="font-size:16px">상담 가서 바로 적기</b> <span class="mut" style="font-size:13px">· 정신없는 상담 중에도 폰으로 버튼·숫자만 누르면 아래 표가 채워져요. 견적서 사진도 같이 남겨요.</span>
-    <div class="cstart" style="margin:10px 0 0">${HALLS.map((h,k)=>`<button data-act="csopen" data-v="${k}"><span>${esc(h.name)}</span><small>${hFilled(h)?`${hFilled(h)}/${HALLROWS.length} 적음`:"상담 모드 열기"} ›</small></button>`).join("")}</div></div>
+  <div class="card" style="margin-bottom:14px;padding:14px 16px"><b style="font-size:16px">상담 가서 바로 적기</b> <span class="mut" style="font-size:13px">· 정신없는 상담 중에도 폰으로 버튼·숫자만 누르면 아래 표가 채워져요. 견적서 사진도 같이 남겨요.</span>
+    <div class="cstart" style="margin:10px 0 0">${HALLS.map((h,k)=>`<button data-act="csopen" data-v="${k}"><span>${esc(h.name)}</span><small>${hFilled(h)?`${hFilled(h)}/${HALLROWS.length} 적음`:"상담 모드 열기"} ›</small></button>`).join("")}</div>
+    <div style="margin-top:10px;font-size:13px"><a class="linkb" href="halls.html">웨딩홀 리스트·후기 보기 ›</a> <span class="mut">· 리스트에서 '가계부 비교표에 넣기'를 누르면 여기로 들어와요</span></div></div>
+  ${vHex()}
   ${S.mode==="mo"?'<p class="mut" style="font-size:13px;margin:-8px 0 10px">표를 옆으로 밀면 다른 홀이 보여요 →</p>':""}
   <div class="tw hall"><table><thead><tr><th class="st">항목</th><th>좋은 기준</th>${HALLS.map((h,k)=>`<th class="${k===best?'top':''}"><input data-hn="${k}" value="${esc(h.name)}">${HALLS.length>1?`<button class="x" data-act="delhall" data-v="${k}" title="이 홀 지우기">×</button>`:""}</th><th class="${k===best?'top':''}">점수</th>`).join("")}</tr></thead><tbody>${body}</tbody></table></div>
   ${HALLS.length<5?`<div style="margin-top:12px"><button class="addrow" data-act="addhall">+ 홀 추가 (최대 5곳)</button></div>`:""}
@@ -1452,6 +1537,9 @@ document.addEventListener("click",e=>{
     case"restore":document.getElementById("restoreFile").click();break;
     case"csv":csv(v);setMsg("엑셀에서 열 수 있는 파일(CSV)을 내려받았어요.");break;
     case"wipe":if(confirm("정말 모든 기록을 지울까요? 되돌릴 수 없어요.")&&confirm("백업 파일이 없으면 복구할 수 없어요. 그래도 지울까요?")){try{localStorage.removeItem(KEY)}catch(e){}use(fresh());S.view="home";render();window.scrollTo(0,0)}break;
+    case"hxv":S.hx=v==="cmp"?"cmp":+v;render();break;
+    case"hxpr":{const pr=P.prio=P.prio||[];const i=pr.indexOf(v);if(i>=0)pr.splice(i,1);else if(pr.length<3)pr.push(v);else{alert("중요한 칸은 3개까지 고를 수 있어요.");break}render();break;}
+    case"hxoff":{const k=+v;if(S.hxOff.has(k))S.hxOff.delete(k);else S.hxOff.add(k);render();break;}
     case"csopen":S.cs={k:+v,g:0};render();window.scrollTo(0,0);break;
     case"csexit":case"csfinish":S.cs=null;closeDlg();render();window.scrollTo(0,0);break;
     case"cgrp":S.cs.g=+v;render();window.scrollTo(0,0);break;
@@ -1462,7 +1550,7 @@ document.addEventListener("click",e=>{
     case"cscopy":try{navigator.clipboard.writeText(S.missTxt);a.textContent="복사했어요 · 카톡이나 메모에 붙여넣으세요"}catch(e){prompt("아래 글을 복사하세요",S.missTxt)}break;
     case"cpview":{const h=HALLS[S.cs.k],p=(S.pcache[hid(h)]||[]).find(x=>x.id===v);if(p)openDlg(`<img src="${p.url}" alt="사진" style="width:100%;display:block"><button class="btn wide ghost" data-act="close" style="margin-top:10px">닫기</button>`);break;}
     case"cpdel":if(confirm("이 사진을 지울까요?")){const H=hid(HALLS[S.cs.k]);PDB.del(v).then(()=>loadPhotos(H,true))}break;
-    case"delhall":if(confirm(`'${HALLS[+v].name}'을 비교표에서 지울까요?`)){HALLS.splice(+v,1);render()}break;
+    case"delhall":if(confirm(`'${HALLS[+v].name}'을 비교표에서 지울까요?`)){HALLS.splice(+v,1);S.hx="cmp";S.hxOff=new Set();render()}break;
     case"addhall":HALLS.push({name:"홀 "+(HALLS.length+1)+" 이름",v:HALLROWS.map(()=>""),sc:HALLROWS.map(()=>3)});render();break;
   }
 });

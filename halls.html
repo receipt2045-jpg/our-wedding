@@ -99,6 +99,21 @@ select,#q{border:1px solid var(--line);padding:8px 10px;font-size:14px;backgroun
 .pin{width:14px;height:14px;background:var(--accd);border:2px solid #fff;box-shadow:0 0 0 1px var(--ink)}
 .pin.on{background:var(--red);width:18px;height:18px}
 .h.flash{outline:3px solid var(--accd)}
+/* 후기 육각형 */
+.rvx{border-top:1px solid var(--line);margin-top:12px;padding-top:10px}
+.rvx .hd{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:13px}
+.rvx .hd b{font-size:13px}
+.rvx .hd span{font-size:11px;color:var(--muted)}
+.rvx .bd{display:grid;grid-template-columns:150px 1fr;gap:10px;align-items:center;margin-top:4px}
+.rvx svg{width:150px;height:auto;display:block;overflow:visible}
+.lvl{display:grid;gap:1px;font-size:12px}
+.lvl button{display:flex;justify-content:space-between;gap:6px;border:0;background:none;padding:2px 4px;text-align:left;color:var(--ink);font-size:12px}
+.lvl button:hover,.lvl button.on{background:var(--accs)}
+.lvl .g{color:var(--green);font-weight:700}.lvl .m{color:var(--sub)}.lvl .b{color:var(--red);font-weight:700}.lvl .n{color:var(--muted)}
+.why{font-size:12px;background:#FAFAF7;padding:7px 9px;margin-top:6px;line-height:1.6}
+.why .pl{color:var(--green)}.why .mi{color:var(--red)}
+.mine{font-size:11px;color:var(--sub);display:flex;gap:10px;margin-top:2px}
+.mine span{display:flex;align-items:center;gap:4px}
 footer{border-top:1px solid var(--line);margin-top:40px;padding:20px 0 40px;font-size:13px;color:var(--muted);line-height:1.7}
 </style>
 </head>
@@ -117,6 +132,7 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:20px 0 40px;font
     <div class="row">
       <select id="area" aria-label="구·시"></select>
       <select id="type" aria-label="홀 종류"></select>
+      <select id="good" aria-label="후기로 거르기"></select>
       <input id="q" type="search" placeholder="홀 이름·역 이름 찾기" autocomplete="off">
       <div class="view" id="view"><button data-view="list" class="on">목록</button><button data-view="map">지도</button></div>
     </div>
@@ -129,11 +145,13 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:20px 0 40px;font
 <footer><div class="wrap">
   <div>정보는 웨딩홀 공식 안내와 블로그·웨딩 플랫폼의 공개 후기를 읽고 정리했어요(<span id="chk"></span> 확인). 식대·보증인원은 날짜·시간·계약 시점에 따라 달라지니 상담에서 꼭 다시 확인하세요.</div>
   <div>사진은 각 웨딩홀 공식 홈페이지의 대표 이미지예요. 사진을 누르면 공식 홈페이지로 가요. 지도는 OpenStreetMap이고, 위치는 주소로 찾은 거라 조금 어긋날 수 있어요.</div>
+  <div>후기 육각형은 후기 요약의 좋은 점·아쉬운 점을 6칸(가격·홀·음식·주차·교통·하객 편의)으로 나눠, 칸마다 좋다는 말만 있으면 '좋다는 말 많음', 아쉬운 말만 있으면 '아쉽다는 말 많음', 둘 다 있으면 '엇갈림', 없으면 '자료 부족'으로 보여줘요. 점수가 아니라 참고용이에요.</div>
   <div>좋은 점·아쉬운 점은 여러 후기에서 겹쳐 나온 내용을 우리 말로 줄인 거예요. 잘못된 정보가 있으면 알려 주세요.</div>
   <div style="margin-top:8px">© OUR WEDDING · <a href="privacy.html">개인정보처리방침</a></div>
 </div></footer>
 
 <script src="halls.js"></script>
+<script src="hex.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 const D=window.OW_HALLS||{items:[]},ALL=D.items;
@@ -141,7 +159,12 @@ const RG=[["all","전체"],["seoul","서울"],["gg","경기"],["ic","인천"]];
 // 공식 홈페이지 원본 사진이 수십 MB인 곳이 있어 이미지 축소 중계(weserv)로 작게 받아 옴
 const IMG=u=>"https://images.weserv.nl/?url="+encodeURIComponent(u)+"&w=640&h=360&fit=cover&output=jpg&q=75";
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const st={rg:"all",area:"",type:"",q:"",view:"list"};
+const st={rg:"all",area:"",type:"",q:"",view:"list",good:""};
+// 내 가계부(같은 사이트)에 점수를 매긴 홀이 있으면 '내 평가'로 겹쳐 그림 — 이 기기에서만
+const MINE={};
+try{const L=JSON.parse(localStorage.getItem("ourwedding-ledger-v1")||"null");((L&&L.halls)||[]).forEach(h=>{if(window.HEX){const v=HEX.score(h);if(HEX.filledCount(v))MINE[h.name.replace(/\s/g,"")]=v}})}catch(e){}
+const mineOf=h=>MINE[h.name.replace(/\s/g,"")]||null;
+const openWhy={};
 try{const u=new URLSearchParams(location.search);if(u.get("r")&&RG.some(x=>x[0]===u.get("r")))st.rg=u.get("r")}catch(e){}
 document.getElementById("chk").textContent=D.checked||"";
 function opts(){
@@ -151,7 +174,20 @@ function opts(){
   document.getElementById("area").innerHTML=`<option value="">구·시 전체</option>`+areas.map(a=>`<option ${a===st.area?"selected":""}>${esc(a)}</option>`).join("");
   const types=[...new Set(ALL.map(h=>h.type).filter(Boolean))];
   document.getElementById("type").innerHTML=`<option value="">홀 종류 전체</option>`+types.map(a=>`<option ${a===st.type?"selected":""}>${esc(a)}</option>`).join("");
+  if(window.HEX)document.getElementById("good").innerHTML=`<option value="">후기로 거르기</option>`+HEX.AX.map(a=>`<option value="${a}" ${st.good===a?"selected":""}>${a} 좋다는 말 많은 홀</option>`).join("");
   document.getElementById("rg").innerHTML=RG.map(([k,l])=>`<button class="${st.rg===k?"on":""}" data-rg="${k}">${l} <small>${k==="all"?ALL.length:ALL.filter(h=>h.region===k).length}</small></button>`).join("");
+}
+function hexBox(h){
+  if(!window.HEX||!h.rv)return"";
+  const H=HEX,lv=H.AX.map(a=>h.rv[a]||"n"),vals=lv.map(k=>H.LV[k][0]),my=mineOf(h),w=openWhy[h.id];
+  const list=[{name:"후기",vals,color:"#5B6270",fill:.14,tips:lv.map(k=>H.LV[k][1])}];
+  if(my)list.push({name:"내 평가",vals:my.map(x=>x||0),color:H.COL[0],dash:true,fill:0});
+  const svg=H.svg(list,{rings:[1.5,3,4.5],miss:lv.map(k=>k==="n"),fs:34,dots:!!my});
+  const why=w!=null&&h.rvWhy&&h.rvWhy[H.AX[w]]?`<div class="why"><b>${H.AX[w]}</b> · ${h.rvWhy[H.AX[w]].map(([s,t])=>`<span class="${s==="+"?"pl":"mi"}">${s==="+"?"좋음":"아쉬움"}</span> ${esc(t)}`).join(" / ")}</div>`:w!=null?`<div class="why"><b>${H.AX[w]}</b> · 이 칸 이야기가 나온 후기가 없어요.</div>`:"";
+  return `<div class="rvx"><div class="hd"><b>후기 육각형</b><span>후기 ${h.sources.length}곳 요약 기준 · 참고용</span></div>
+    <div class="bd"><svg viewBox="0 0 440 400" role="img" aria-label="${esc(h.name)} 후기 육각형">${svg}</svg>
+    <div class="lvl">${H.AX.map((a,i)=>`<button data-why="${h.id}|${i}" class="${w===i?"on":""}"><span>${a}</span><span class="${lv[i]}">${H.LV[lv[i]][1]}</span></button>`).join("")}</div></div>
+    ${my?`<div class="mine"><span><i style="width:12px;height:3px;background:#5B6270;display:inline-block"></i>후기 요약</span><span><i style="width:12px;border-top:2px dashed ${H.COL[0]};display:inline-block"></i>내 평가(이 기기에만 보여요)</span></div>`:""}${why}</div>`;
 }
 function card(h){
   const f=[["보증인원",h.guarantee],["식대",h.meal],["주차",h.parking],["가는 길",h.station],["홀",h.halls]].filter(x=>x[1]);
@@ -159,6 +195,7 @@ function card(h){
   return `<article class="h" id="h-${h.id}">${photo}<div class="body">
     <div class="top"><div><h3>${esc(h.name)}</h3><div class="meta">${esc(h.area||"")}${h.type?` · ${esc(h.type)}`:""}</div></div>${h.single===true?'<span class="tag y">단독홀</span>':""}</div>
     ${f.length?`<dl class="facts">${f.map(([k,v])=>`<dt>${k}</dt><dd>${esc(v)}</dd>`).join("")}</dl>`:""}
+    ${hexBox(h)}
     ${(h.pros&&h.pros.length)||(h.cons&&h.cons.length)?`<div class="pc"><div class="p"><b>후기 좋은 점</b><ul>${(h.pros||[]).map(x=>`<li>${esc(x)}</li>`).join("")||"<li>–</li>"}</ul></div><div class="c"><b>후기 아쉬운 점</b><ul>${(h.cons||[]).map(x=>`<li>${esc(x)}</li>`).join("")||"<li>–</li>"}</ul></div></div>`:""}
     <div class="foot2">${h.sources&&h.sources.length?`<details class="src"><summary>출처 ${h.sources.length}개</summary><ul>${h.sources.map(s=>`<li><a href="${esc(s.u)}" target="_blank" rel="noopener nofollow">${esc(s.t||s.u)}</a></li>`).join("")}</ul></details>`:"<span></span>"}
       <a class="add" href="app.html?addhall=${encodeURIComponent(h.id)}">가계부 비교표에 넣기</a></div>
@@ -185,7 +222,7 @@ function drawMap(xs,focus){
 function draw(focus){
   opts();
   const q=st.q.trim().toLowerCase();
-  const xs=ALL.filter(h=>(st.rg==="all"||h.region===st.rg)&&(!st.area||h.area===st.area)&&(!st.type||h.type===st.type)&&(!q||[h.name,h.station,h.address,h.area].join(" ").toLowerCase().includes(q)));
+  const xs=ALL.filter(h=>(st.rg==="all"||h.region===st.rg)&&(!st.area||h.area===st.area)&&(!st.type||h.type===st.type)&&(!st.good||(h.rv&&h.rv[st.good]==="g"))&&(!q||[h.name,h.station,h.address,h.area].join(" ").toLowerCase().includes(q)));
   document.querySelectorAll("#view button").forEach(b=>b.classList.toggle("on",b.dataset.view===st.view));
   document.getElementById("list").hidden=st.view==="map";document.getElementById("map").hidden=st.view!=="map";
   if(st.view==="map"){drawMap(xs,focus);return}
@@ -196,11 +233,13 @@ document.addEventListener("click",e=>{
   const b=e.target.closest("[data-rg]");if(b){st.rg=b.dataset.rg;st.area="";draw();return}
   const v=e.target.closest("[data-view]");if(v){st.view=v.dataset.view;draw();return}
   const m=e.target.closest("[data-onmap]");if(m){st.view="map";draw(m.dataset.onmap);window.scrollTo(0,0);return}
+  const y=e.target.closest("[data-why]");if(y){const[id,i]=y.dataset.why.split("|");openWhy[id]=openWhy[id]===+i?null:+i;const h=ALL.find(x=>x.id===id),el=document.getElementById("h-"+id);if(h&&el){const nb=document.createElement("div");nb.innerHTML=hexBox(h);el.querySelector(".rvx").replaceWith(nb.firstElementChild)}return}
   const t=e.target.closest("[data-tolist]");if(t){e.preventDefault();const id=t.dataset.tolist;st.view="list";draw();
     const el=document.getElementById("h-"+id);if(el){el.scrollIntoView({block:"center"});el.classList.add("flash");setTimeout(()=>el.classList.remove("flash"),1600)}}
 });
 document.getElementById("area").addEventListener("change",e=>{st.area=e.target.value;draw()});
 document.getElementById("type").addEventListener("change",e=>{st.type=e.target.value;draw()});
+document.getElementById("good").addEventListener("change",e=>{st.good=e.target.value;draw()});
 document.getElementById("q").addEventListener("input",e=>{st.q=e.target.value;draw()});
 draw();
 </script>
