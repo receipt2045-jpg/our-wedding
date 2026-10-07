@@ -308,6 +308,8 @@ a.logo{text-decoration:none;color:inherit}
 .start label .mut,.set label .mut{font-weight:400;font-size:12px}
 .wedpick{display:flex;gap:10px;align-items:center}
 input.ly.auto{background:#fff;border-style:dashed;color:var(--sub)}
+sup.src{font-size:10px;margin-left:2px;color:var(--muted);vertical-align:super}
+sup.src.est{color:var(--acct)}
 .avbar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;background:#FAFAF7;padding:10px 12px;margin:-4px 0 14px;font-size:13px}
 .avbar .k{display:inline-block;width:26px;height:14px;border:1px dashed var(--accl);vertical-align:middle;margin-right:4px}
 #mnote{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-size:14px;padding:10px 14px;max-width:calc(100% - 32px);opacity:0;pointer-events:none;transition:.2s;z-index:50}
@@ -675,7 +677,17 @@ const plan=s=>sum(EXP.filter(e=>e.s===s&&e.st==="예정"),e=>e.a);
 const reg=()=>R.regions.find(r=>r.id===P.region)||R.regions[0];
 const OPT=n=>{const o=R.options.find(x=>x[0]===n);return o?o[1+R.zoneOrder.indexOf(reg().zone)]:null};
 const AVG_MAP={"대관료":()=>reg().rental,"식대":()=>reg().meal,"패키지":()=>reg().sdm,"꽃장식":()=>OPT("생화 꽃장식"),"사회자":()=>OPT("본식 사회자"),"부케":()=>OPT("부케"),"헬퍼비":()=>OPT("본식 드레스 도우미"),"스냅":()=>OPT("본식 촬영"),"한복":()=>OPT("한복 대여"),"메이크업":()=>OPT("혼주 헤어·메이크업"),"축하 무대":()=>OPT("축가·축하공연")};
-const avgOf=c=>{if(!c||c.custom)return null;const f=AVG_MAP[c.small];if(!f)return null;const v=f();return v==null?null:Math.round(v)*10000};
+// 지역 평균이 없는 항목의 참고값(만원) [값, 출처] — xl 엑셀 25~26 평균 · duo 듀오 2026 평균을 나눈 값 · est 흔한 금액으로 잡은 참고값
+const AVG_REF={"첫인사 식사":[30,"xl"],"첫인사 선물":[30,"xl"],"상견례 식사":[64,"xl"],"상견례 선물":[20,"xl"],"청첩장":[15,"xl"],"청첩장 모임":[50,"est"],"주선자":[30,"est"],
+  "와인":[30,"est"],"스튜디오 추가금":[100,"xl"],"드레스 추가금":[30,"xl"],"메이크업 추가금":[10,"xl"],"예복":[100,"xl"],"구두":[20,"xl"],
+  "영상":[50,"xl"],"양복":[100,"xl"],"반지":[350,"xl"],"가방":[120,"duo"],"시계":[118,"duo"],
+  "마사지":[30,"est"],"시술":[50,"est"],"네일":[10,"est"],"머리":[20,"est"],"교통비":[50,"est"],"답례품":[100,"est"],
+  "항공권":[350,"duo"],"숙소":[350,"duo"],"경비":[220,"duo"],"선물":[110,"duo"],
+  "가전 패키지":[1500,"xl"],"침실":[300,"xl"],"거실":[200,"xl"],"서재":[50,"xl"],"주방":[50,"xl"],"생활용품":[30,"xl"],"침구":[50,"xl"],"식기류":[50,"xl"],
+  "벽지":[150,"est"],"타일":[100,"est"]};
+const SRC_NAME={kca:"소비자원 지역 평균",xl:"엑셀 25~26 평균",duo:"듀오 2026 평균을 나눈 값",est:"흔한 금액으로 잡은 참고값"};
+const avgSrc=c=>{if(!c||c.custom)return null;if(AVG_MAP[c.small]&&AVG_MAP[c.small]()!=null)return"kca";return AVG_REF[c.small]?AVG_REF[c.small][1]:null};
+const avgOf=c=>{if(!c||c.custom)return null;const f=AVG_MAP[c.small];if(f){const v=f();if(v!=null)return Math.round(v)*10000}const r=AVG_REF[c.small];return r?r[0]*10000:null};
 // 지역 평균으로 예산 채우기: 빈 칸과 '평균으로 넣은 값 그대로'인 칸만 (직접 고친 칸은 건드리지 않음)
 function fillAvg(){
   P.autoB=P.autoB||{};let n=0;
@@ -856,7 +868,7 @@ function vBudget(){
       const b=MY[c.small]||0,p=paid(c.small),q=plan(c.small),l=b-p-q,a=avgOf(c),pct=b?Math.round((p+q)/b*100):0;
       const nm=c.custom?`<input class="nmin" data-ren="${c.id}" value="${esc(c.small)}">`:c.small;
       const af=(!p&&!q&&AFF[c.small])?`<span class="aff">${AFF[c.small]}</span>`:"";
-      rows+=`<tr><td class="nm">${nm}</td><td class="num mut">${a!=null?man(a):'<span class="soon">–</span>'}</td>
+      rows+=`<tr><td class="nm">${nm}</td><td class="num mut" title="${a!=null?SRC_NAME[avgSrc(c)]:""}">${a!=null?man(a)+(avgSrc(c)==="kca"?"":`<sup class="src ${avgSrc(c)}">${avgSrc(c)==="est"?"추정":"참고"}</sup>`):'<span class="soon">–</span>'}</td>
         <td class="num"><input class="ly ${isAvgB(c.small)?"auto":""}" data-bud="${esc(c.small)}" data-fk="b-${c.id}" data-col="bud" value="${b?(b/10000).toLocaleString():""}" placeholder="0" inputmode="numeric" title="${isAvgB(c.small)?"지역 평균으로 넣은 값이에요. 바로 고칠 수 있어요":""}"><span class="u">만</span></td>
         <td class="num">${p?man(p):'<span class="mut">0</span>'}</td><td class="num">${q?man(q):'<span class="mut">0</span>'}</td>
         <td class="num b ${l<0?'red':''}">${b?man(l):'<span class="mut">–</span>'}</td>
@@ -873,7 +885,8 @@ function vBudget(){
   <div class="ph"><h1>예산</h1><p><b>색칠된 칸</b>에 우리 예산만 적으세요. 냈어요·남은 돈은 지출 탭에서 자동으로 채워져요.</p></div>
   <div class="pills">${bigs.map(b=>`<button class="${S.big===b?'on':''}" data-act="big" data-v="${b}">${b}<small>${man(sum(CATS.filter(c=>b==="전체"||c.big===b),c=>MY[c.small]||0))}</small></button>`).join("")}</div>
   <div class="basis" data-act="basis">남들 평균 기준 <b>${reg().name}</b> ▾ <span style="font-size:12px;color:var(--muted)">소비자원 2026.8 · 듀오 2026</span></div>
-  <div class="avbar"><button class="btn" data-act="fillavg" style="padding:6px 12px">${reg().name} 평균으로 예산 채우기</button><span class="mut"><i class="k"></i>점선 칸 = 지역 평균으로 넣은 값 · 칸을 눌러 바로 고치면 우리 예산이 돼요 · 직접 적은 칸은 그대로 둬요</span></div>
+  <div class="avbar"><button class="btn" data-act="fillavg" style="padding:6px 12px">평균으로 예산 채우기</button><span class="mut"><i class="k"></i>점선 칸 = 평균으로 넣은 값 · 칸을 눌러 바로 고치면 우리 예산이 돼요 · 직접 적은 칸은 그대로 둬요</span>
+    <span class="mut" style="flex-basis:100%;font-size:12px">대관료·식대·스드메 등 11개는 소비자원 <b>지역 평균</b>, <sup class="src">참고</sup>는 엑셀 25~26 평균·듀오 평균을 나눈 값, <sup class="src est">추정</sup>은 흔한 금액으로 잡은 참고값이에요. 신혼집(계약금·잔금 등)과 여행사 패키지는 사람마다 너무 달라서 비워 둬요.</span></div>
   <div class="grid g4" style="margin-bottom:14px">
     <div class="card kpi"><div class="l">예산</div><div class="v">${man(tb)}</div></div>
     <div class="card kpi"><div class="l">냈어요</div><div class="v">${man(tp)}</div></div>
@@ -1539,7 +1552,7 @@ document.addEventListener("click",e=>{
     case"big":S.big=v;render();break;
     case"basis":dlgBasis();break;
     case"setr":{P.region=v;closeDlg();const n=fillAvg();render();if(n)moneyNote(`${reg().name} 평균으로 예산 ${n}칸을 바꿨어요 · 직접 적은 칸은 그대로예요`);break;}
-    case"fillavg":{const n=fillAvg();render();moneyNote(n?`${reg().name} 평균으로 예산 ${n}칸을 채웠어요 · 칸을 눌러 바로 고칠 수 있어요`:"채울 빈 칸이 없어요 · 직접 적은 칸은 그대로 둬요");break;}
+    case"fillavg":{const n=fillAvg();render();moneyNote(n?`평균으로 예산 ${n}칸을 채웠어요 · 칸을 눌러 바로 고칠 수 있어요`:"채울 빈 칸이 없어요 · 직접 적은 칸은 그대로 둬요");break;}
     case"close":closeDlg();if(S.view==="sdm")render();break;
     case"ef":S.ef=v;render();break;
     case"st":S.st=v;document.querySelectorAll("#fSt button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));break;
@@ -1574,7 +1587,7 @@ document.addEventListener("click",e=>{
     case"start":{const w=document.getElementById("stW"),tbd=document.querySelector('[data-tbd="stW"]');
       if(!tbd.checked&&w.value&&(w.value<WED_MIN||w.value>WED_MAX)){alert("예식일은 2028년 12월 31일까지만 고를 수 있어요. 아직 모르면 '아직 미정'을 눌러 주세요.");w.focus();break}
       P.wed=tbd.checked?"":w.value;P.region=document.getElementById("stR").value;P.bride=document.getElementById("stB").value.trim();P.groom=document.getElementById("stG").value.trim();P.started=true;P.demo=false;
-      const nf=fillAvg();render();window.scrollTo(0,0);if(nf)moneyNote(`${reg().name} 평균으로 예산 ${nf}칸을 채웠어요 · 예산 탭에서 바로 고칠 수 있어요`);break;}
+      const nf=fillAvg();render();window.scrollTo(0,0);if(nf)moneyNote(`${reg().name} 기준 평균으로 예산 ${nf}칸을 채웠어요 · 예산 탭에서 바로 고칠 수 있어요`);break;}
     case"demo":use(demoData());S.view="home";render();window.scrollTo(0,0);break;
     case"enddemo":if(confirm("예시를 지우고 빈 가계부로 시작할까요?")){use(fresh());S.view="home";render();window.scrollTo(0,0)}break;
     case"login":dlgLogin(false);break;
