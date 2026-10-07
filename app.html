@@ -307,6 +307,9 @@ a.logo{text-decoration:none;color:inherit}
 .start label,.set label{display:block;font-size:14px;font-weight:600;margin:14px 0 6px}
 .start label .mut,.set label .mut{font-weight:400;font-size:12px}
 .wedpick{display:flex;gap:10px;align-items:center}
+input.ly.auto{background:#fff;border-style:dashed;color:var(--sub)}
+.avbar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;background:#FAFAF7;padding:10px 12px;margin:-4px 0 14px;font-size:13px}
+.avbar .k{display:inline-block;width:26px;height:14px;border:1px dashed var(--accl);vertical-align:middle;margin-right:4px}
 #mnote{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-size:14px;padding:10px 14px;max-width:calc(100% - 32px);opacity:0;pointer-events:none;transition:.2s;z-index:50}
 #mnote.on{opacity:1;transform:translateX(-50%)}
 .wedpick input[type=date]{flex:1;min-width:0}
@@ -673,6 +676,15 @@ const reg=()=>R.regions.find(r=>r.id===P.region)||R.regions[0];
 const OPT=n=>{const o=R.options.find(x=>x[0]===n);return o?o[1+R.zoneOrder.indexOf(reg().zone)]:null};
 const AVG_MAP={"대관료":()=>reg().rental,"식대":()=>reg().meal,"패키지":()=>reg().sdm,"꽃장식":()=>OPT("생화 꽃장식"),"사회자":()=>OPT("본식 사회자"),"부케":()=>OPT("부케"),"헬퍼비":()=>OPT("본식 드레스 도우미"),"스냅":()=>OPT("본식 촬영"),"한복":()=>OPT("한복 대여"),"메이크업":()=>OPT("혼주 헤어·메이크업"),"축하 무대":()=>OPT("축가·축하공연")};
 const avgOf=c=>{if(!c||c.custom)return null;const f=AVG_MAP[c.small];if(!f)return null;const v=f();return v==null?null:Math.round(v)*10000};
+// 지역 평균으로 예산 채우기: 빈 칸과 '평균으로 넣은 값 그대로'인 칸만 (직접 고친 칸은 건드리지 않음)
+function fillAvg(){
+  P.autoB=P.autoB||{};let n=0;
+  CATS.forEach(c=>{const a=avgOf(c);if(a==null)return;const k=c.small,cur=MY[k]||0,auto=P.autoB[k];
+    if(auto===false)return;
+    if(!cur||cur===auto){if(cur!==a)n++;MY[k]=a;P.autoB[k]=a}});
+  return n;
+}
+const isAvgB=k=>P.autoB&&P.autoB[k]&&MY[k]===P.autoB[k];
 const GROUP_AVG={big:{"혼수":1445,"신혼여행":1030},mid:{"예물":588}};  // 듀오 2026 전국 평균(만원)
 const gavg=(k,n)=>GROUP_AVG[k][n]?man(GROUP_AVG[k][n]*10000):"";
 const man=n=>{ if(n==null)return"–"; const neg=n<0; n=Math.abs(n); if(n>0&&n<10000)return(neg?"-":"")+n.toLocaleString()+"원"; const m=Math.round(n/10000); let t; if(m>=10000){const e=Math.floor(m/10000),r=m%10000;t=e+"억"+(r?" "+r.toLocaleString()+"만":"")}else t=m.toLocaleString()+"만"; return(neg?"-":"")+t;};
@@ -845,11 +857,11 @@ function vBudget(){
       const nm=c.custom?`<input class="nmin" data-ren="${c.id}" value="${esc(c.small)}">`:c.small;
       const af=(!p&&!q&&AFF[c.small])?`<span class="aff">${AFF[c.small]}</span>`:"";
       rows+=`<tr><td class="nm">${nm}</td><td class="num mut">${a!=null?man(a):'<span class="soon">–</span>'}</td>
-        <td class="num"><input class="ly" data-bud="${esc(c.small)}" data-fk="b-${c.id}" data-col="bud" value="${b?(b/10000).toLocaleString():""}" placeholder="0" inputmode="numeric"><span class="u">만</span></td>
+        <td class="num"><input class="ly ${isAvgB(c.small)?"auto":""}" data-bud="${esc(c.small)}" data-fk="b-${c.id}" data-col="bud" value="${b?(b/10000).toLocaleString():""}" placeholder="0" inputmode="numeric" title="${isAvgB(c.small)?"지역 평균으로 넣은 값이에요. 바로 고칠 수 있어요":""}"><span class="u">만</span></td>
         <td class="num">${p?man(p):'<span class="mut">0</span>'}</td><td class="num">${q?man(q):'<span class="mut">0</span>'}</td>
         <td class="num b ${l<0?'red':''}">${b?man(l):'<span class="mut">–</span>'}</td>
         <td><div class="pb">${bar(b,p,q)}<span>${b?pct+"%":""}</span></div></td><td>${af}${c.custom?`<button class="x" data-act="delcat" data-id="${c.id}" title="직접 만든 항목 지우기">×</button>`:""}</td></tr>`;
-      mob+=`<div class="mrow"><div class="a"><span class="n">${nm}${c.custom?`<button class="x" data-act="delcat" data-id="${c.id}" title="직접 만든 항목 지우기">×</button>`:""}</span><span><input class="ly" data-bud="${esc(c.small)}" data-fk="b-${c.id}" data-col="bud" value="${b?(b/10000).toLocaleString():""}" placeholder="예산" inputmode="numeric"><span class="u">만</span></span></div>
+      mob+=`<div class="mrow"><div class="a"><span class="n">${nm}${c.custom?`<button class="x" data-act="delcat" data-id="${c.id}" title="직접 만든 항목 지우기">×</button>`:""}</span><span><input class="ly ${isAvgB(c.small)?"auto":""}" data-bud="${esc(c.small)}" data-fk="b-${c.id}" data-col="bud" value="${b?(b/10000).toLocaleString():""}" placeholder="예산" inputmode="numeric"><span class="u">만</span></span></div>
         <div class="s"><span>${a!=null?"평균 "+man(a)+" · ":""}냈어요 ${man(p)}${q?" · 예정 "+man(q):""}</span><span class="b ${l<0?'red':''}">${b?"남은 "+man(l):""}</span></div>
         ${b||p||q?bar(b,p,q):""}${af?`<div style="margin-top:6px">${af}</div>`:""}</div>`;
     });
@@ -861,6 +873,7 @@ function vBudget(){
   <div class="ph"><h1>예산</h1><p><b>색칠된 칸</b>에 우리 예산만 적으세요. 냈어요·남은 돈은 지출 탭에서 자동으로 채워져요.</p></div>
   <div class="pills">${bigs.map(b=>`<button class="${S.big===b?'on':''}" data-act="big" data-v="${b}">${b}<small>${man(sum(CATS.filter(c=>b==="전체"||c.big===b),c=>MY[c.small]||0))}</small></button>`).join("")}</div>
   <div class="basis" data-act="basis">남들 평균 기준 <b>${reg().name}</b> ▾ <span style="font-size:12px;color:var(--muted)">소비자원 2026.8 · 듀오 2026</span></div>
+  <div class="avbar"><button class="btn" data-act="fillavg" style="padding:6px 12px">${reg().name} 평균으로 예산 채우기</button><span class="mut"><i class="k"></i>점선 칸 = 지역 평균으로 넣은 값 · 칸을 눌러 바로 고치면 우리 예산이 돼요 · 직접 적은 칸은 그대로 둬요</span></div>
   <div class="grid g4" style="margin-bottom:14px">
     <div class="card kpi"><div class="l">예산</div><div class="v">${man(tb)}</div></div>
     <div class="card kpi"><div class="l">냈어요</div><div class="v">${man(tp)}</div></div>
@@ -1525,7 +1538,8 @@ document.addEventListener("click",e=>{
   switch(a.dataset.act){
     case"big":S.big=v;render();break;
     case"basis":dlgBasis();break;
-    case"setr":P.region=v;closeDlg();render();break;
+    case"setr":{P.region=v;closeDlg();const n=fillAvg();render();if(n)moneyNote(`${reg().name} 평균으로 예산 ${n}칸을 바꿨어요 · 직접 적은 칸은 그대로예요`);break;}
+    case"fillavg":{const n=fillAvg();render();moneyNote(n?`${reg().name} 평균으로 예산 ${n}칸을 채웠어요 · 칸을 눌러 바로 고칠 수 있어요`:"채울 빈 칸이 없어요 · 직접 적은 칸은 그대로 둬요");break;}
     case"close":closeDlg();if(S.view==="sdm")render();break;
     case"ef":S.ef=v;render();break;
     case"st":S.st=v;document.querySelectorAll("#fSt button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));break;
@@ -1559,7 +1573,8 @@ document.addEventListener("click",e=>{
     case"stage":S.stage=v;render();break;
     case"start":{const w=document.getElementById("stW"),tbd=document.querySelector('[data-tbd="stW"]');
       if(!tbd.checked&&w.value&&(w.value<WED_MIN||w.value>WED_MAX)){alert("예식일은 2028년 12월 31일까지만 고를 수 있어요. 아직 모르면 '아직 미정'을 눌러 주세요.");w.focus();break}
-      P.wed=tbd.checked?"":w.value;P.region=document.getElementById("stR").value;P.bride=document.getElementById("stB").value.trim();P.groom=document.getElementById("stG").value.trim();P.started=true;P.demo=false;render();window.scrollTo(0,0);break;}
+      P.wed=tbd.checked?"":w.value;P.region=document.getElementById("stR").value;P.bride=document.getElementById("stB").value.trim();P.groom=document.getElementById("stG").value.trim();P.started=true;P.demo=false;
+      const nf=fillAvg();render();window.scrollTo(0,0);if(nf)moneyNote(`${reg().name} 평균으로 예산 ${nf}칸을 채웠어요 · 예산 탭에서 바로 고칠 수 있어요`);break;}
     case"demo":use(demoData());S.view="home";render();window.scrollTo(0,0);break;
     case"enddemo":if(confirm("예시를 지우고 빈 가계부로 시작할까요?")){use(fresh());S.view="home";render();window.scrollTo(0,0)}break;
     case"login":dlgLogin(false);break;
@@ -1605,7 +1620,7 @@ document.addEventListener("click",e=>{
 });
 document.addEventListener("change",e=>{
   const t=e.target;
-  if(t.dataset.bud!=null){const n=parseMoney(t.value,"man");MY[t.dataset.bud]=n==null?0:Math.round(n*10000);later();}
+  if(t.dataset.bud!=null){const n=parseMoney(t.value,"man");MY[t.dataset.bud]=n==null?0:Math.round(n*10000);(P.autoB=P.autoB||{})[t.dataset.bud]=false;later();}
   else if(t.dataset.xf!=null){const e=EXP[+t.dataset.xi],f=t.dataset.xf;
     if(f==="s"){const v=t.value.trim();if(!cat(v)){t.classList.add("bad");toast('<span class="red">목록에 있는 항목만 쓸 수 있어요. 글자를 치면 찾아줘요.</span>');t.value=e.s;setTimeout(()=>t.classList.remove("bad"),1500);return}e.s=v}
     else if(f==="a"){const n=parseMoney(t.value,"won");if(!n){moneyNote("금액을 읽지 못했어요. 예: 150만, 1500000");t.value=e.a.toLocaleString();return}e.a=n}
@@ -1625,7 +1640,7 @@ document.addEventListener("change",e=>{
   else if(t.dataset.cmemo!=null){HALLS[+t.dataset.cmemo].memo=t.value;save();}
   else if(t.id==="cphoto"&&t.files.length){const h=HALLS[+t.dataset.k],H=hid(h),fs=[...t.files];t.value="";toast("사진 넣는 중…");
     (async()=>{for(const f of fs){try{const b=await shrinkImg(f);await PDB.put({id:Math.random().toString(36).slice(2,10),hid:H,t:Date.now(),b})}catch(e){toast('<span class="red">사진을 저장하지 못했어요</span>');}}await loadPhotos(H,true);toast("사진을 넣었어요")})();}
-  else if(t.dataset.pf!=null){P[t.dataset.pf]=t.value;later();}
+  else if(t.dataset.pf!=null){P[t.dataset.pf]=t.value;if(t.dataset.pf==="region"){const n=fillAvg();if(n)moneyNote(`${reg().name} 평균으로 예산 ${n}칸을 바꿨어요 · 직접 적은 칸은 그대로예요`)}later();}
   else if(t.dataset.tbd!=null){const w=document.getElementById(t.dataset.tbd);w.disabled=t.checked;if(t.checked){w.value="";if(t.dataset.tbd==="setW"){P.wed="";later()}}else w.focus();}
   else if(t.id==="stW"||t.id==="setW"){
     if(t.value&&(t.value<WED_MIN||t.value>WED_MAX)){alert("예식일은 2028년 12월 31일까지만 고를 수 있어요.");t.value=t.id==="setW"?P.wed:"";return}
