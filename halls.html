@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OUR WEDDING · 웨딩홀 리스트와 하객 후기</title>
+<meta name="description" content="서울·경기·인천 웨딩홀의 보증인원, 식대, 주차, 단독홀 여부와 하객·신랑신부 후기에서 자주 나오는 장단점을 한눈에 모았어요.">
+<meta property="og:title" content="OUR WEDDING · 웨딩홀 리스트와 하객 후기">
+<meta property="og:description" content="서울·경기·인천 웨딩홀 정보와 후기 장단점을 한눈에.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#FFF0A6">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{
+  --acc:#FFF0A6; --acc2:#FFF6C9; --accs:#FFFCEC; --accl:#F1DC6E; --accd:#D9B300; --acct:#3A3200;
+  --ink:#1C1F26; --sub:#4F5563; --muted:#8B909B; --line:#EEEEEE; --track:#F2F2F2; --red:#DC4449; --green:#1C9A57;
+}
+*,*::before,*::after{box-sizing:border-box;border-radius:0!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:#fff;color:var(--ink);font-family:Pretendard,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-size:15px;line-height:1.55;font-variant-numeric:tabular-nums;word-break:keep-all}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:inherit}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+header{border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff;z-index:10}
+header .wrap{display:flex;justify-content:space-between;align-items:center;height:58px;gap:8px}
+.logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:16px;letter-spacing:.05em;text-decoration:none}
+.logo i{width:20px;height:20px;background:var(--acc);border:1px solid var(--accl);display:inline-block}
+.nav{display:flex;gap:6px}
+.nav a{font-size:13px;color:var(--sub);border:1px solid var(--line);padding:6px 10px;text-decoration:none;white-space:nowrap}
+.nav a.go{background:var(--acc);border-color:var(--accl);color:var(--acct);font-weight:700}
+@media (max-width:480px){.nav .lg{display:none}}
+main{padding:28px 0 20px}
+h1{font-size:24px;margin:0 0 6px;letter-spacing:-.5px}
+.lead{color:var(--sub);font-size:14px;margin:0 0 18px}
+
+/* 거르기 */
+.filters{position:sticky;top:58px;z-index:5;background:#fff;padding:10px 0;border-bottom:1px solid var(--line);margin-bottom:14px}
+.row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.row+.row{margin-top:8px}
+.pills button{border:1px solid var(--line);background:#fff;padding:7px 12px;font-size:14px}
+.pills button.on{background:var(--acc);border-color:var(--accd);font-weight:700}
+select,#q{border:1px solid var(--line);padding:8px 10px;font-size:14px;background:#fff}
+#q{flex:1;min-width:160px}
+@media (max-width:680px){.filters{position:static}}
+.count{font-size:13px;color:var(--muted);margin:0 0 10px}
+
+/* 카드 */
+.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:12px}
+@media (max-width:680px){.list{grid-template-columns:1fr}}
+.h{border:1px solid var(--line);padding:16px;display:flex;flex-direction:column}
+.h .top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.h h3{margin:0;font-size:17px;letter-spacing:-.3px}
+.h .meta{font-size:13px;color:var(--sub);margin-top:2px}
+.tag{display:inline-block;font-size:11px;font-weight:700;padding:1px 6px;border:1px solid var(--line);color:var(--sub);white-space:nowrap}
+.tag.y{background:var(--acc);border-color:var(--accl);color:var(--acct)}
+.facts{display:grid;grid-template-columns:72px 1fr;gap:3px 8px;font-size:13px;margin:12px 0 0}
+.facts dt{color:var(--muted)}
+.facts dd{margin:0}
+.pc{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;font-size:13px}
+.pc b{display:block;font-size:12px;margin-bottom:3px}
+.pc .p b{color:var(--green)} .pc .c b{color:var(--red)}
+.pc ul{margin:0;padding-left:16px}
+.pc li{margin:1px 0}
+.foot2{margin-top:auto;padding-top:12px;display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.src summary{cursor:pointer;color:var(--sub);text-decoration:underline}
+.src ul{margin:6px 0 0;padding-left:16px;max-width:260px}
+.src a{word-break:break-all}
+.add{border:1px solid var(--accl);background:var(--accs);padding:7px 10px;font-size:13px;font-weight:700;text-decoration:none;color:var(--acct);white-space:nowrap}
+.add:hover{background:var(--acc)}
+.empty{color:var(--muted);padding:30px 0;text-align:center}
+footer{border-top:1px solid var(--line);margin-top:40px;padding:20px 0 40px;font-size:13px;color:var(--muted);line-height:1.7}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <a class="logo" href="./"><i></i>OUR WEDDING</a>
+  <div class="nav"><a href="./" class="lg">남들은 얼마 쓸까</a><a href="app.html" class="go">우리 가계부</a></div>
+</div></header>
+
+<main class="wrap">
+  <h1>웨딩홀 리스트</h1>
+  <p class="lead">보증인원·식대·주차 같은 기본 정보와, 하객·신랑신부 후기에서 <b>자주 나오는 좋은 점·아쉬운 점</b>을 짧게 모았어요. 후기 원문은 각 홀의 '출처'에서 볼 수 있어요.</p>
+
+  <div class="filters">
+    <div class="row pills" id="rg"></div>
+    <div class="row">
+      <select id="area" aria-label="구·시"></select>
+      <select id="type" aria-label="홀 종류"></select>
+      <input id="q" type="search" placeholder="홀 이름·역 이름 찾기" autocomplete="off">
+    </div>
+  </div>
+  <p class="count" id="cnt"></p>
+  <div class="list" id="list"></div>
+</main>
+
+<footer><div class="wrap">
+  <div>정보는 웨딩홀 공식 안내와 블로그·웨딩 플랫폼의 공개 후기를 읽고 정리했어요(<span id="chk"></span> 확인). 식대·보증인원은 날짜·시간·계약 시점에 따라 달라지니 상담에서 꼭 다시 확인하세요.</div>
+  <div>좋은 점·아쉬운 점은 여러 후기에서 겹쳐 나온 내용을 우리 말로 줄인 거예요. 잘못된 정보가 있으면 알려 주세요.</div>
+  <div style="margin-top:8px">© OUR WEDDING · <a href="privacy.html">개인정보처리방침</a></div>
+</div></footer>
+
+<script src="halls.js"></script>
+<script>
+const D=window.OW_HALLS||{items:[]},ALL=D.items;
+const RG=[["all","전체"],["seoul","서울"],["gg","경기"],["ic","인천"]];
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const st={rg:"all",area:"",type:"",q:""};
+try{const u=new URLSearchParams(location.search);if(u.get("r")&&RG.some(x=>x[0]===u.get("r")))st.rg=u.get("r")}catch(e){}
+document.getElementById("chk").textContent=D.checked||"";
+function opts(){
+  const inRg=ALL.filter(h=>st.rg==="all"||h.region===st.rg);
+  const areas=[...new Set(inRg.map(h=>h.area).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"ko"));
+  if(st.area&&!areas.includes(st.area))st.area="";
+  document.getElementById("area").innerHTML=`<option value="">구·시 전체</option>`+areas.map(a=>`<option ${a===st.area?"selected":""}>${esc(a)}</option>`).join("");
+  const types=[...new Set(ALL.map(h=>h.type).filter(Boolean))];
+  document.getElementById("type").innerHTML=`<option value="">홀 종류 전체</option>`+types.map(a=>`<option ${a===st.type?"selected":""}>${esc(a)}</option>`).join("");
+  document.getElementById("rg").innerHTML=RG.map(([k,l])=>`<button class="${st.rg===k?"on":""}" data-rg="${k}">${l} <small>${k==="all"?ALL.length:ALL.filter(h=>h.region===k).length}</small></button>`).join("");
+}
+function card(h){
+  const f=[["보증인원",h.guarantee],["식대",h.meal],["주차",h.parking],["가는 길",h.station],["홀",h.halls]].filter(x=>x[1]);
+  return `<article class="h">
+    <div class="top"><div><h3>${esc(h.name)}</h3><div class="meta">${esc(h.area||"")}${h.type?` · ${esc(h.type)}`:""}</div></div>${h.single===true?'<span class="tag y">단독홀</span>':""}</div>
+    ${f.length?`<dl class="facts">${f.map(([k,v])=>`<dt>${k}</dt><dd>${esc(v)}</dd>`).join("")}</dl>`:""}
+    ${(h.pros&&h.pros.length)||(h.cons&&h.cons.length)?`<div class="pc"><div class="p"><b>후기 좋은 점</b><ul>${(h.pros||[]).map(x=>`<li>${esc(x)}</li>`).join("")||"<li>–</li>"}</ul></div><div class="c"><b>후기 아쉬운 점</b><ul>${(h.cons||[]).map(x=>`<li>${esc(x)}</li>`).join("")||"<li>–</li>"}</ul></div></div>`:""}
+    <div class="foot2">${h.sources&&h.sources.length?`<details class="src"><summary>출처 ${h.sources.length}개</summary><ul>${h.sources.map(s=>`<li><a href="${esc(s.u)}" target="_blank" rel="noopener nofollow">${esc(s.t||s.u)}</a></li>`).join("")}</ul></details>`:"<span></span>"}
+      <a class="add" href="app.html?addhall=${encodeURIComponent(h.id)}">가계부 비교표에 넣기</a></div>
+  </article>`;
+}
+function draw(){
+  opts();
+  const q=st.q.trim().toLowerCase();
+  const xs=ALL.filter(h=>(st.rg==="all"||h.region===st.rg)&&(!st.area||h.area===st.area)&&(!st.type||h.type===st.type)&&(!q||[h.name,h.station,h.address,h.area].join(" ").toLowerCase().includes(q)));
+  document.getElementById("cnt").textContent=`${xs.length}곳`;
+  document.getElementById("list").innerHTML=xs.map(card).join("")||'<p class="empty">조건에 맞는 웨딩홀이 없어요</p>';
+}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-rg]");if(b){st.rg=b.dataset.rg;st.area="";draw()}});
+document.getElementById("area").addEventListener("change",e=>{st.area=e.target.value;draw()});
+document.getElementById("type").addEventListener("change",e=>{st.type=e.target.value;draw()});
+document.getElementById("q").addEventListener("input",e=>{st.q=e.target.value;draw()});
+draw();
+</script>
+</body>
+</html>

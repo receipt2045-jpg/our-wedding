@@ -1229,10 +1229,10 @@ function vHall(){
   if(HALLS.some(h=>h.memo))body+=`<tr><td class="st">혜택·조건 메모</td><td></td>${HALLS.map((h,k)=>`<td colspan="2" class="${k===best?'top':''}" style="white-space:pre-wrap;font-size:13px;max-width:220px">${esc(h.memo||"")}</td>`).join("")}</tr>`;
   body+=`<tr class="sum"><td class="st">총 비용</td><td class="best" style="font-weight:400">대관료+식대×보증</td>${HALLS.map((h,k)=>`<td colspan="2" class="${k===best?'top':''}">${cost[k].toLocaleString()}만</td>`).join("")}</tr>`;
   return `<div class="ph"><h1>웨딩홀 비교</h1><p>투어 전에 홀 이름을 적고, 다녀와서 <b>내용과 점수(1~5)</b>만 채우세요. 점수 합이 제일 높은 홀에 표시돼요.</p></div>
-  <div class="card" style="margin-bottom:14px;padding:14px 16px"><b style="font-size:16px">상담 가서 바로 적기</b> <span class="mut" style="font-size:13px">· 정신없는 상담 중에도 폰으로 버튼·숫자만 누르면 아래 표가 채워져요. 견적서 사진도 같이 남겨요.</span>
+  <div class="card" style="margin-bottom:14px;padding:14px 16px"><div style="float:right"><a class="linkb" href="halls.html">웨딩홀 리스트·후기 보기 ›</a></div><b style="font-size:16px">상담 가서 바로 적기</b> <span class="mut" style="font-size:13px">· 정신없는 상담 중에도 폰으로 버튼·숫자만 누르면 아래 표가 채워져요. 견적서 사진도 같이 남겨요.</span>
     <div class="cstart" style="margin:10px 0 0">${HALLS.map((h,k)=>`<button data-act="csopen" data-v="${k}"><span>${esc(h.name)}</span><small>${hFilled(h)?`${hFilled(h)}/${HALLROWS.length} 적음`:"상담 모드 열기"} ›</small></button>`).join("")}</div></div>
   ${S.mode==="mo"?'<p class="mut" style="font-size:13px;margin:-8px 0 10px">표를 옆으로 밀면 다른 홀이 보여요 →</p>':""}
-  <div class="tw hall"><table><thead><tr><th class="st">항목</th><th>좋은 기준</th>${HALLS.map((h,k)=>`<th class="${k===best?'top':''}"><input data-hn="${k}" value="${esc(h.name)}"></th><th class="${k===best?'top':''}">점수</th>`).join("")}</tr></thead><tbody>${body}</tbody></table></div>
+  <div class="tw hall"><table><thead><tr><th class="st">항목</th><th>좋은 기준</th>${HALLS.map((h,k)=>`<th class="${k===best?'top':''}"><input data-hn="${k}" value="${esc(h.name)}">${HALLS.length>1?`<button class="x" data-act="delhall" data-v="${k}" title="이 홀 지우기">×</button>`:""}</th><th class="${k===best?'top':''}">점수</th>`).join("")}</tr></thead><tbody>${body}</tbody></table></div>
   ${HALLS.length<5?`<div style="margin-top:12px"><button class="addrow" data-act="addhall">+ 홀 추가 (최대 5곳)</button></div>`:""}
   ${foot()}`;
 }
@@ -1250,7 +1250,7 @@ function render(){
   document.getElementById("side").innerHTML=`<a class="logo" href="./"><i></i>OUR WEDDING</a>
     <div class="couple"><div class="n">${names()}</div><div class="d">${ddText()}</div><div class="s">${wedText()}</div></div>
     <div class="nav">${NAV.map(([k,l],i)=>`${k==="set"?'<div class="sep"></div>':""}<button class="${S.view===k?'on':''}" data-go="${k}">${l}</button>`).join("")}
-      <a class="navlink" href="./">남들은 얼마 쓸까 ›</a></div>
+      <a class="navlink" href="./">남들은 얼마 쓸까 ›</a><a class="navlink" href="halls.html">웨딩홀 리스트 ›</a></div>
     <div class="side-foot">${acctBox()}</div>`;
   document.getElementById("mhead").innerHTML=`<div class="mtop"><a class="logo" href="./" style="padding:0;font-size:16px"><i></i>OUR WEDDING</a><div class="r">${names()}<br><b>${ddText()}</b></div></div>
     <div class="mtabs">${!CL.id&&SB?'<button class="mlogin" data-act="login">로그인</button>':""}${NAV.map(([k,l])=>`<button class="${S.view===k?'on':''}" data-go="${k}">${l}</button>`).join("")}<a href="./">남들 평균</a></div>`;
@@ -1462,6 +1462,7 @@ document.addEventListener("click",e=>{
     case"cscopy":try{navigator.clipboard.writeText(S.missTxt);a.textContent="복사했어요 · 카톡이나 메모에 붙여넣으세요"}catch(e){prompt("아래 글을 복사하세요",S.missTxt)}break;
     case"cpview":{const h=HALLS[S.cs.k],p=(S.pcache[hid(h)]||[]).find(x=>x.id===v);if(p)openDlg(`<img src="${p.url}" alt="사진" style="width:100%;display:block"><button class="btn wide ghost" data-act="close" style="margin-top:10px">닫기</button>`);break;}
     case"cpdel":if(confirm("이 사진을 지울까요?")){const H=hid(HALLS[S.cs.k]);PDB.del(v).then(()=>loadPhotos(H,true))}break;
+    case"delhall":if(confirm(`'${HALLS[+v].name}'을 비교표에서 지울까요?`)){HALLS.splice(+v,1);render()}break;
     case"addhall":HALLS.push({name:"홀 "+(HALLS.length+1)+" 이름",v:HALLROWS.map(()=>""),sc:HALLROWS.map(()=>3)});render();break;
   }
 });
@@ -1523,7 +1524,26 @@ addEventListener("keydown",e=>{
 
 addEventListener("resize",()=>{const m=innerWidth<760?"mo":"pc";if(m!==S.mode){S.mode=m;render()}});
 addEventListener("storage",e=>{if(e.key===KEY&&e.newValue){try{use(JSON.parse(e.newValue));render()}catch(err){}}});
+function addHallFromList(){
+  let u;try{u=new URL(location.href)}catch(e){return}
+  const id=u.searchParams.get("addhall");if(!id)return;
+  u.searchParams.delete("addhall");history.replaceState(null,"",u.pathname+u.search+u.hash);
+  const sc=document.createElement("script");sc.src="halls.js";
+  sc.onload=()=>{const h=((window.OW_HALLS||{}).items||[]).find(x=>x.id===id);S.view="hall";S.cs=null;
+    if(!h){render();return}
+    if(HALLS.some(x=>x.name===h.name)){render();alert(`'${h.name}'은 이미 비교표에 있어요.`);return}
+    const nh={name:h.name,v:HALLROWS.map(()=>""),sc:HALLROWS.map(()=>3),memo:[h.guarantee&&"보증 "+h.guarantee,h.meal&&"식대 "+h.meal,h.parking&&"주차 "+h.parking].filter(Boolean).join(" · ")};
+    const set=(label,val)=>{const ri=HALLROWS.findIndex(r=>r[1]===label);if(ri>=0&&val)nh.v[ri]=val};
+    const pk=String(h.parking||"").match(/([\d,]+)\s*대/);if(pk)set("주차 대수",pk[1].replace(/,/g,"")+"대");
+    const gu=String(h.guarantee||"").match(/(\d+)/);if(gu)set("최소 보증 인원",gu[1]+"명");
+    if(h.single===true)set("단독홀 여부","단독홀");
+    const empty=HALLS.findIndex(x=>/^홀 \d+ 이름$/.test(x.name)&&!x.v.some(v=>String(v||"").trim()));
+    if(empty>=0)HALLS[empty]=nh;else if(HALLS.length<5)HALLS.push(nh);else{render();alert("비교표에는 5곳까지 넣을 수 있어요. 표 위쪽 홀 이름 옆 ×로 하나를 지우고 다시 넣어 주세요.");return}
+    render();window.scrollTo(0,0)};
+  document.body.appendChild(sc);
+}
 render();
+addHallFromList();
 cloudInit();
 </script>
 </body>
