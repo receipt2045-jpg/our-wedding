@@ -661,10 +661,10 @@ function parseMoney(str, unit){
 }
 let _mnT;function moneyNote(msg){let el=document.getElementById("mnote");if(!el){el=document.createElement("div");el.id="mnote";document.body.appendChild(el)}el.textContent=msg;el.className="on";clearTimeout(_mnT);_mnT=setTimeout(()=>el.className="",3200)}
 const wedDate = () => P.wed ? new Date(P.wed) : null;
-const WED_MIN = "2025-01-01", WED_MAX = "2028-12-31";
+const WED_MIN = "2025-01-01", WED_MAX = "2099-12-31";   // 위 끝은 잘못 친 연도(예: 20288)만 막는 용도
 // 예식일 칸 + '아직 미정' 체크 (id: 시작 화면은 stW, 설정은 setW)
 // 시작 화면은 날짜 칸을 열어 두고, 설정은 예식일이 비어 있으면 '미정'에 체크된 채로 보여줌
-const wedPick = id => { const tbd = id === "setW" && !P.wed; return `<div class="wedpick"><input type="date" id="${id}" min="${WED_MIN}" max="${WED_MAX}" value="${P.wed}" ${tbd ? "disabled" : ""}><label class="tbd"><input type="checkbox" data-tbd="${id}" ${tbd ? "checked" : ""}> 아직 미정</label></div><div class="mut" style="font-size:12px;margin-top:4px">2028년 12월 31일까지 고를 수 있어요</div>`; };
+const wedPick = id => { const tbd = id === "setW" && !P.wed; return `<div class="wedpick"><input type="date" id="${id}" min="${WED_MIN}" max="${WED_MAX}" value="${P.wed}" ${tbd ? "disabled" : ""}><label class="tbd"><input type="checkbox" data-tbd="${id}" ${tbd ? "checked" : ""}> 아직 미정</label></div>`; };
 const dday = () => { const w = wedDate(); return w ? Math.round((w - TODAY) / 864e5) : null; };
 const S = {mode: innerWidth<760?"mo":"pc", view:"home", big:"전체", ef:"전체", gside:"전체", gshow:30, stage:null, st:"완료", pay:"공동 계좌"};
 
@@ -1585,7 +1585,7 @@ document.addEventListener("click",e=>{
     case"todo":{const t=a.dataset.t;DONE.has(t)?DONE.delete(t):DONE.add(t);render();break;}
     case"stage":S.stage=v;render();break;
     case"start":{const w=document.getElementById("stW"),tbd=document.querySelector('[data-tbd="stW"]');
-      if(!tbd.checked&&w.value&&(w.value<WED_MIN||w.value>WED_MAX)){alert("예식일은 2028년 12월 31일까지만 고를 수 있어요. 아직 모르면 '아직 미정'을 눌러 주세요.");w.focus();break}
+      if(!tbd.checked&&w.value&&(w.value<WED_MIN||w.value>WED_MAX)){alert("예식일 날짜를 다시 확인해 주세요. 아직 모르면 '아직 미정'을 눌러 주세요.");w.focus();break}
       P.wed=tbd.checked?"":w.value;P.region=document.getElementById("stR").value;P.bride=document.getElementById("stB").value.trim();P.groom=document.getElementById("stG").value.trim();P.started=true;P.demo=false;
       const nf=fillAvg();render();window.scrollTo(0,0);if(nf)moneyNote(`${reg().name} 기준 평균으로 예산 ${nf}칸을 채웠어요 · 예산 탭에서 바로 고칠 수 있어요`);break;}
     case"demo":use(demoData());S.view="home";render();window.scrollTo(0,0);break;
@@ -1656,7 +1656,7 @@ document.addEventListener("change",e=>{
   else if(t.dataset.pf!=null){P[t.dataset.pf]=t.value;if(t.dataset.pf==="region"){const n=fillAvg();if(n)moneyNote(`${reg().name} 평균으로 예산 ${n}칸을 바꿨어요 · 직접 적은 칸은 그대로예요`)}later();}
   else if(t.dataset.tbd!=null){const w=document.getElementById(t.dataset.tbd);w.disabled=t.checked;if(t.checked){w.value="";if(t.dataset.tbd==="setW"){P.wed="";later()}}else w.focus();}
   else if(t.id==="stW"||t.id==="setW"){
-    if(t.value&&(t.value<WED_MIN||t.value>WED_MAX)){alert("예식일은 2028년 12월 31일까지만 고를 수 있어요.");t.value=t.id==="setW"?P.wed:"";return}
+    if(t.value&&(t.value<WED_MIN||t.value>WED_MAX)){alert("예식일 날짜를 다시 확인해 주세요.");t.value=t.id==="setW"?P.wed:"";return}
     if(t.id==="setW"){P.wed=t.value;later()}}
   else if(t.dataset.qf!=null){const q=QUOTES[+t.dataset.qi],f=t.dataset.qf;
     if(f==="name")q.name=t.value.trim()||q.name;else if(f==="disc")q.disc=parseMoney(t.value,"man")||0;
