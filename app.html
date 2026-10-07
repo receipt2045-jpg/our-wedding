@@ -306,6 +306,11 @@ a.logo{text-decoration:none;color:inherit}
 .mtabs a{flex:0 0 auto;border:1px solid var(--line);background:#fff;padding:7px 14px;font-size:15px;color:var(--sub);text-decoration:none}
 .start label,.set label{display:block;font-size:14px;font-weight:600;margin:14px 0 6px}
 .start label .mut,.set label .mut{font-weight:400;font-size:12px}
+.wedpick{display:flex;gap:10px;align-items:center}
+.wedpick input[type=date]{flex:1;min-width:0}
+.wedpick input[type=date]:disabled{background:#F6F6F3;color:var(--muted)}
+.start .wedpick label.tbd,.set .wedpick label.tbd{display:flex;align-items:center;gap:6px;margin:0;font-weight:600;font-size:14px;white-space:nowrap;cursor:pointer}
+.wedpick label.tbd input{width:18px;height:18px;margin:0}
 .start input,.start select,.set input,.set select{width:100%;border:1px solid #DAD9D2;padding:11px 12px;font-size:16px;background:#fff}
 .start input:focus,.start select:focus,.set input:focus,.set select:focus{outline:2px solid var(--accd);outline-offset:-2px}
 .set .btn.wide{margin-top:8px}
@@ -625,6 +630,10 @@ function demoData() {
 }
 load();
 const wedDate = () => P.wed ? new Date(P.wed) : null;
+const WED_MIN = "2025-01-01", WED_MAX = "2028-12-31";
+// 예식일 칸 + '아직 미정' 체크 (id: 시작 화면은 stW, 설정은 setW)
+// 시작 화면은 날짜 칸을 열어 두고, 설정은 예식일이 비어 있으면 '미정'에 체크된 채로 보여줌
+const wedPick = id => { const tbd = id === "setW" && !P.wed; return `<div class="wedpick"><input type="date" id="${id}" min="${WED_MIN}" max="${WED_MAX}" value="${P.wed}" ${tbd ? "disabled" : ""}><label class="tbd"><input type="checkbox" data-tbd="${id}" ${tbd ? "checked" : ""}> 아직 미정</label></div><div class="mut" style="font-size:12px;margin-top:4px">2028년 12월 31일까지 고를 수 있어요</div>`; };
 const dday = () => { const w = wedDate(); return w ? Math.round((w - TODAY) / 864e5) : null; };
 const S = {mode: innerWidth<760?"mo":"pc", view:"home", big:"전체", ef:"전체", gside:"전체", gshow:30, stage:null, st:"완료", pay:"공동 계좌"};
 
@@ -748,7 +757,7 @@ const regionOpts=()=>R.regions.map(r=>`<option value="${r.id}" ${r.id===P.region
 function vStart(){
   return `<div class="ph"><h1>우리 결혼 가계부를 시작해요</h1><p>회원가입 없이 바로 써요. 적은 내용은 <b>이 브라우저에만</b> 저장돼요.</p></div>
   <div class="card start" style="max-width:560px">
-    <label>예식일 <span class="mut">아직 몰라도 괜찮아요</span></label><input type="date" id="stW" value="${P.wed}">
+    <label>예식일 <span class="mut">아직 몰라도 괜찮아요</span></label>${wedPick("stW")}
     <label>결혼식 지역 <span class="mut">예산 탭의 남들 평균을 이 지역 기준으로 보여줘요</span></label><select id="stR">${regionOpts()}</select>
     <div class="grid g2"><div><label>예신 호칭</label><input id="stB" placeholder="예신" value="${esc(P.bride)}"></div><div><label>예랑 호칭</label><input id="stG" placeholder="예랑" value="${esc(P.groom)}"></div></div>
     <button class="btn wide" data-act="start" style="margin-top:20px">시작하기</button>
@@ -763,7 +772,7 @@ function vSet(){
   return `<div class="ph"><h1>설정 · 백업</h1><p>${CL.id?"로그인되어 있어서 기록은 <b>계정에</b> 저장돼요. 백업 파일도 가끔 받아 두면 더 안전해요.":"로그인 없이 쓰는 동안 기록은 <b>이 브라우저에만</b> 저장돼요. 브라우저 기록을 지우면 함께 지워지니 가끔 백업 파일을 받아 두세요."}</p></div>
   <div class="grid g2" style="align-items:start">
     <div class="card set"><h2>결혼 정보</h2>
-      <label>예식일</label><input type="date" data-pf="wed" value="${P.wed}">
+      <label>예식일</label>${wedPick("setW")}
       <label>결혼식 지역 <span class="mut">남들 평균 기준</span></label><select data-pf="region">${regionOpts()}</select>
       <label>예신 호칭</label><input data-pf="bride" value="${esc(P.bride)}" placeholder="예신">
       <label>예랑 호칭</label><input data-pf="groom" value="${esc(P.groom)}" placeholder="예랑">
@@ -1510,7 +1519,9 @@ document.addEventListener("click",e=>{
     case"addg":{const n=document.getElementById("gN").value.trim();if(!n)return;GUESTS.unshift({name:n,side:document.getElementById("gS").value,prev:false,inv:false,close:false,plus:0,memo:"",aDay:0,aGift:0,aHow:""});S.gside="전체";render();break;}
     case"todo":{const t=a.dataset.t;DONE.has(t)?DONE.delete(t):DONE.add(t);render();break;}
     case"stage":S.stage=v;render();break;
-    case"start":{P.wed=document.getElementById("stW").value;P.region=document.getElementById("stR").value;P.bride=document.getElementById("stB").value.trim();P.groom=document.getElementById("stG").value.trim();P.started=true;P.demo=false;render();window.scrollTo(0,0);break;}
+    case"start":{const w=document.getElementById("stW"),tbd=document.querySelector('[data-tbd="stW"]');
+      if(!tbd.checked&&w.value&&(w.value<WED_MIN||w.value>WED_MAX)){alert("예식일은 2028년 12월 31일까지만 고를 수 있어요. 아직 모르면 '아직 미정'을 눌러 주세요.");w.focus();break}
+      P.wed=tbd.checked?"":w.value;P.region=document.getElementById("stR").value;P.bride=document.getElementById("stB").value.trim();P.groom=document.getElementById("stG").value.trim();P.started=true;P.demo=false;render();window.scrollTo(0,0);break;}
     case"demo":use(demoData());S.view="home";render();window.scrollTo(0,0);break;
     case"enddemo":if(confirm("예시를 지우고 빈 가계부로 시작할까요?")){use(fresh());S.view="home";render();window.scrollTo(0,0)}break;
     case"login":dlgLogin(false);break;
@@ -1577,6 +1588,10 @@ document.addEventListener("change",e=>{
   else if(t.id==="cphoto"&&t.files.length){const h=HALLS[+t.dataset.k],H=hid(h),fs=[...t.files];t.value="";toast("사진 넣는 중…");
     (async()=>{for(const f of fs){try{const b=await shrinkImg(f);await PDB.put({id:Math.random().toString(36).slice(2,10),hid:H,t:Date.now(),b})}catch(e){toast('<span class="red">사진을 저장하지 못했어요</span>');}}await loadPhotos(H,true);toast("사진을 넣었어요")})();}
   else if(t.dataset.pf!=null){P[t.dataset.pf]=t.value;later();}
+  else if(t.dataset.tbd!=null){const w=document.getElementById(t.dataset.tbd);w.disabled=t.checked;if(t.checked){w.value="";if(t.dataset.tbd==="setW"){P.wed="";later()}}else w.focus();}
+  else if(t.id==="stW"||t.id==="setW"){
+    if(t.value&&(t.value<WED_MIN||t.value>WED_MAX)){alert("예식일은 2028년 12월 31일까지만 고를 수 있어요.");t.value=t.id==="setW"?P.wed:"";return}
+    if(t.id==="setW"){P.wed=t.value;later()}}
   else if(t.dataset.qf!=null){const q=QUOTES[+t.dataset.qi],f=t.dataset.qf;
     if(f==="name")q.name=t.value.trim()||q.name;else if(f==="disc")q.disc=parseFloat(t.value.replace(/,/g,""))||0;
     else{const slot=q[f[0]]=q[f[0]]||{};if(f[1]==="v")slot.v=t.value.trim();else slot.p=t.value===""?"":(parseFloat(t.value.replace(/,/g,""))||0)}
