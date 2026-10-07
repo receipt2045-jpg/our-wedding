@@ -386,7 +386,12 @@ tr.newrow .pickbtn{background:#fff}
 .distbar .me:after{content:"";position:absolute;left:50%;bottom:-6px;margin-left:-4px;border:4px solid transparent;border-top-color:var(--red)}
 .distbar .lb{position:absolute;top:18px;font-size:11px;color:var(--muted);transform:translateX(-50%);white-space:nowrap}
 .vtab td.best{background:var(--accs);font-weight:800}
-.vtab td small{display:block;color:var(--muted);font-size:11px}
+.vtab table{table-layout:fixed;width:100%}
+.vtab td{vertical-align:top}
+.vtab td .pv{font-size:15px}
+.vtab td.best .pv{font-weight:800}
+.vtab td small{display:block;color:var(--muted);font-size:11px;line-height:1.4;margin-top:2px}
+.vtab td small.dt{white-space:normal;word-break:keep-all;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;cursor:help}
 .vtab .vn{font-weight:700}
 .vlist .it{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:#fff;padding:10px 4px;cursor:pointer}
 .vlist .it:hover{background:var(--accs)}
@@ -949,13 +954,24 @@ function vRow(v){
   const rep=r=>{const pr=r.pr;const pref=r.k==="studio"?pr[0]:(pr.find(x=>/^본식\+촬영( 실장)?$/.test(x[0]))||pr.find(x=>/^본식\+촬영/.test(x[0]))||pr[0]);return pref};
   return {rep};
 }
+// 가격 글자에서 시간·달 숫자를 빼고 가격만 골라 최저~최고로 줄임 ("오전 161 / 오후 172" → 161~172, "264~" → 264~)
+function priceOf(x){
+  const t=String(x[1]),clean=t.replace(/\d+\s*~\s*\d+\s*월/g,"").replace(/\d+\s*(시|월|분)/g,"");
+  const ns=(clean.match(/\d+(?:\.\d+)?/g)||[]).map(Number);if(!ns.length)return{lo:null,hi:null,main:t,more:""};
+  const lo=Math.min(...ns),open=/~\s*$/.test(t.trim())&&ns.length===1,hi=open?Infinity:Math.max(...ns);
+  const main=open?`${lo}~`:lo===hi?`${lo}`:`${lo}~${hi}`;
+  const more=t.replace(/\s+/g,"")===main?"":t.replace(/\s*\/\s*/g," / ").replace(/\s{2,}/g," ");
+  return{lo,hi,main,more};
+}
 function vVendors(){
   if(!VEN)return'<p class="empty">업체 가격표가 없어요.</p>';
   const PL=VEN.planners.map(x=>x.n),q=(S.vq||"").trim();
   const rows=VEN.rows.filter(r=>r.k===S.vk&&(S.vp==="전체"||r.p===S.vp)&&(!q||r.v.includes(q)));
   const {rep}=vRow();
-  const groups={};rows.forEach(r=>{const key=r.v.replace(/\s|\(.*?\)/g,"").toLowerCase();(groups[key]=groups[key]||{v:r.v,by:{}}).by[r.p]=r});
-  const list=Object.values(groups).map(g=>({...g,min:Math.min(...Object.values(g.by).map(r=>rep(r)[2]||9999))})).sort((a,b)=>a.min-b.min);
+  const groups={};rows.forEach(r=>{const key=r.v.replace(/\s|\(.*?\)/g,"").toLowerCase(),g=(groups[key]=groups[key]||{v:r.v,by:{}}),had=g.by[r.p];
+    // 한 플래너 표에 같은 업체가 두 줄이면 가격을 이어 붙임 (덮어쓰면 한 줄이 사라짐)
+    if(had){const a=rep(had),b=rep(r);g.by[r.p]={...had,pr:[[a[0],a[1]+" / "+b[1],Math.min(a[2]??9999,b[2]??9999)]]}}else g.by[r.p]=r});
+  const list=Object.values(groups).map(g=>({...g,min:Math.min(...Object.values(g.by).map(r=>priceOf(rep(r)).lo??9999))})).sort((a,b)=>a.min-b.min);
   const bi=BASE_ITEM[S.vk],lo=sv(S.vk,bi,1),hi=sv(S.vk,bi,3);
   const intro=`<div class="pills">${["studio","dress","makeup"].map(k=>`<button class="${S.vk===k?"on":""}" data-act="vk" data-v="${k}">${KN[k]}</button>`).join("")}</div>
     <div class="pills">${["전체",...PL].map(n=>`<button class="${S.vp===n?"on":""}" data-act="vp" data-v="${n}">${n}</button>`).join("")}</div>
@@ -964,14 +980,18 @@ function vVendors(){
       <div style="margin-top:6px">${VEN.asOf} 기준 플래너별 공개 가격이에요(만원). 같은 업체도 어느 플래너로 계약하느냐에 따라 가격이 달라요.${S.vk==="studio"?" 스튜디오는 원본·수정본을 포함한 가격이에요.":""} 업체 사정에 따라 바뀌니 계약 전에 꼭 다시 확인하세요.</div></div>
     <input id="vq" class="ce" style="width:100%;border:1px solid var(--line);padding:10px;margin-bottom:10px" placeholder="업체 이름 찾기" value="${esc(S.vq||"")}">`;
   const showPL=S.vp==="전체"?PL:[S.vp];
-  if(S.mode==="pc")return intro+`<div class="tw vtab"><table><thead><tr><th>업체</th>${showPL.map(n=>`<th class="num">${n}</th>`).join("")}<th>우리 지역 기준</th></tr></thead><tbody>
-    ${list.map(g=>{const vals=showPL.map(n=>g.by[n]?rep(g.by[n]):null),mn=Math.min(...vals.filter(Boolean).map(x=>x[2]||9999));
+  // 칸 안: 큰 글씨는 최저~최고, 작은 글씨는 시간대·조건 원문(두 줄까지, 마우스 올리면 전체)
+  const sub=(x,p)=>p.more?`<small class="dt" title="${esc(p.more)}">${esc(p.more)}</small>`:(x[0]==="기본가"?"":`<small>${esc(x[0])}</small>`);
+  if(S.mode==="pc")return intro+`<div class="tw vtab"><table><colgroup><col style="width:22%">${showPL.map(()=>"<col>").join("")}<col style="width:104px"></colgroup><thead><tr><th>업체</th>${showPL.map(n=>`<th class="num">${n}</th>`).join("")}<th>우리 지역 기준</th></tr></thead><tbody>
+    ${list.map(g=>{const vals=showPL.map(n=>g.by[n]?rep(g.by[n]):null),ps=vals.map(x=>x?priceOf(x):null);
+      // 다른 플래너의 최저가보다 이 칸의 최고가가 낮을 때만 '제일 싼 곳'으로 칠함 (범위끼리 겹치면 안 칠함)
+      const best=ps.map((p,i)=>p&&p.lo!=null&&ps.filter(Boolean).length>1&&ps.every((o,j)=>j===i||!o||o.lo==null||p.hi<o.lo));
       return `<tr><td class="vn">${esc(g.v)}${Object.keys(g.by).length>1?`<small>플래너 ${Object.keys(g.by).length}곳</small>`:""}</td>
-        ${vals.map((x,i)=>x?`<td class="num ${Object.keys(g.by).length>1&&x[2]===mn?"best":""}">${esc(x[1])}<small>${esc(x[0])}</small></td>`:'<td class="num mut">–</td>').join("")}
+        ${vals.map((x,i)=>x?`<td class="num ${best[i]?"best":""}"><span class="pv">${esc(ps[i].main)}</span>${sub(x,ps[i])}</td>`:'<td class="num mut">–</td>').join("")}
         <td>${rateOf(g.min<9999?g.min:null,lo,hi)}</td></tr>`}).join("")||'<tr><td colspan="6" class="mut">찾는 업체가 없어요</td></tr>'}
-  </tbody></table></div><p class="mut" style="font-size:12px">한 업체가 여러 플래너에 있으면 가장 싼 곳을 칠해 뒀어요. 드레스·메이크업은 본식+촬영 가격(메이크업은 실장 기준)을 보여줘요.</p>`;
+  </tbody></table></div><p class="mut" style="font-size:12px">가격이 시간대·조건별로 다르면 최저~최고로 줄여 보여주고, 작은 글씨에 원래 조건을 적어 뒀어요. 한 플래너가 다른 곳보다 확실히 쌀 때만(가격대가 겹치지 않을 때) 칠해 뒀어요. 드레스·메이크업은 본식+촬영 가격(메이크업은 실장 기준)이에요.</p>`;
   return intro+`<div class="card" style="padding:4px 16px">${list.map(g=>`<div class="mrow"><div class="a"><span class="n">${esc(g.v)}</span><span>${rateOf(g.min<9999?g.min:null,lo,hi)}</span></div>
-    <div class="s" style="display:block">${Object.values(g.by).map(r=>{const x=rep(r);return `${r.p} <b style="color:var(--ink)">${esc(x[1])}</b>만 <span style="font-size:11px">(${esc(x[0])})</span>`}).join(" · ")}</div></div>`).join("")||'<p class="empty">찾는 업체가 없어요</p>'}</div>`;
+    <div class="s" style="display:block">${Object.values(g.by).map(r=>{const x=rep(r),p=priceOf(x);return `<div>${r.p} <b style="color:var(--ink)">${esc(p.main)}</b>만${x[0]!=="기본가"?` <span style="font-size:11px">(${esc(x[0])})</span>`:""}${p.more?`<br><span style="font-size:11px">${esc(p.more)}</span>`:""}</div>`}).join("")}</div></div>`).join("")||'<p class="empty">찾는 업체가 없어요</p>'}</div>`;
 }
 function vExtras(){
   if(P.region==="all")return "";
