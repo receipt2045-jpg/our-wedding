@@ -62,7 +62,7 @@ select,#q{border:1px solid var(--line);padding:8px 10px;font-size:14px;backgroun
 .facts dd{margin:0}
 .pc{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;font-size:13px}
 .pc b{display:block;font-size:12px;margin-bottom:3px}
-.pc .p b{color:var(--green)} .pc .c b{color:var(--red)}
+.pc .p b{color:var(--green)} .pc .c b{color:var(--acct)}
 .pc ul{margin:0;padding-left:16px}
 .pc li{margin:1px 0}
 .foot2{margin-top:auto;padding-top:12px;display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
@@ -109,9 +109,9 @@ select,#q{border:1px solid var(--line);padding:8px 10px;font-size:14px;backgroun
 .lvl{display:grid;gap:1px;font-size:12px}
 .lvl button{display:flex;justify-content:space-between;gap:6px;border:0;background:none;padding:2px 4px;text-align:left;color:var(--ink);font-size:12px}
 .lvl button:hover,.lvl button.on{background:var(--accs)}
-.lvl .g{color:var(--green);font-weight:700}.lvl .m{color:var(--sub)}.lvl .b{color:var(--red);font-weight:700}.lvl .n{color:var(--muted)}
+.lvl .g{color:var(--green);font-weight:700}.lvl .m{color:var(--sub)}.lvl .c{color:var(--acct);font-weight:700}.lvl .n{color:var(--muted)}
 .why{font-size:12px;background:#FAFAF7;padding:7px 9px;margin-top:6px;line-height:1.6}
-.why .pl{color:var(--green)}.why .mi{color:var(--red)}
+.why .pl{color:var(--green)}.why .ck{color:var(--acct);font-weight:700}
 .mine{font-size:11px;color:var(--sub);display:flex;gap:10px;margin-top:2px}
 .mine span{display:flex;align-items:center;gap:4px}
 footer{border-top:1px solid var(--line);margin-top:40px;padding:20px 0 40px;font-size:13px;color:var(--muted);line-height:1.7}
@@ -125,7 +125,7 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:20px 0 40px;font
 
 <main class="wrap">
   <h1>웨딩홀 리스트</h1>
-  <p class="lead">보증인원·식대·주차 같은 기본 정보와, 하객·신랑신부 후기에서 <b>자주 나오는 좋은 점·아쉬운 점</b>을 짧게 모았어요. 후기 원문은 각 홀의 '출처'에서 볼 수 있어요.</p>
+  <p class="lead">보증인원·식대·주차 같은 기본 정보와, 하객·신랑신부 후기에서 <b>자주 나오는 좋은 점과 상담 때 확인할 점</b>을 짧게 모았어요. 후기 원문은 각 홀의 '출처'에서 볼 수 있어요.</p>
 
   <div class="filters">
     <div class="row pills" id="rg"></div>
@@ -145,8 +145,8 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:20px 0 40px;font
 <footer><div class="wrap">
   <div>정보는 웨딩홀 공식 안내와 블로그·웨딩 플랫폼의 공개 후기를 읽고 정리했어요(<span id="chk"></span> 확인). 식대·보증인원은 날짜·시간·계약 시점에 따라 달라지니 상담에서 꼭 다시 확인하세요.</div>
   <div>사진은 각 웨딩홀 공식 홈페이지의 대표 이미지예요. 사진을 누르면 공식 홈페이지로 가요. 지도는 OpenStreetMap이고, 위치는 주소로 찾은 거라 조금 어긋날 수 있어요.</div>
-  <div>후기 육각형은 후기 요약의 좋은 점·아쉬운 점을 6칸(가격·홀·음식·주차·교통·하객 편의)으로 나눠, 칸마다 좋다는 말만 있으면 '좋다는 말 많음', 아쉬운 말만 있으면 '아쉽다는 말 많음', 둘 다 있으면 '엇갈림', 없으면 '자료 부족'으로 보여줘요. 점수가 아니라 참고용이에요.</div>
-  <div>좋은 점·아쉬운 점은 여러 후기에서 겹쳐 나온 내용을 우리 말로 줄인 거예요. 잘못된 정보가 있으면 알려 주세요.</div>
+  <div>후기 육각형은 후기 요약을 6칸(가격·홀·음식·주차·교통·하객 편의)으로 나눠, 칸마다 좋은 말만 있으면 '좋다는 말 많음', 확인할 점만 있으면 '확인해 볼 점 있음', 둘 다 있으면 '좋은 말·확인할 점', 이야기가 없으면 '자료 부족'으로 보여줘요. 점수가 아니라 참고용이에요.</div>
+  <div>좋은 점과 '상담 때 확인할 점'은 여러 후기에서 겹쳐 나온 내용을 우리 말로 줄인 거예요. 확인할 점은 홀에 대한 평가가 아니라, 상담 때 직접 물어보고 확인해 보시라는 목록이에요. 잘못된 정보가 있으면 알려 주세요.</div>
   <div style="margin-top:8px">© OUR WEDDING · <a href="privacy.html">개인정보처리방침</a></div>
 </div></footer>
 
@@ -182,8 +182,8 @@ function hexBox(h){
   const H=HEX,lv=H.AX.map(a=>h.rv[a]||"n"),vals=lv.map(k=>H.LV[k][0]),my=mineOf(h),w=openWhy[h.id];
   const list=[{name:"후기",vals,color:"#5B6270",fill:.14,tips:lv.map(k=>H.LV[k][1])}];
   if(my)list.push({name:"내 평가",vals:my.map(x=>x||0),color:H.COL[0],dash:true,fill:0});
-  const svg=H.svg(list,{rings:[1.5,3,4.5],miss:lv.map(k=>k==="n"),fs:34,dots:!!my});
-  const why=w!=null&&h.rvWhy&&h.rvWhy[H.AX[w]]?`<div class="why"><b>${H.AX[w]}</b> · ${h.rvWhy[H.AX[w]].map(([s,t])=>`<span class="${s==="+"?"pl":"mi"}">${s==="+"?"좋음":"아쉬움"}</span> ${esc(t)}`).join(" / ")}</div>`:w!=null?`<div class="why"><b>${H.AX[w]}</b> · 이 칸 이야기가 나온 후기가 없어요.</div>`:"";
+  const svg=H.svg(list,{rings:[2,3.2,4.5],miss:lv.map(k=>k==="n"),fs:34,dots:!!my});
+  const why=w!=null&&h.rvWhy&&h.rvWhy[H.AX[w]]?`<div class="why"><b>${H.AX[w]}</b> · ${h.rvWhy[H.AX[w]].map(([s,t])=>`<span class="${s==="+"?"pl":"ck"}">${s==="+"?"좋음":"확인"}</span> ${esc(t)}`).join(" / ")}</div>`:w!=null?`<div class="why"><b>${H.AX[w]}</b> · 이 칸 이야기가 나온 후기가 없어요.</div>`:"";
   return `<div class="rvx"><div class="hd"><b>후기 육각형</b><span>후기 ${h.sources.length}곳 요약 기준 · 참고용</span></div>
     <div class="bd"><svg viewBox="0 0 440 400" role="img" aria-label="${esc(h.name)} 후기 육각형">${svg}</svg>
     <div class="lvl">${H.AX.map((a,i)=>`<button data-why="${h.id}|${i}" class="${w===i?"on":""}"><span>${a}</span><span class="${lv[i]}">${H.LV[lv[i]][1]}</span></button>`).join("")}</div></div>
@@ -196,7 +196,7 @@ function card(h){
     <div class="top"><div><h3>${esc(h.name)}</h3><div class="meta">${esc(h.area||"")}${h.type?` · ${esc(h.type)}`:""}</div></div>${h.single===true?'<span class="tag y">단독홀</span>':""}</div>
     ${f.length?`<dl class="facts">${f.map(([k,v])=>`<dt>${k}</dt><dd>${esc(v)}</dd>`).join("")}</dl>`:""}
     ${hexBox(h)}
-    ${(h.pros&&h.pros.length)||(h.cons&&h.cons.length)?`<div class="pc"><div class="p"><b>후기 좋은 점</b><ul>${(h.pros||[]).map(x=>`<li>${esc(x)}</li>`).join("")||"<li>–</li>"}</ul></div><div class="c"><b>후기 아쉬운 점</b><ul>${(h.cons||[]).map(x=>`<li>${esc(x)}</li>`).join("")||"<li>–</li>"}</ul></div></div>`:""}
+    ${(h.pros&&h.pros.length)||(h.checks&&h.checks.length)?`<div class="pc"><div class="p"><b>후기 좋은 점</b><ul>${(h.pros||[]).map(x=>`<li>${esc(x)}</li>`).join("")||"<li>–</li>"}</ul></div><div class="c"><b>상담 때 확인할 점</b><ul>${(h.checks||[]).map(x=>`<li>${esc(x)}</li>`).join("")||"<li>–</li>"}</ul></div></div>`:""}
     <div class="foot2">${h.sources&&h.sources.length?`<details class="src"><summary>출처 ${h.sources.length}개</summary><ul>${h.sources.map(s=>`<li><a href="${esc(s.u)}" target="_blank" rel="noopener nofollow">${esc(s.t||s.u)}</a></li>`).join("")}</ul></details>`:"<span></span>"}
       <a class="add" href="app.html?addhall=${encodeURIComponent(h.id)}">가계부 비교표에 넣기</a></div>
     <div class="links" style="margin-top:8px">${h.lat?`<button data-onmap="${h.id}">지도에서 보기</button>`:""}<a href="https://map.naver.com/p/search/${encodeURIComponent(h.name)}" target="_blank" rel="noopener">네이버 지도 길찾기</a>${h.site?`<a href="${esc(h.site)}" target="_blank" rel="noopener">공식 홈페이지</a>`:""}</div>
