@@ -597,7 +597,8 @@ function load() {
   try { const t = localStorage.getItem(KEY); if (t) { use(JSON.parse(t)); return; } } catch (e) { storeOK = false; }
   use(fresh());
 }
-function save() { clearTimeout(_st); _st = setTimeout(() => { try { localStorage.setItem(KEY, JSON.stringify(snapshot())); storeOK = true; } catch (e) { storeOK = false; } }, 200); if (typeof cloudSave === "function") cloudSave(); }
+let _lastLocal = "";
+function save() { clearTimeout(_st); _st = setTimeout(() => { try { const d = snapshot(), c = coreOf(d); if (c !== _lastLocal) { localStorage.setItem(KEY, JSON.stringify(d)); _lastLocal = c; } storeOK = true; } catch (e) { storeOK = false; } }, 200); if (typeof cloudSave === "function") cloudSave(); }
 
 // 예시 가계부 (처음 온 사람이 둘러보는 용도)
 function demoData() {
@@ -1423,7 +1424,9 @@ const CONF=window.OW_CONF||{};
 let SB=null;try{if(window.supabase&&CONF.supabaseUrl)SB=window.supabase.createClient(CONF.supabaseUrl,CONF.supabaseKey,{auth:{flowType:"pkce",persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}})}catch(e){SB=null}
 const CL={providers:[],user:null,id:null,invite:"",members:0,state:"",last:"",ch:null,t:null};
 const PNAME={kakao:"카카오",naver:"네이버",google:"구글"};
-const coreOf=d=>{const c=Object.assign({},d);delete c.saved;return JSON.stringify(c)};
+// 서버는 키 순서를 바꿔 돌려주므로, 키를 정렬해서 비교 (saved 시각은 빼고)
+const stab=v=>Array.isArray(v)?"["+v.map(stab).join(",")+"]":v&&typeof v==="object"?"{"+Object.keys(v).sort().map(k=>JSON.stringify(k)+":"+stab(v[k])).join(",")+"}":JSON.stringify(v===undefined?null:v);
+const coreOf=d=>{const c=Object.assign({},d);delete c.saved;return stab(c)};
 const getJoin=()=>{try{return sessionStorage.getItem("ow-join")}catch(e){return null}};
 const userName=()=>{const u=CL.user;if(!u)return"";const m=u.user_metadata||{};return m.full_name||m.name||m.nickname||m.user_name||u.email||"내 계정"};
 const inviteLink=()=>location.origin+location.pathname+"?join="+CL.invite;
@@ -1507,10 +1510,10 @@ function editingNow(){const a=document.activeElement;if(!a||a===document.body)re
   return a.isContentEditable||(a.tagName==="TEXTAREA")||(a.tagName==="INPUT"&&!/^(checkbox|radio|button|submit|file)$/.test(a.type))}
 function applyRemote(n){const c=coreOf(n.data);CL.pend=null;if(c===CL.last)return;
   CL.last=c;use(n.data);P.demo=false;CL.state=(CL.user&&n.updated_by&&n.updated_by!==CL.user.id)?"상대가 방금 고쳤어요":"저장됨";render();}
-document.addEventListener("focusout",()=>setTimeout(()=>{if(CL.pend&&!editingNow())applyRemote(CL.pend)},400));
-// 칸을 벗어난 신호를 못 받았거나 칸에 커서만 둔 채 8초 넘게 안 치면 그때 반영
-document.addEventListener("input",()=>{CL.typedAt=Date.now()});
-setInterval(()=>{if(CL.pend&&(!editingNow()||Date.now()-(CL.typedAt||0)>8000))applyRemote(CL.pend)},1500);
+function applyPending(){if(editingNow())return;if(CL.pend)applyRemote(CL.pend);if(S.pendLocal){const d=S.pendLocal;S.pendLocal=null;if(coreOf(d)!==coreOf(snapshot())){use(d);render()}}}
+document.addEventListener("focusout",()=>setTimeout(applyPending,400));
+// 칸을 벗어난 신호를 놓친 경우를 위해 1.5초마다 확인 (치는 중이면 반영 안 함)
+setInterval(applyPending,1500);
 function subscribe(){
   if(CL.ch)SB.removeChannel(CL.ch);
   CL.ch=SB.channel("ledger-"+CL.id).on("postgres_changes",{event:"UPDATE",schema:"public",table:"ledgers",filter:"id=eq."+CL.id},pl=>{
@@ -1701,7 +1704,8 @@ function onKey(t,key,shift,pd){
 }
 
 addEventListener("resize",()=>{const m=innerWidth<760?"mo":"pc";if(m!==S.mode){S.mode=m;render()}});
-addEventListener("storage",e=>{if(e.key===KEY&&e.newValue){try{use(JSON.parse(e.newValue));render()}catch(err){}}});
+addEventListener("storage",e=>{if(e.key!==KEY||!e.newValue)return;try{const d=JSON.parse(e.newValue),c=coreOf(d);if(c===coreOf(snapshot()))return;_lastLocal=c;
+  if(editingNow()){S.pendLocal=d;return}use(d);render()}catch(err){}});
 function addHallFromList(){
   let u;try{u=new URL(location.href)}catch(e){return}
   const id=u.searchParams.get("addhall");if(!id)return;
