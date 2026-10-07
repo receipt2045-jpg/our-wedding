@@ -307,6 +307,8 @@ a.logo{text-decoration:none;color:inherit}
 .start label,.set label{display:block;font-size:14px;font-weight:600;margin:14px 0 6px}
 .start label .mut,.set label .mut{font-weight:400;font-size:12px}
 .wedpick{display:flex;gap:10px;align-items:center}
+#mnote{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-size:14px;padding:10px 14px;max-width:calc(100% - 32px);opacity:0;pointer-events:none;transition:.2s;z-index:50}
+#mnote.on{opacity:1;transform:translateX(-50%)}
 .wedpick input[type=date]{flex:1;min-width:0}
 .wedpick input[type=date]:disabled{background:#F6F6F3;color:var(--muted)}
 .start .wedpick label.tbd,.set .wedpick label.tbd{display:flex;align-items:center;gap:6px;margin:0;font-weight:600;font-size:14px;white-space:nowrap;cursor:pointer}
@@ -629,6 +631,30 @@ function demoData() {
   return d;
 }
 load();
+// 금액 글자 읽기: "150만", "150만원", "1억 2천만", "1,500,000", "1500000원" 모두 됨
+// unit "man"이면 만원 단위로, "won"이면 원 단위로 돌려줌 (못 읽으면 null)
+function parseMoney(str, unit){
+  let t=String(str??"").replace(/[,\s]/g,"");if(!t)return null;
+  let won=null;
+  if(/[억만천]/.test(t)){
+    won=0;let rest=t.replace(/원$/,"");
+    const take=(re,mul)=>{const m=rest.match(re);if(m){won+=parseFloat(m[1]||"1")*mul;rest=rest.replace(m[0],"")}};
+    take(/([\d.]*)억/,1e8);take(/([\d.]*)천만/,1e7);take(/([\d.]*)백만/,1e6);take(/([\d.]*)만/,1e4);take(/([\d.]*)천/,1e3);
+    const r=rest.match(/[\d.]+/);if(r)won+=parseFloat(r[0]);
+    if(!isFinite(won))return null;
+    return unit==="man"?Math.round(won/1e3)/10:Math.round(won);
+  }
+  const n=parseFloat(t.replace(/[^\d.]/g,""));if(isNaN(n))return null;
+  if(unit==="man"){
+    // 만원 칸에 원 단위로 친 경우 (10만 이상 = 10억 이상은 원으로 본다)
+    if(/원$/.test(t)||n>=100000){moneyNote(`${n.toLocaleString()}원 → ${(Math.round(n/1e3)/10).toLocaleString()}만원으로 넣었어요`);return Math.round(n/1e3)/10}
+    return n;
+  }
+  // 원 칸에 만원 단위로 친 경우 (1000 미만 = '150'은 150만원으로 본다)
+  if(n>0&&n<1000&&!/원$/.test(t)){moneyNote(`${n}만원(${(n*1e4).toLocaleString()}원)으로 넣었어요. 정말 ${n}원이면 '${n}원'이라고 적어 주세요`);return Math.round(n*1e4)}
+  return Math.round(n);
+}
+let _mnT;function moneyNote(msg){let el=document.getElementById("mnote");if(!el){el=document.createElement("div");el.id="mnote";document.body.appendChild(el)}el.textContent=msg;el.className="on";clearTimeout(_mnT);_mnT=setTimeout(()=>el.className="",3200)}
 const wedDate = () => P.wed ? new Date(P.wed) : null;
 const WED_MIN = "2025-01-01", WED_MAX = "2028-12-31";
 // 예식일 칸 + '아직 미정' 체크 (id: 시작 화면은 stW, 설정은 setW)
@@ -1473,7 +1499,7 @@ async function signOutAll(){try{if(CL.ch)SB.removeChannel(CL.ch);await SB.auth.s
 function toast(t){const h=document.querySelector("#dlg #fH")||document.getElementById("fH");if(h)h.innerHTML=t}
 function readExp(){
   const g=id=>document.querySelector("#dlg #"+id)||document.getElementById(id);
-  const s=g("fS").value.trim(),am=parseInt((g("fA").value||"").replace(/[^0-9]/g,""));
+  const s=g("fS").value.trim(),am=parseMoney(g("fA").value,"won");
   if(!cat(s)){toast('<span class="red">어디에 쓴 돈인지 대분류 › 중분류 › 항목을 골라 주세요.</span>');const b=g("fSbtn");if(b)b.focus();return null}
   if(!am){toast('<span class="red">금액을 적어 주세요.</span>');g("fA").focus();return null}
   const pSel=g("fP"),stSel=g("fStS");
@@ -1567,14 +1593,14 @@ document.addEventListener("click",e=>{
 });
 document.addEventListener("change",e=>{
   const t=e.target;
-  if(t.dataset.bud!=null){const n=parseFloat(t.value.replace(/,/g,""));MY[t.dataset.bud]=isNaN(n)?0:Math.round(n*10000);later();}
+  if(t.dataset.bud!=null){const n=parseMoney(t.value,"man");MY[t.dataset.bud]=n==null?0:Math.round(n*10000);later();}
   else if(t.dataset.xf!=null){const e=EXP[+t.dataset.xi],f=t.dataset.xf;
     if(f==="s"){const v=t.value.trim();if(!cat(v)){t.classList.add("bad");toast('<span class="red">목록에 있는 항목만 쓸 수 있어요. 글자를 치면 찾아줘요.</span>');t.value=e.s;setTimeout(()=>t.classList.remove("bad"),1500);return}e.s=v}
-    else if(f==="a"){const n=parseInt(t.value.replace(/[^0-9]/g,""));if(!n){t.value=e.a.toLocaleString();return}e.a=n}
+    else if(f==="a"){const n=parseMoney(t.value,"won");if(!n){moneyNote("금액을 읽지 못했어요. 예: 150만, 1500000");t.value=e.a.toLocaleString();return}e.a=n}
     else if(f==="r")e.r=t.checked; else e[f]=t.value;
     later();}
   else if(t.dataset.gf!=null){const g=GUESTS[+t.dataset.gi],f=t.dataset.gf;
-    if(f==="plus"||f==="day")g[f]=parseInt(t.value)||0; else if(f==="gift")g.gift=parseInt(t.value.replace(/[^0-9]/g,""))||0; else g[f]=t.value;
+    if(f==="plus"||f==="day")g[f]=parseInt(t.value)||0; else if(f==="gift")g.gift=parseMoney(t.value,"won")||0; else g[f]=t.value;
     later();}
   else if(t.dataset.ren!=null){const c=CATS.find(c=>c.id==t.dataset.ren);const old=c.small,nv=t.value.trim();
     if(!nv||nv===old){t.value=old;return}
@@ -1583,7 +1609,7 @@ document.addEventListener("change",e=>{
   else if(t.dataset.hs!=null){const[k,r]=t.dataset.hs.split(",");HALLS[k].sc[r]=+t.value;render();}
   else if(t.dataset.hn!=null){HALLS[+t.dataset.hn].name=t.value;save();}
   else if(t.dataset.cv!=null){const[k,ri]=t.dataset.cv.split(",").map(Number),m=CM[HALLROWS[ri][1]]||{};let val=t.value.trim();
-    if(m.t==="num"&&/^[\d.,]+$/.test(val))val=val.replace(/,/g,"")+m.u;HALLS[k].v[ri]=val;later();}
+    if(m.t==="num"&&m.u==="만"){const n=parseMoney(val,"man");if(n!=null)val=n+"만"}else if(m.t==="num"&&/^[\d.,]+$/.test(val))val=val.replace(/,/g,"")+m.u;HALLS[k].v[ri]=val;later();}
   else if(t.dataset.cmemo!=null){HALLS[+t.dataset.cmemo].memo=t.value;save();}
   else if(t.id==="cphoto"&&t.files.length){const h=HALLS[+t.dataset.k],H=hid(h),fs=[...t.files];t.value="";toast("사진 넣는 중…");
     (async()=>{for(const f of fs){try{const b=await shrinkImg(f);await PDB.put({id:Math.random().toString(36).slice(2,10),hid:H,t:Date.now(),b})}catch(e){toast('<span class="red">사진을 저장하지 못했어요</span>');}}await loadPhotos(H,true);toast("사진을 넣었어요")})();}
@@ -1593,10 +1619,10 @@ document.addEventListener("change",e=>{
     if(t.value&&(t.value<WED_MIN||t.value>WED_MAX)){alert("예식일은 2028년 12월 31일까지만 고를 수 있어요.");t.value=t.id==="setW"?P.wed:"";return}
     if(t.id==="setW"){P.wed=t.value;later()}}
   else if(t.dataset.qf!=null){const q=QUOTES[+t.dataset.qi],f=t.dataset.qf;
-    if(f==="name")q.name=t.value.trim()||q.name;else if(f==="disc")q.disc=parseFloat(t.value.replace(/,/g,""))||0;
-    else{const slot=q[f[0]]=q[f[0]]||{};if(f[1]==="v")slot.v=t.value.trim();else slot.p=t.value===""?"":(parseFloat(t.value.replace(/,/g,""))||0)}
+    if(f==="name")q.name=t.value.trim()||q.name;else if(f==="disc")q.disc=parseMoney(t.value,"man")||0;
+    else{const slot=q[f[0]]=q[f[0]]||{};if(f[1]==="v")slot.v=t.value.trim();else slot.p=t.value===""?"":(parseMoney(t.value,"man")??0)}
     later();}
-  else if(t.dataset.qe!=null){const e=QUOTES[+t.dataset.qi].ex[+t.dataset.qe];e.a=t.value===""?"":(parseFloat(t.value.replace(/,/g,""))||0);later();}
+  else if(t.dataset.qe!=null){const e=QUOTES[+t.dataset.qi].ex[+t.dataset.qe];e.a=t.value===""?"":(parseMoney(t.value,"man")??0);later();}
   else if(t.id==="restoreFile"&&t.files[0]){const fr=new FileReader();fr.onload=()=>{try{const d=JSON.parse(fr.result);if(!d||d.v!==1||!Array.isArray(d.exp)||!Array.isArray(d.cats))throw 0;
       if(!confirm("지금 기록을 이 백업 파일 내용으로 바꿀까요?"))return;use(d);P.started=true;P.demo=false;S.view="home";render();window.scrollTo(0,0);}catch(err){setMsg('<span class="red">OUR WEDDING 백업 파일이 아니에요.</span>')}};fr.readAsText(t.files[0]);t.value="";}
 });
@@ -1609,9 +1635,18 @@ document.addEventListener("input",e=>{
   if(t.dataset.hv!=null){}
 });
 document.addEventListener("focusout",e=>{const t=e.target;if(t.dataset&&t.dataset.hv!=null){const[k,r]=t.dataset.hv.split(",");HALLS[k].v[r]=t.textContent;render();}});
+// 한글은 글자를 조합하는 중에 Enter·↓를 누르면 마지막 글자가 다음 칸으로 튐 → 조합이 끝난 다음에 처리
 addEventListener("keydown",e=>{
   if(e.key==="Escape"){closeDlg();return}
   const t=e.target;if(!t||!t.dataset)return;
+  if(e.isComposing||e.keyCode===229){if(e.key==="Enter"||e.key==="ArrowDown"||e.key==="ArrowUp")S.pendKey={t,key:e.key,shift:e.shiftKey,at:performance.now()};return}
+  if(e.key==="Enter"||e.key==="ArrowDown"||e.key==="ArrowUp")S.navAt=performance.now();
+  onKey(t,e.key,e.shiftKey,()=>e.preventDefault());
+});
+addEventListener("compositionend",e=>{const p=S.pendKey;S.pendKey=null;if(!p||p.t!==e.target)return;
+  setTimeout(()=>{if((S.navAt||0)>p.at)return;if(document.activeElement===p.t||p.key==="Enter")onKey(p.t,p.key,p.shift,()=>{})},30)});
+function onKey(t,key,shift,pd){
+  const e={key,shiftKey:shift,preventDefault:pd};
   if(e.key==="Enter"&&t.dataset.pkadd){e.preventDefault();pkAdd(t.dataset.pkadd);return}
   if(e.key==="Enter"&&t.id==="pkq"){e.preventDefault();const f=document.querySelector('#pk [data-act="pksm"]');if(f)f.click();return}
   if(e.key==="Enter"&&t.classList&&t.classList.contains("pickbtn"))return;
@@ -1623,7 +1658,7 @@ addEventListener("keydown",e=>{
   const scope=t.closest("table")||document.getElementById("main");
   const all=[...scope.querySelectorAll(`[data-col="${col}"]`)];const n=all[all.indexOf(t)+dir];
   if(n){n.focus();try{n.select()}catch(e){}}else t.blur();
-});
+}
 
 addEventListener("resize",()=>{const m=innerWidth<760?"mo":"pc";if(m!==S.mode){S.mode=m;render()}});
 addEventListener("storage",e=>{if(e.key===KEY&&e.newValue){try{use(JSON.parse(e.newValue));render()}catch(err){}}});
