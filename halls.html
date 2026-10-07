@@ -11,6 +11,7 @@
 <meta name="theme-color" content="#FFF0A6">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>
 :root{
   --acc:#FFF0A6; --acc2:#FFF6C9; --accs:#FFFCEC; --accl:#F1DC6E; --accd:#D9B300; --acct:#3A3200;
@@ -18,6 +19,7 @@
 }
 *,*::before,*::after{box-sizing:border-box;border-radius:0!important}
 html{-webkit-text-size-adjust:100%}
+[hidden]{display:none!important}
 body{margin:0;background:#fff;color:var(--ink);font-family:Pretendard,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-size:15px;line-height:1.55;font-variant-numeric:tabular-nums;word-break:keep-all}
 button,input,select{font:inherit;color:inherit}
 button{cursor:pointer}
@@ -70,6 +72,33 @@ select,#q{border:1px solid var(--line);padding:8px 10px;font-size:14px;backgroun
 .add{border:1px solid var(--accl);background:var(--accs);padding:7px 10px;font-size:13px;font-weight:700;text-decoration:none;color:var(--acct);white-space:nowrap}
 .add:hover{background:var(--acc)}
 .empty{color:var(--muted);padding:30px 0;text-align:center}
+/* 사진 */
+.h{padding:0}
+.h .body{padding:16px;display:flex;flex-direction:column;flex:1}
+.ph{position:relative;aspect-ratio:16/9;background:var(--accs);border-bottom:1px solid var(--line);overflow:hidden}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.ph .cr{position:absolute;right:0;bottom:0;background:rgba(0,0,0,.55);color:#fff;font-size:11px;padding:2px 7px;text-decoration:none}
+.ph.none{display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px}
+/* 보기 바꾸기 */
+.view{display:inline-flex;border:1px solid var(--line);margin-left:auto}
+.view button{border:0;background:#fff;padding:7px 14px;font-size:14px}
+.view button.on{background:var(--ink);color:#fff;font-weight:700}
+.links{display:flex;gap:10px;align-items:center}
+.links a,.links button{font-size:12px;color:var(--sub);background:none;border:0;padding:0;text-decoration:underline}
+/* 지도 */
+#map{height:calc(100vh - 230px);min-height:420px;border:1px solid var(--line)}
+@media (max-width:680px){#map{height:70vh}}
+.leaflet-popup-content-wrapper,.leaflet-popup-tip{border-radius:0!important}
+.leaflet-popup-content{margin:0;width:240px!important;font-family:Pretendard,sans-serif}
+.pop img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
+.pop .in{padding:10px 12px}
+.pop b{font-size:15px;display:block}
+.pop .m{font-size:12px;color:var(--sub);margin:2px 0 6px}
+.pop .f{font-size:12px;line-height:1.5}
+.pop .go{display:inline-block;margin-top:8px;font-size:12px;font-weight:700;color:var(--acct);background:var(--acc);padding:4px 8px;text-decoration:none}
+.pin{width:14px;height:14px;background:var(--accd);border:2px solid #fff;box-shadow:0 0 0 1px var(--ink)}
+.pin.on{background:var(--red);width:18px;height:18px}
+.h.flash{outline:3px solid var(--accd)}
 footer{border-top:1px solid var(--line);margin-top:40px;padding:20px 0 40px;font-size:13px;color:var(--muted);line-height:1.7}
 </style>
 </head>
@@ -89,24 +118,30 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:20px 0 40px;font
       <select id="area" aria-label="구·시"></select>
       <select id="type" aria-label="홀 종류"></select>
       <input id="q" type="search" placeholder="홀 이름·역 이름 찾기" autocomplete="off">
+      <div class="view" id="view"><button data-view="list" class="on">목록</button><button data-view="map">지도</button></div>
     </div>
   </div>
   <p class="count" id="cnt"></p>
   <div class="list" id="list"></div>
+  <div id="map" hidden></div>
 </main>
 
 <footer><div class="wrap">
   <div>정보는 웨딩홀 공식 안내와 블로그·웨딩 플랫폼의 공개 후기를 읽고 정리했어요(<span id="chk"></span> 확인). 식대·보증인원은 날짜·시간·계약 시점에 따라 달라지니 상담에서 꼭 다시 확인하세요.</div>
+  <div>사진은 각 웨딩홀 공식 홈페이지의 대표 이미지예요. 사진을 누르면 공식 홈페이지로 가요. 지도는 OpenStreetMap이고, 위치는 주소로 찾은 거라 조금 어긋날 수 있어요.</div>
   <div>좋은 점·아쉬운 점은 여러 후기에서 겹쳐 나온 내용을 우리 말로 줄인 거예요. 잘못된 정보가 있으면 알려 주세요.</div>
   <div style="margin-top:8px">© OUR WEDDING · <a href="privacy.html">개인정보처리방침</a></div>
 </div></footer>
 
 <script src="halls.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 const D=window.OW_HALLS||{items:[]},ALL=D.items;
 const RG=[["all","전체"],["seoul","서울"],["gg","경기"],["ic","인천"]];
+// 공식 홈페이지 원본 사진이 수십 MB인 곳이 있어 이미지 축소 중계(weserv)로 작게 받아 옴
+const IMG=u=>"https://images.weserv.nl/?url="+encodeURIComponent(u)+"&w=640&h=360&fit=cover&output=jpg&q=75";
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const st={rg:"all",area:"",type:"",q:""};
+const st={rg:"all",area:"",type:"",q:"",view:"list"};
 try{const u=new URLSearchParams(location.search);if(u.get("r")&&RG.some(x=>x[0]===u.get("r")))st.rg=u.get("r")}catch(e){}
 document.getElementById("chk").textContent=D.checked||"";
 function opts(){
@@ -120,22 +155,50 @@ function opts(){
 }
 function card(h){
   const f=[["보증인원",h.guarantee],["식대",h.meal],["주차",h.parking],["가는 길",h.station],["홀",h.halls]].filter(x=>x[1]);
-  return `<article class="h">
+  const photo=h.image?`<div class="ph"><a href="${esc(h.site||h.image)}" target="_blank" rel="noopener"><img src="${esc(IMG(h.image))}" alt="${esc(h.name)} 대표 사진" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.ph').remove()"></a>${h.site?`<a class="cr" href="${esc(h.site)}" target="_blank" rel="noopener">공식 홈페이지</a>`:""}</div>`:"";
+  return `<article class="h" id="h-${h.id}">${photo}<div class="body">
     <div class="top"><div><h3>${esc(h.name)}</h3><div class="meta">${esc(h.area||"")}${h.type?` · ${esc(h.type)}`:""}</div></div>${h.single===true?'<span class="tag y">단독홀</span>':""}</div>
     ${f.length?`<dl class="facts">${f.map(([k,v])=>`<dt>${k}</dt><dd>${esc(v)}</dd>`).join("")}</dl>`:""}
     ${(h.pros&&h.pros.length)||(h.cons&&h.cons.length)?`<div class="pc"><div class="p"><b>후기 좋은 점</b><ul>${(h.pros||[]).map(x=>`<li>${esc(x)}</li>`).join("")||"<li>–</li>"}</ul></div><div class="c"><b>후기 아쉬운 점</b><ul>${(h.cons||[]).map(x=>`<li>${esc(x)}</li>`).join("")||"<li>–</li>"}</ul></div></div>`:""}
     <div class="foot2">${h.sources&&h.sources.length?`<details class="src"><summary>출처 ${h.sources.length}개</summary><ul>${h.sources.map(s=>`<li><a href="${esc(s.u)}" target="_blank" rel="noopener nofollow">${esc(s.t||s.u)}</a></li>`).join("")}</ul></details>`:"<span></span>"}
       <a class="add" href="app.html?addhall=${encodeURIComponent(h.id)}">가계부 비교표에 넣기</a></div>
-  </article>`;
+    <div class="links" style="margin-top:8px">${h.lat?`<button data-onmap="${h.id}">지도에서 보기</button>`:""}<a href="https://map.naver.com/p/search/${encodeURIComponent(h.name)}" target="_blank" rel="noopener">네이버 지도 길찾기</a>${h.site?`<a href="${esc(h.site)}" target="_blank" rel="noopener">공식 홈페이지</a>`:""}</div>
+  </div></article>`;
 }
-function draw(){
+let MAP=null,LAYER=null,MARK={};
+function popup(h){
+  const f=[h.guarantee&&"보증 "+h.guarantee,h.meal&&"식대 "+h.meal].filter(Boolean).map(esc).join("<br>");
+  return `<div class="pop">${h.image?`<img src="${esc(IMG(h.image))}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">`:""}<div class="in"><b>${esc(h.name)}</b><div class="m">${esc(h.area||"")} · ${esc(h.type||"")}${h.single===true?" · 단독홀":""}</div>${f?`<div class="f">${f}</div>`:""}<a class="go" href="#h-${h.id}" data-tolist="${h.id}">자세히 보기</a></div></div>`;
+}
+function drawMap(xs,focus){
+  if(!window.L){document.getElementById("map").innerHTML='<p class="empty">지도를 불러오지 못했어요</p>';return}
+  if(!MAP){MAP=L.map("map",{scrollWheelZoom:true}).setView([37.5,127.0],10);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:18,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(MAP);}
+  if(LAYER)LAYER.remove();LAYER=L.layerGroup().addTo(MAP);MARK={};
+  const pts=xs.filter(h=>h.lat&&h.lng);
+  pts.forEach(h=>{MARK[h.id]=L.marker([h.lat,h.lng],{icon:L.divIcon({className:"",html:`<div class="pin ${h.id===focus?"on":""}"></div>`,iconSize:[18,18],iconAnchor:[9,9]}),title:h.name}).bindPopup(popup(h)).addTo(LAYER)});
+  setTimeout(()=>{MAP.invalidateSize();
+    if(focus&&MARK[focus]){MAP.setView(MARK[focus].getLatLng(),15);MARK[focus].openPopup()}
+    else if(pts.length)MAP.fitBounds(L.latLngBounds(pts.map(h=>[h.lat,h.lng])),{padding:[30,30],maxZoom:14})},0);
+  document.getElementById("cnt").textContent=`${xs.length}곳 중 지도에 ${pts.length}곳`;
+}
+function draw(focus){
   opts();
   const q=st.q.trim().toLowerCase();
   const xs=ALL.filter(h=>(st.rg==="all"||h.region===st.rg)&&(!st.area||h.area===st.area)&&(!st.type||h.type===st.type)&&(!q||[h.name,h.station,h.address,h.area].join(" ").toLowerCase().includes(q)));
+  document.querySelectorAll("#view button").forEach(b=>b.classList.toggle("on",b.dataset.view===st.view));
+  document.getElementById("list").hidden=st.view==="map";document.getElementById("map").hidden=st.view!=="map";
+  if(st.view==="map"){drawMap(xs,focus);return}
   document.getElementById("cnt").textContent=`${xs.length}곳`;
   document.getElementById("list").innerHTML=xs.map(card).join("")||'<p class="empty">조건에 맞는 웨딩홀이 없어요</p>';
 }
-document.addEventListener("click",e=>{const b=e.target.closest("[data-rg]");if(b){st.rg=b.dataset.rg;st.area="";draw()}});
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-rg]");if(b){st.rg=b.dataset.rg;st.area="";draw();return}
+  const v=e.target.closest("[data-view]");if(v){st.view=v.dataset.view;draw();return}
+  const m=e.target.closest("[data-onmap]");if(m){st.view="map";draw(m.dataset.onmap);window.scrollTo(0,0);return}
+  const t=e.target.closest("[data-tolist]");if(t){e.preventDefault();const id=t.dataset.tolist;st.view="list";draw();
+    const el=document.getElementById("h-"+id);if(el){el.scrollIntoView({block:"center"});el.classList.add("flash");setTimeout(()=>el.classList.remove("flash"),1600)}}
+});
 document.getElementById("area").addEventListener("change",e=>{st.area=e.target.value;draw()});
 document.getElementById("type").addEventListener("change",e=>{st.type=e.target.value;draw()});
 document.getElementById("q").addEventListener("input",e=>{st.q=e.target.value;draw()});
