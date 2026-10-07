@@ -1374,8 +1374,10 @@ function render(){
     <div class="side-foot">${acctBox()}</div>`;
   document.getElementById("mhead").innerHTML=`<div class="mtop"><a class="logo" href="./" style="padding:0;font-size:16px"><i></i>OUR WEDDING</a><div class="r">${names()}<br><b>${ddText()}</b></div></div>
     <div class="mtabs">${!CL.id&&SB?'<button class="mlogin" data-act="login">로그인</button>':""}${NAV.map(([k,l])=>`<button class="${S.view===k?'on':''}" data-go="${k}">${l}</button>`).join("")}<a href="./">남들 평균</a></div>`;
+  const draft={};["fA","fV","fM","fD"].forEach(id=>{const el=document.getElementById(id);if(el&&el.closest("tr.newrow")&&el.value)draft[id]=el.value});
   document.getElementById("main").innerHTML=(P.demo?`<div class="demo"><span><b>예시 가계부</b>를 보고 있어요. 숫자는 모두 예시예요.</span><button class="btn" data-act="enddemo" style="padding:6px 12px">예시 지우고 내 가계부 시작</button></div>`:"")+VIEWS[S.view]();
   document.getElementById("catlist").innerHTML=CATS.map(c=>`<option value="${esc(c.small)}">${c.big} · ${c.mid}</option>`).join("");
+  if(!S.clearDraft)Object.entries(draft).forEach(([id,v])=>{const el=document.getElementById(id);if(el&&el.closest("tr.newrow"))el.value=v});S.clearDraft=false;
   if(S.focusNew){S.focusNew=false;const f=document.getElementById("fSbtn")||document.getElementById("fS");if(f)f.focus();}
   else if(fk){const el=document.querySelector(`[data-fk="${fk}"]`);if(el&&el!==document.activeElement){el.focus();try{el.select()}catch(e){}}}
   if(S.mode==="mo")document.documentElement.style.setProperty("--mh",document.getElementById("mhead").offsetHeight+"px");
@@ -1475,11 +1477,20 @@ async function cloudStart(){
   }catch(e){CL.state="연결 실패 · 이 브라우저에 저장 중";render()}
   finally{_starting=false}
 }
+function editingNow(){const a=document.activeElement;if(!a||a===document.body)return false;
+  return a.isContentEditable||(a.tagName==="TEXTAREA")||(a.tagName==="INPUT"&&!/^(checkbox|radio|button|submit|file)$/.test(a.type))}
+function applyRemote(n){const c=coreOf(n.data);CL.pend=null;if(c===CL.last)return;
+  CL.last=c;use(n.data);P.demo=false;CL.state=(CL.user&&n.updated_by&&n.updated_by!==CL.user.id)?"상대가 방금 고쳤어요":"저장됨";render();}
+document.addEventListener("focusout",()=>setTimeout(()=>{if(CL.pend&&!editingNow())applyRemote(CL.pend)},400));
+// 칸을 벗어난 신호를 못 받았거나 칸에 커서만 둔 채 8초 넘게 안 치면 그때 반영
+document.addEventListener("input",()=>{CL.typedAt=Date.now()});
+setInterval(()=>{if(CL.pend&&(!editingNow()||Date.now()-(CL.typedAt||0)>8000))applyRemote(CL.pend)},1500);
 function subscribe(){
   if(CL.ch)SB.removeChannel(CL.ch);
   CL.ch=SB.channel("ledger-"+CL.id).on("postgres_changes",{event:"UPDATE",schema:"public",table:"ledgers",filter:"id=eq."+CL.id},pl=>{
-    const n=pl.new;if(!n||!n.data||!n.data.v)return;const c=coreOf(n.data);if(c===CL.last)return;
-    CL.last=c;use(n.data);P.demo=false;CL.state=(CL.user&&n.updated_by&&n.updated_by!==CL.user.id)?"상대가 방금 고쳤어요":"저장됨";render();
+    const n=pl.new;if(!n||!n.data||!n.data.v)return;const c=coreOf(n.data);if(c===CL.last||(CL.sent||[]).includes(c))return;
+    if(editingNow()){CL.pend=n;return}   // 칸에 치는 중이면 다 친 다음에 반영
+    applyRemote(n);
   }).subscribe();
 }
 function cloudSave(){
@@ -1487,6 +1498,7 @@ function cloudSave(){
   clearTimeout(CL.t);
   CL.t=setTimeout(async()=>{
     const d=snapshot(),c=coreOf(d);if(c===CL.last)return;
+    CL.sent=(CL.sent||[]).concat(c).slice(-8);   // 서버에서 되돌아오는 내 저장은 무시하려고 기억
     setState("저장 중");
     const {error}=await SB.rpc("save_ledger",{p_id:CL.id,p_data:d});
     if(error){setState("저장 실패 · 다시 시도 중");setTimeout(cloudSave,5000);return}
@@ -1529,7 +1541,7 @@ document.addEventListener("click",e=>{
     case"delcat":{const c=CATS.find(x=>String(x.id)===a.dataset.id);if(!c)break;const n=EXP.filter(x=>x.s===c.small).length;
       if(n){alert(`'${c.small}' 항목으로 적은 지출이 ${n}건 있어요. 그 지출의 항목을 먼저 바꿔 주세요.`);break}
       if(!confirm(`직접 만든 '${c.small}' 항목을 지울까요?`))break;CATS.splice(CATS.indexOf(c),1);delete MY[c.small];if(S.newS===c.small)S.newS="";render();break;}
-    case"addexp":{const x=readExp();if(!x)return;S.pay=x.p;S.st=x.st;EXP.unshift(x);const inDlg=!!a.closest("#dlg");closeDlg();S.focusNew=!inDlg;render();toast(`<b>${x.s} ${man(x.a)}</b> 추가했어요. 홈·예산·할일에 바로 반영됐어요.`);break;}
+    case"addexp":{const x=readExp();if(!x)return;S.pay=x.p;S.st=x.st;EXP.unshift(x);S.clearDraft=true;const inDlg=!!a.closest("#dlg");closeDlg();S.focusNew=!inDlg;render();toast(`<b>${x.s} ${man(x.a)}</b> 추가했어요. 홈·예산·할일에 바로 반영됐어요.`);break;}
     case"saveexp":{const x=readExp();if(!x)return;Object.assign(EXP[+a.dataset.i],x);closeDlg();render();break;}
     case"editexp":{const i=+a.dataset.i,e=EXP[i];S.st=e.st;S.pay=e.p;S.pkTarget="form";pkFrom(e.s);openDlg(`<h3>지출 고치기</h3>`+expForm(true),true);
       const set=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v};set("fA",e.a.toLocaleString());set("fS",e.s);set("fD",e.d);set("fV",e.v);set("fM",e.m);document.getElementById("fR").checked=e.r;
