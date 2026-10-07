@@ -355,6 +355,44 @@ tr.newrow .pickbtn{background:#fff}
 .mtabs .mlogin{flex:0 0 auto;border:1px solid var(--accd);background:var(--acc);padding:7px 14px;font-size:15px;font-weight:800}
 .invite{display:flex;gap:6px;margin:6px 0}
 .invite input{flex:1;min-width:0}
+/* ---------- 스드메 견적 ---------- */
+.qgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px;align-items:start}
+#app.mo .qgrid{grid-template-columns:1fr}
+.qcard{border:1px solid var(--line);background:#fff;padding:16px}
+.qcard.done{border:2px solid var(--accd)}
+.qhead{display:flex;gap:8px;align-items:center;margin-bottom:10px}
+.qhead input{flex:1;font-size:17px;font-weight:800;border:1px solid transparent;padding:4px 6px}
+.qhead input:hover,.qhead input:focus{border-color:var(--line);outline:0}
+.qslot{display:grid;grid-template-columns:62px minmax(0,1fr) 88px;gap:6px;align-items:center;padding:8px 0;border-top:1px solid var(--line)}
+.qslot .lb{font-size:14px;font-weight:700}
+.qslot input.vn{width:100%;border:1px solid var(--line);padding:7px 8px;font-size:14px}
+.qslot .pick2{border:0;background:none;color:var(--sub);font-size:12px;text-decoration:underline;padding:2px 0;cursor:pointer;text-align:left}
+.qslot .tg2{grid-column:2/4;font-size:12px;color:var(--muted)}
+.rate{display:inline-block;font-size:11px;font-weight:700;padding:0 6px;margin-left:4px;border:1px solid var(--line)}
+.rate.lo{background:#E9F7EF;color:var(--green);border-color:#BFE6CF}.rate.mid{background:var(--accs)}.rate.hi{background:#FFF0F0;color:var(--red);border-color:#F6D4D5}
+.qex{margin-top:6px}
+.qex .row{display:flex;justify-content:space-between;align-items:center;gap:6px;padding:4px 0;font-size:14px}
+.qex .row span{flex:1}
+.miss{margin-top:8px;font-size:12px;color:var(--sub)}
+.miss button{border:1px dashed var(--accl);background:#fff;padding:3px 8px;margin:3px 4px 0 0;font-size:12px;cursor:pointer}
+.qsum{margin-top:10px;padding-top:10px;border-top:2px solid var(--ink)}
+.qsum .r{display:flex;justify-content:space-between;font-size:14px;color:var(--sub)}
+.qsum .t{display:flex;justify-content:space-between;align-items:baseline;font-size:15px;font-weight:700;margin-top:4px}
+.qsum .t b{font-size:24px}
+.distbar{position:relative;height:14px;background:var(--track);margin:26px 0 22px}
+.distbar .iq{position:absolute;top:0;bottom:0;background:var(--acc2);border-left:2px solid var(--accl);border-right:2px solid var(--accl)}
+.distbar .md{position:absolute;top:-4px;width:3px;height:22px;background:var(--ink)}
+.distbar .me{position:absolute;top:-22px;transform:translateX(-50%);font-size:11px;font-weight:800;white-space:nowrap;background:var(--red);color:#fff;padding:0 5px}
+.distbar .me:after{content:"";position:absolute;left:50%;bottom:-6px;margin-left:-4px;border:4px solid transparent;border-top-color:var(--red)}
+.distbar .lb{position:absolute;top:18px;font-size:11px;color:var(--muted);transform:translateX(-50%);white-space:nowrap}
+.vtab td.best{background:var(--accs);font-weight:800}
+.vtab td small{display:block;color:var(--muted);font-size:11px}
+.vtab .vn{font-weight:700}
+.vlist .it{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:#fff;padding:10px 4px;cursor:pointer}
+.vlist .it:hover{background:var(--accs)}
+.vlist .it small{display:block;color:var(--muted);font-size:12px}
+.vlist .pp{display:inline-block;border:1px solid var(--line);padding:2px 7px;margin:4px 4px 0 0;font-size:13px;cursor:pointer;background:#fff}
+.vlist .pp:hover{background:var(--acc);border-color:var(--accd)}
 /* 웨딩홀 */
 .hall td,.hall th{white-space:nowrap}
 .hall td.st,.hall th.st{position:sticky;left:0;background:#fff;z-index:1;border-right:1px solid var(--line)}
@@ -416,6 +454,8 @@ tr.newrow .pickbtn{background:#fff}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="config.js"></script>
 <script src="data.js"></script>
+<script src="sdm.js"></script>
+<script src="vendors.js"></script>
 <script>
 /* ================= 데이터 ================= */
 const RAW = [["결혼식", "인사", "첫인사 식사"], ["결혼식", "인사", "첫인사 선물"], ["결혼식", "인사", "상견례 식사"], ["결혼식", "인사", "상견례 선물"], ["결혼식", "인사", "청첩장"], ["결혼식", "인사", "청첩장 모임"], ["결혼식", "인사", "주선자"], ["결혼식", "웨딩홀", "대관료"], ["결혼식", "웨딩홀", "식대"], ["결혼식", "웨딩홀", "와인"], ["결혼식", "웨딩홀", "꽃장식"], ["결혼식", "스드메", "패키지"], ["결혼식", "스드메", "스튜디오 추가금"], ["결혼식", "스드메", "드레스 추가금"], ["결혼식", "스드메", "메이크업 추가금"], ["결혼식", "스드메", "예복"], ["결혼식", "스드메", "구두"], ["결혼식", "스드메", "부케"], ["결혼식", "본식진행", "헬퍼비"], ["결혼식", "본식진행", "사회자"], ["결혼식", "본식진행", "축하 무대"], ["결혼식", "본식진행", "스냅"], ["결혼식", "본식진행", "영상"], ["결혼식", "혼주", "한복"], ["결혼식", "혼주", "양복"], ["결혼식", "혼주", "메이크업"], ["결혼식", "예물", "반지"], ["결혼식", "예물", "가방"], ["결혼식", "예물", "시계"], ["결혼식", "관리", "마사지"], ["결혼식", "관리", "시술"], ["결혼식", "관리", "네일"], ["결혼식", "관리", "머리"], ["결혼식", "하객", "교통비"], ["결혼식", "하객", "답례품"], ["신혼여행", "신혼여행", "여행사 패키지"], ["신혼여행", "신혼여행", "항공권"], ["신혼여행", "신혼여행", "숙소"], ["신혼여행", "신혼여행", "경비"], ["신혼여행", "신혼여행", "선물"], ["혼수", "가전", "가전 패키지"], ["혼수", "가구", "침실"], ["혼수", "가구", "거실"], ["혼수", "가구", "서재"], ["혼수", "가구", "주방"], ["혼수", "가구", "생활용품"], ["혼수", "가구", "침구"], ["혼수", "가구", "식기류"], ["신혼집", "인테리어", "벽지"], ["신혼집", "인테리어", "타일"], ["신혼집", "인테리어", "샷시"], ["신혼집", "집", "계약금"], ["신혼집", "집", "중도금"], ["신혼집", "집", "잔금"], ["신혼집", "집", "보증금"], ["신혼집", "집", "세금"], ["신혼집", "집", "법무사비"], ["신혼집", "집", "부동산중개비"]];  // [대분류, 중분류, 소분류]
@@ -443,17 +483,17 @@ const TODAY = new Date(todayISO());
 const SIDES = ["예신","예랑","예신 부모","예랑 부모"];
 const BASE_CATS = RAW.map(([big, mid, small], i) => ({ id: i, big, mid, small }));
 const blankHall = n => ({ name: "홀 " + n + " 이름", v: HALLROWS.map(() => ""), sc: HALLROWS.map(() => 3) });
-let P, CATS, MY, EXP, DONE, GUESTS, HALLS;
+let P, CATS, MY, EXP, DONE, GUESTS, HALLS, QUOTES;
 function fresh() {
   return { v: 1, profile: { wed: "", region: "all", bride: "", groom: "", started: false, demo: false },
-    cats: BASE_CATS.map(c => ({ ...c })), budget: {}, exp: [], done: [], guests: [], halls: [blankHall(1), blankHall(2)] };
+    cats: BASE_CATS.map(c => ({ ...c })), budget: {}, exp: [], done: [], guests: [], halls: [blankHall(1), blankHall(2)], quotes: [] };
 }
 function use(d) {
   const f = fresh();
   d = Object.assign(f, d || {}); d.profile = Object.assign(fresh().profile, d.profile || {});
-  P = d.profile; CATS = d.cats; MY = d.budget; EXP = d.exp; DONE = new Set(d.done); GUESTS = d.guests; HALLS = d.halls;
+  P = d.profile; CATS = d.cats; MY = d.budget; EXP = d.exp; DONE = new Set(d.done); GUESTS = d.guests; HALLS = d.halls; QUOTES = d.quotes || [];
 }
-const snapshot = () => ({ v: 1, profile: P, cats: CATS, budget: MY, exp: EXP, done: [...DONE], guests: GUESTS, halls: HALLS, saved: new Date().toISOString() });
+const snapshot = () => ({ v: 1, profile: P, cats: CATS, budget: MY, exp: EXP, done: [...DONE], guests: GUESTS, halls: HALLS, quotes: QUOTES, saved: new Date().toISOString() });
 let storeOK = true, _st;
 function load() {
   try { const t = localStorage.getItem(KEY); if (t) { use(JSON.parse(t)); return; } } catch (e) { storeOK = false; }
@@ -489,6 +529,10 @@ function demoData() {
    {name:"A홀 그랜드볼룸",v:["4월","토요일","12:30","90분","300만","100만","6.5만","3.5만","200명","가능","없음","가능","불가","생화","20만","포함","없음","단독홀","화사함","긴편","높음","가능","넓음","있음","있음","넓음","3개","가능","2개","60종","주류 포함","상","4명","800대","보통","2시간","역 5분","없음","가능","있음"]},
    {name:"B홀 채플홀",v:["5월","토요일","13:00","60분","0원","50만","7.2만","4만","250명","가능","있음","가능","가능","조화","15만","30만","있음","단독홀","어두운 편","보통","보통","불가","보통","없음","없음","좁음","2개","불가","1개","45종","주류 별도","중","2명","300대","혼잡","1.5시간","역 10분","있음","가능","없음"]},
    {name:"C홀 가든홀",v:["10월","일요일","11:00","100분","500만","200만","5.8만","3만","180명","가능","없음","가능","불가","생화","포함","포함","없음","단독홀","야외 느낌","긴편","높음","가능","넓음","있음","있음","넓음","4개","가능","3개","70종","주류 포함","상","4명","1,200대","여유","3시간","역 15분","있음","가능","있음"]}
+  ];
+  d.quotes = [
+    { name: "A안 · 다이렉트", s: { v: "구호", p: 124 }, d: { v: "브라이드벨라", p: 75 }, m: { v: "꾸띠원", p: 84 }, disc: 0, ex: [{ k: "dress", n: "헬퍼(본식)", a: 25 }, { k: "studio", n: "원본구매비", a: 33 }] },
+    { name: "B안 · 베리굿", s: { v: "미루", p: 121 }, d: { v: "드이베", p: 170 }, m: { v: "모아위", p: 71 }, disc: 10, ex: [{ k: "dress", n: "헬퍼(본식)", a: 25 }] }
   ];
   d.halls.forEach((h, k) => { const base = [4, 3, 4][k]; h.sc = HALLROWS.map(() => Math.max(1, Math.min(5, base + Math.round((rnd() - .45) * 2.4)))); });
   return d;
@@ -826,6 +870,147 @@ function vExp(){
   ${body}${foot()}`;
 }
 
+
+/* ================= 화면: 스드메 견적 ================= */
+const SDM=window.OW_SDM||null, VEN=window.OW_VENDORS||null;
+const KN={studio:"스튜디오",dress:"드레스",makeup:"메이크업"};
+const SLOT={s:"studio",d:"dress",m:"makeup"};
+const BASE_ITEM={studio:"기본가격",dress:"(본식+촬영)기본가격",makeup:"(실장)기본가격"};
+const MISS=[["studio","원본구매비"],["studio","수정본구매비"],["studio","얼리스타트비"],["dress","헬퍼(본식)"],["dress","헬퍼(촬영)"],["dress","기본 피팅비"],["dress","드레스 지정비"],["makeup","얼리스타트비"]];
+const PKG_AREA={all:"전국",gn:"서울(강남)",seoul:"서울(강남외)",bs:"부산",dg:"대구",ic:"인천",gj:"전남광주",dj:"대전",us:"울산",gg:"경기도",gw:"강원도",cc:"충청도",jb:"전북",gs:"경상도",jj:"제주도"};
+S.sdmTab=S.sdmTab||"q";S.vk=S.vk||"studio";S.vp=S.vp||"전체";S.vq="";
+const itemIdx=(k,n)=>SDM?SDM.items.findIndex(i=>i.k===k&&i.n===n):-1;
+const sv=(k,n,rg)=>{if(!SDM)return null;const v=SDM.vals[P.region];const i=itemIdx(k,n);return v&&i>=0?v[rg][i]:null};   // rg: 0하위10 1하위25 2중간 3상위25 4상위10 5평균
+function pkgStat(){if(!SDM)return null;const pk=SDM.pkg.sdm,name=PKG_AREA[P.region]||"전국";let i=pk.areas?pk.areas.indexOf(name):-1,fb=false;if(i<0||pk.mid[i]==null||pk.cnt[i]<10){fb=i>0;i=0}
+  return{fb,area:pk.areas[i],l10:pk.low10[i],l25:pk.low25[i],mid:pk.mid[i],h25:pk.high25[i],h10:pk.high10[i],cnt:pk.cnt[i]}}
+function rateOf(p,lo,hi){if(p==null||p===""||lo==null||hi==null)return"";p=+p;return p<=lo?'<span class="rate lo">싼 편</span>':p>=hi?'<span class="rate hi">비싼 편</span>':'<span class="rate mid">보통</span>'}
+const qBase=q=>["s","d","m"].reduce((t,k)=>t+(+(q[k]&&q[k].p)||0),0)-(+q.disc||0);
+const qEx=q=>(q.ex||[]).reduce((t,e)=>t+(+e.a||0),0);
+const m1=n=>n==null?"–":(Math.round(n*10)/10).toLocaleString("ko-KR")+"만";
+function blankQuote(){return{name:"견적 "+(QUOTES.length+1),s:{v:"",p:""},d:{v:"",p:""},m:{v:"",p:""},disc:0,ex:[]}}
+
+function distBar(st,me){
+  if(!st||st.l10==null||st.h10==null)return"";
+  const lo=Math.min(st.l10,me||st.l10)*0.9,hi=Math.max(st.h10,me||0)*1.05,x=v=>((v-lo)/(hi-lo)*100).toFixed(1)+"%";
+  return `<div class="distbar"><div class="iq" style="left:${x(st.l25)};width:calc(${x(st.h25)} - ${x(st.l25)})"></div><div class="md" style="left:${x(st.mid)}"></div>
+    ${me?`<div class="me" style="left:${x(me)}">우리 ${m1(me)}</div>`:""}
+    <span class="lb" style="left:${x(st.l10)};transform:none">하위10% ${m1(st.l10)}</span><span class="lb" style="left:${x(st.mid)}">중간 ${m1(st.mid)}</span><span class="lb" style="left:${x(st.h10)};transform:translateX(-100%)">상위10% ${m1(st.h10)}</span></div>`;
+}
+function quoteCard(q,qi){
+  const k=(f)=>`data-qi="${qi}" data-qf="${f}" data-fk="q-${qi}-${f}"`;
+  const slot=(key,label)=>{const kind=SLOT[key],it=q[key]||{v:"",p:""},bi=BASE_ITEM[kind];
+    const lo=sv(kind,bi,1),mid=sv(kind,bi,2),hi=sv(kind,bi,3);
+    return `<div class="qslot"><span class="lb">${label}</span><input class="vn" placeholder="업체 이름" value="${esc(it.v||"")}" ${k(key+"v")}>
+      <span><input class="ly" style="width:62px" inputmode="decimal" value="${it.p===""||it.p==null?"":it.p}" placeholder="0" ${k(key+"p")}><span class="u">만</span></span>
+      <span></span><span class="tg2"><button class="pick2" data-act="vpick" data-qi="${qi}" data-v="${key}">업체 가격표에서 고르기</button>${mid!=null?` · 우리 지역 중간 ${m1(mid)}${rateOf(it.p,lo,hi)}`:""}</span></div>`};
+  const base=qBase(q),ex=qEx(q),tot=base+ex,st=pkgStat();
+  const have=new Set((q.ex||[]).map(e=>e.k+"|"+e.n));
+  const miss=MISS.filter(([kk,n])=>!have.has(kk+"|"+n)&&sv(kk,n,2)!=null);
+  return `<div class="qcard ${q.done?"done":""}">
+    <div class="qhead"><input value="${esc(q.name)}" ${k("name")}>${q.done?'<span class="tag y">확정</span>':""}<button class="x" data-act="qdel" data-qi="${qi}" title="견적 지우기">×</button></div>
+    ${slot("s","스튜디오")}${slot("d","드레스")}${slot("m","메이크업")}
+    <div class="qslot"><span class="lb">할인</span><span class="mut" style="font-size:12px">패키지 할인 등 (빼는 금액)</span><span><input class="ly" style="width:62px" inputmode="decimal" value="${q.disc||""}" placeholder="0" ${k("disc")}><span class="u">만</span></span></div>
+    <div class="qex"><div class="mgh" style="margin:8px 0 2px"><span>추가금 ${q.ex&&q.ex.length?q.ex.length+"개":""}</span><button class="linkb" data-act="exadd" data-qi="${qi}">+ 추가금 고르기</button></div>
+      ${(q.ex||[]).map((e,ei)=>`<div class="row"><span>${KN[e.k]} · ${esc(e.n)}${sv(e.k,e.n,2)!=null?` <span class="mut" style="font-size:12px">(보통 ${m1(sv(e.k,e.n,2))})</span>`:""}</span>
+        <span><input class="ly" style="width:58px" inputmode="decimal" value="${e.a===""||e.a==null?"":e.a}" data-qi="${qi}" data-qe="${ei}" data-fk="qe-${qi}-${ei}"><span class="u">만</span></span><button class="x" data-act="exdel" data-qi="${qi}" data-v="${ei}">×</button></div>`).join("")||'<p class="empty" style="padding:2px 0">견적서에 적힌 추가금을 넣어 주세요.</p>'}
+      ${miss.length?`<div class="miss">물어봤나요? 자주 붙는 추가금 ${miss.slice(0,5).map(([kk,n])=>`<button data-act="exquick" data-qi="${qi}" data-v="${kk}|${esc(n)}">+ ${n.startsWith(KN[kk])?"":KN[kk]+" "}${esc(n)} · 보통 ${m1(sv(kk,n,2))}</button>`).join("")}</div>`:""}
+    </div>
+    <div class="qsum"><div class="r"><span>기본가 합${q.disc?" (할인 뺌)":""}</span><span>${m1(base)}</span></div><div class="r"><span>추가금 합</span><span>${m1(ex)}</span></div>
+      <div class="t"><span>진짜 총액</span><b>${m1(tot)}</b></div>
+      ${st&&st.mid!=null&&base>0?`<div class="mut" style="font-size:12px;margin-top:4px">기본가 합이 ${esc(st.area)} 스드메 패키지 중간값(${m1(st.mid)})보다 ${base>st.mid?`<b class="red">${m1(base-st.mid)} 비싸요</b>`:`<b class="grn">${m1(st.mid-base)} 싸요</b>`}</div>`:""}
+      <button class="btn wide ${q.done?"ghost":""}" data-act="qdone" data-qi="${qi}" style="margin-top:10px">${q.done?"확정됨 · 다시 반영하기":"이 견적으로 확정"}</button></div>
+  </div>`;
+}
+function vSdm(){
+  const tabs=[["q","내 견적"],["v","업체 가격표"],["x","추가금 미리 보기"]];
+  const head=`<div class="ph"><h1>스드메 견적</h1><p>받은 견적을 적으면 <b>추가금까지 더한 진짜 총액</b>과 우리 지역 가격을 같이 보여줘요.${SDM?` <span style="font-size:13px;color:var(--muted)">(남들 가격: 한국소비자원 참가격 ${SDM.asOf} 계약 금액)</span>`:""}</p></div>
+    <div class="pills">${tabs.map(([k,l])=>`<button class="${S.sdmTab===k?"on":""}" data-act="sdmtab" data-v="${k}">${l}</button>`).join("")}</div>
+    <div class="basis" data-act="basis">남들 가격 기준 <b>${reg().name}</b> ▾</div>`;
+  if(!SDM)return head+'<p class="empty">가격 자료를 불러오지 못했어요.</p>'+foot();
+  const noRegion=P.region==="all"?'<p class="mut" style="font-size:13px;margin:-4px 0 12px">스튜디오·드레스·메이크업 항목별 가격은 지역을 고르면 보여요. 지금은 전국 패키지 가격만 보여요.</p>':"";
+  if(S.sdmTab==="v")return head+vVendors()+foot();
+  if(S.sdmTab==="x")return head+noRegion+vExtras()+foot();
+  const st=pkgStat(),best=QUOTES.length>1?QUOTES.reduce((b,q,i)=>qBase(q)+qEx(q)<qBase(QUOTES[b])+qEx(QUOTES[b])?i:b,0):-1;
+  return head+noRegion+`
+  <div class="card" style="margin-bottom:14px"><h2>${esc(st.area)} 스드메 패키지, 남들은 얼마?</h2>
+    <p class="mut" style="font-size:13px;margin:0">가운데 진한 칸이 절반의 부부가 낸 가격대(하위 25%~상위 25%)예요. 계약 ${(st.cnt||0).toLocaleString()}건 기준${st.fb?` · ${esc(PKG_AREA[P.region])} 계약 자료가 너무 적어서 전국 가격으로 보여줘요`:st.cnt<30?' · <b class="red">계약 건수가 적어서 참고만 하세요</b>':""}.</p>
+    ${distBar(st,QUOTES.length?Math.min(...QUOTES.map(qBase).filter(x=>x>0).concat([Infinity])):0)}
+    ${P.region!=="all"?`<div class="mut" style="font-size:13px">항목별 중간값 · 스튜디오 ${m1(sv("studio","기본가격",2))} · 드레스(본식+촬영) ${m1(sv("dress","(본식+촬영)기본가격",2))} · 메이크업(실장) ${m1(sv("makeup","(실장)기본가격",2))}</div>`:""}
+  </div>
+  ${QUOTES.length>1?`<div class="tw" style="margin-bottom:14px"><table><thead><tr><th>견적</th><th class="num">기본가 합</th><th class="num">추가금</th><th class="num">진짜 총액</th></tr></thead><tbody>
+    ${QUOTES.map((q,i)=>`<tr${i===best?' class="plan"':""}><td class="nm">${esc(q.name)}${q.done?' <span class="tag y">확정</span>':""}${i===best?' <span class="tag y">제일 싸요</span>':""}</td><td class="num">${m1(qBase(q))}</td><td class="num">${m1(qEx(q))}</td><td class="num b">${m1(qBase(q)+qEx(q))}</td></tr>`).join("")}
+  </tbody></table></div>`:""}
+  <div class="qgrid">${QUOTES.map(quoteCard).join("")}
+    <button class="addrow" data-act="qadd" style="padding:28px;font-size:15px">+ 받은 견적 적기</button></div>
+  <p class="mut" style="font-size:12px;margin-top:12px">'싼 편·보통·비싼 편'은 우리 지역 계약 금액의 하위 25%·상위 25%를 기준으로 나눠요. 업체 가격표는 ${VEN?VEN.asOf:""} 기준 플래너 공개 가격이라 지금과 다를 수 있어요.</p>`+foot();
+}
+function vRow(v){
+  // 같은 업체를 플래너별로 묶기
+  const rep=r=>{const pr=r.pr;const pref=r.k==="studio"?pr[0]:(pr.find(x=>/^본식\+촬영( 실장)?$/.test(x[0]))||pr.find(x=>/^본식\+촬영/.test(x[0]))||pr[0]);return pref};
+  return {rep};
+}
+function vVendors(){
+  if(!VEN)return'<p class="empty">업체 가격표가 없어요.</p>';
+  const PL=VEN.planners.map(x=>x.n),q=(S.vq||"").trim();
+  const rows=VEN.rows.filter(r=>r.k===S.vk&&(S.vp==="전체"||r.p===S.vp)&&(!q||r.v.includes(q)));
+  const {rep}=vRow();
+  const groups={};rows.forEach(r=>{const key=r.v.replace(/\s|\(.*?\)/g,"").toLowerCase();(groups[key]=groups[key]||{v:r.v,by:{}}).by[r.p]=r});
+  const list=Object.values(groups).map(g=>({...g,min:Math.min(...Object.values(g.by).map(r=>rep(r)[2]||9999))})).sort((a,b)=>a.min-b.min);
+  const bi=BASE_ITEM[S.vk],lo=sv(S.vk,bi,1),hi=sv(S.vk,bi,3);
+  const intro=`<div class="pills">${["studio","dress","makeup"].map(k=>`<button class="${S.vk===k?"on":""}" data-act="vk" data-v="${k}">${KN[k]}</button>`).join("")}</div>
+    <div class="pills">${["전체",...PL].map(n=>`<button class="${S.vp===n?"on":""}" data-act="vp" data-v="${n}">${n}</button>`).join("")}</div>
+    <div class="card" style="margin-bottom:12px;padding:12px 14px;font-size:13px;color:var(--sub)">
+      ${VEN.planners.map(x=>`<div><b style="color:var(--ink)">${x.n}</b> · ${esc(x.d)}</div>`).join("")}
+      <div style="margin-top:6px">${VEN.asOf} 기준 플래너별 공개 가격이에요(만원). 같은 업체도 어느 플래너로 계약하느냐에 따라 가격이 달라요.${S.vk==="studio"?" 스튜디오는 원본·수정본을 포함한 가격이에요.":""} 업체 사정에 따라 바뀌니 계약 전에 꼭 다시 확인하세요.</div></div>
+    <input id="vq" class="ce" style="width:100%;border:1px solid var(--line);padding:10px;margin-bottom:10px" placeholder="업체 이름 찾기" value="${esc(S.vq||"")}">`;
+  const showPL=S.vp==="전체"?PL:[S.vp];
+  if(S.mode==="pc")return intro+`<div class="tw vtab"><table><thead><tr><th>업체</th>${showPL.map(n=>`<th class="num">${n}</th>`).join("")}<th>우리 지역 기준</th></tr></thead><tbody>
+    ${list.map(g=>{const vals=showPL.map(n=>g.by[n]?rep(g.by[n]):null),mn=Math.min(...vals.filter(Boolean).map(x=>x[2]||9999));
+      return `<tr><td class="vn">${esc(g.v)}${Object.keys(g.by).length>1?`<small>플래너 ${Object.keys(g.by).length}곳</small>`:""}</td>
+        ${vals.map((x,i)=>x?`<td class="num ${Object.keys(g.by).length>1&&x[2]===mn?"best":""}">${esc(x[1])}<small>${esc(x[0])}</small></td>`:'<td class="num mut">–</td>').join("")}
+        <td>${rateOf(g.min<9999?g.min:null,lo,hi)}</td></tr>`}).join("")||'<tr><td colspan="6" class="mut">찾는 업체가 없어요</td></tr>'}
+  </tbody></table></div><p class="mut" style="font-size:12px">한 업체가 여러 플래너에 있으면 가장 싼 곳을 칠해 뒀어요. 드레스·메이크업은 본식+촬영 가격(메이크업은 실장 기준)을 보여줘요.</p>`;
+  return intro+`<div class="card" style="padding:4px 16px">${list.map(g=>`<div class="mrow"><div class="a"><span class="n">${esc(g.v)}</span><span>${rateOf(g.min<9999?g.min:null,lo,hi)}</span></div>
+    <div class="s" style="display:block">${Object.values(g.by).map(r=>{const x=rep(r);return `${r.p} <b style="color:var(--ink)">${esc(x[1])}</b>만 <span style="font-size:11px">(${esc(x[0])})</span>`}).join(" · ")}</div></div>`).join("")||'<p class="empty">찾는 업체가 없어요</p>'}</div>`;
+}
+function vExtras(){
+  if(P.region==="all")return "";
+  const row=(i,it)=>`<tr><td>${esc(it.n)}${it.t==="base"?' <span class="tag">기본</span>':""}</td><td class="num">${m1(SDM.vals[P.region][1][i])}</td><td class="num b">${m1(SDM.vals[P.region][2][i])}</td><td class="num">${m1(SDM.vals[P.region][3][i])}</td></tr>`;
+  return `<p class="mut" style="font-size:13px">${reg().name}에서 실제로 계약한 금액이에요(만원). 추가금은 계약이 적은 지역이면 서울·경기인천·광역시·그 밖의 지역 4개 권역 값으로 보여줘요. 견적서에 없는 추가금이 나중에 붙지 않는지 미리 물어보세요.</p>
+  <div class="grid g3">${["studio","dress","makeup"].map(k=>`<div class="tw"><table><thead><tr><th>${KN[k]}</th><th class="num">하위 25%</th><th class="num">중간</th><th class="num">상위 25%</th></tr></thead><tbody>
+    ${SDM.items.map((it,i)=>it.k===k&&SDM.vals[P.region][2][i]!=null?row(i,it):"").join("")}</tbody></table></div>`).join("")}</div>`;
+}
+function dlgExtras(qi){
+  const q=QUOTES[qi],have=new Set((q.ex||[]).map(e=>e.k+"|"+e.n));
+  openDlg(`<h3>추가금 고르기</h3><p class="mut" style="font-size:13px;margin:0 0 10px">견적서에 있는 추가금을 눌러 넣으세요. 금액은 우리 지역 중간값으로 먼저 들어가고, 견적서 금액으로 고치면 돼요.</p>
+    ${["studio","dress","makeup"].map(k=>`<h3 style="font-size:15px;margin:14px 0 6px">${KN[k]}</h3><div class="chips">${SDM.items.filter(it=>it.k===k&&it.t==="opt").map(it=>{const on=have.has(k+"|"+it.n),md=sv(k,it.n,2);
+      return `<button class="${on?"on":""}" data-act="extoggle" data-qi="${qi}" data-v="${k}|${esc(it.n)}">${esc(it.n)}${md!=null?` · ${m1(md)}`:""}</button>`}).join("")}</div>`).join("")}
+    <button class="btn wide" data-act="close" style="margin-top:16px">다 골랐어요</button>`);
+  if(S.mode==="pc")document.getElementById("dlg").style.width="min(760px,calc(100% - 32px))";
+}
+function dlgVendorPick(qi,key){
+  S.vpick={qi,key};const kind=SLOT[key];
+  const draw=()=>{const q=(document.getElementById("vpq")||{}).value||"";const rows=VEN.rows.filter(r=>r.k===kind&&(!q||r.v.includes(q))).sort((a,b)=>(a.pr[0][2]||0)-(b.pr[0][2]||0)).slice(0,120);
+    document.getElementById("vpl").innerHTML=rows.map((r,ri)=>`<div class="it" style="cursor:default"><b>${esc(r.v)}</b> <span class="mut" style="font-size:12px">${r.p}</span><div>${r.pr.map(x=>`<span class="pp" data-act="vset" data-v="${esc(r.v)}|${r.p}|${x[2]==null?"":x[2]}">${esc(x[0])} ${esc(x[1])}</span>`).join("")}</div></div>`).join("")||'<p class="empty">찾는 업체가 없어요</p>'};
+  openDlg(`<h3>${KN[kind]} 업체 고르기</h3><p class="mut" style="font-size:13px;margin:0 0 8px">가격을 누르면 견적에 들어가요. ${VEN.asOf} 기준 플래너별 가격(만원)이에요.</p>
+    <input id="vpq" style="width:100%;border:1px solid #DAD9D2;padding:10px;font-size:16px" placeholder="업체 이름 찾기" autocomplete="off"><div id="vpl" class="vlist" style="margin-top:8px;max-height:56vh;overflow:auto"></div>`);
+  if(S.mode==="pc")document.getElementById("dlg").style.width="min(640px,calc(100% - 32px))";
+  draw();S.vpDraw=draw;
+}
+function confirmQuote(qi){
+  const q=QUOTES[qi],base=qBase(q),sum=k=>(q.ex||[]).filter(e=>e.k===k).reduce((t,e)=>t+(+e.a||0),0);
+  QUOTES.forEach((x,i)=>x.done=i===qi);
+  const parts=[["패키지",base],["스튜디오 추가금",sum("studio")],["드레스 추가금",sum("dress")],["메이크업 추가금",sum("makeup")]].filter(([c])=>cat(c));
+  parts.forEach(([c,a])=>MY[c]=Math.round(a*10000));
+  const old=EXP.some(x=>x.fq&&x.st==="예정");
+  if(confirm(`'${q.name}' 견적으로 스드메 예산을 채웠어요.\n패키지 ${m1(base)} · 추가금 ${m1(qEx(q))}\n\n지출 탭에도 '낼 예정'으로 넣을까요?${old?"\n(전에 견적에서 넣은 '낼 예정' 지출은 지우고 새로 넣어요)":""}`)){
+    const vendor=["s","d","m"].map(k=>q[k]&&q[k].v).filter(Boolean).join("·"),d=todayISO();
+    for(let i=EXP.length-1;i>=0;i--)if(EXP[i].fq&&EXP[i].st==="예정")EXP.splice(i,1);
+    parts.slice().reverse().forEach(([c,a])=>{if(a>0)EXP.unshift({d,s:c,a:Math.round(a*10000),p:S.pay||"공동 계좌",st:"예정",v:vendor,m:q.name+(c==="패키지"?"":" 추가금"),r:false,fq:1})});
+  }
+  render();
+}
+
 /* ================= 화면: 하객 ================= */
 function vGuest(){
   const list=GUESTS.map((g,i)=>({g,i})).filter(x=>S.gside==="전체"||x.g.side===S.gside);
@@ -927,8 +1112,8 @@ function vHall(){
 /* ================= 공통 ================= */
 const fab=()=>`<div class="fabw"><button class="fab" data-act="mexp"><i>+</i>지출 적기</button></div>`;
 const foot=()=>`<div class="foot">${CL.id?"기록은 계정에 저장돼요. 로그인하면 폰·PC 어디서든 이어서 써요.":`기록은 이 브라우저에만 저장돼요. <button class="linkb" data-go="set">설정·백업</button>에서 가끔 백업해 두세요.`} · 남들 평균 출처: 한국소비자원 참가격(2026년 8월), 듀오 2026 결혼비용 보고서 · <a href="./">남들은 얼마 쓸까</a> · <a href="privacy.html">개인정보처리방침</a></div>`;
-const NAV=[["home","홈"],["budget","예산"],["exp","지출"],["guest","하객"],["todo","할일"],["hall","웨딩홀"],["set","설정·백업"]];
-const VIEWS={home:vHome,budget:vBudget,exp:vExp,guest:vGuest,todo:vTodo,hall:vHall,set:vSet};
+const NAV=[["home","홈"],["budget","예산"],["exp","지출"],["sdm","스드메 견적"],["guest","하객"],["todo","할일"],["hall","웨딩홀"],["set","설정·백업"]];
+const VIEWS={home:vHome,budget:vBudget,exp:vExp,sdm:vSdm,guest:vGuest,todo:vTodo,hall:vHall,set:vSet};
 
 let _rt;const later=()=>{clearTimeout(_rt);_rt=setTimeout(render,0)};
 function render(){
@@ -936,7 +1121,7 @@ function render(){
   const app=document.getElementById("app");app.className=S.mode;
   document.getElementById("side").innerHTML=`<a class="logo" href="./"><i></i>OUR WEDDING</a>
     <div class="couple"><div class="n">${names()}</div><div class="d">${ddText()}</div><div class="s">${wedText()}</div></div>
-    <div class="nav">${NAV.map(([k,l],i)=>`${i===6?'<div class="sep"></div>':""}<button class="${S.view===k?'on':''}" data-go="${k}">${l}</button>`).join("")}
+    <div class="nav">${NAV.map(([k,l],i)=>`${k==="set"?'<div class="sep"></div>':""}<button class="${S.view===k?'on':''}" data-go="${k}">${l}</button>`).join("")}
       <a class="navlink" href="./">남들은 얼마 쓸까 ›</a></div>
     <div class="side-foot">${acctBox()}</div>`;
   document.getElementById("mhead").innerHTML=`<div class="mtop"><a class="logo" href="./" style="padding:0;font-size:16px"><i></i>OUR WEDDING</a><div class="r">${names()}<br><b>${ddText()}</b></div></div>
@@ -1080,7 +1265,7 @@ document.addEventListener("click",e=>{
     case"big":S.big=v;render();break;
     case"basis":dlgBasis();break;
     case"setr":P.region=v;closeDlg();render();break;
-    case"close":closeDlg();break;
+    case"close":closeDlg();if(S.view==="sdm")render();break;
     case"ef":S.ef=v;render();break;
     case"st":S.st=v;document.querySelectorAll("#fSt button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));break;
     case"pay":S.pay=v;a.parentNode.querySelectorAll("button").forEach(b=>b.classList.toggle("on",b===a));break;
@@ -1121,6 +1306,19 @@ document.addEventListener("click",e=>{
     case"newinv":(async()=>{const {data,error}=await SB.rpc("new_invite_code",{p_id:CL.id});if(!error){CL.invite=data;render();setMsg("새 링크를 만들었어요. 예전 링크는 이제 못 써요.")}})();break;
     case"logout":if(confirm("로그아웃할까요? 이 기기에서는 기록이 지워지고, 다시 로그인하면 불러와요."))signOutAll();break;
     case"delme":if(confirm("탈퇴하면 계정과 가계부 기록이 바로 지워져요. 같이 쓰던 상대의 가계부는 남아요.\n탈퇴할까요?")&&confirm("되돌릴 수 없어요. 정말 탈퇴할까요?")){(async()=>{const {error}=await SB.rpc("delete_me");if(error){alert("탈퇴하지 못했어요. 다시 시도해 주세요.");return}await signOutAll();alert("탈퇴했어요. 그동안 써 주셔서 고마워요.")})()}break;
+    case"sdmtab":S.sdmTab=v;render();break;
+    case"vk":S.vk=v;render();break;
+    case"vp":S.vp=v;render();break;
+    case"qadd":QUOTES.push(blankQuote());render();break;
+    case"qdel":if(confirm("이 견적을 지울까요?")){QUOTES.splice(+a.dataset.qi,1);render()}break;
+    case"qdone":confirmQuote(+a.dataset.qi);break;
+    case"exadd":dlgExtras(+a.dataset.qi);break;
+    case"exdel":QUOTES[+a.dataset.qi].ex.splice(+v,1);render();break;
+    case"exquick":case"extoggle":{const q=QUOTES[+a.dataset.qi];q.ex=q.ex||[];const [kk,...nn]=v.split("|");const n=nn.join("|");const i=q.ex.findIndex(e=>e.k===kk&&e.n===n);
+      if(i>=0&&a.dataset.act==="extoggle"){q.ex.splice(i,1);a.classList.remove("on")}else if(i<0){q.ex.push({k:kk,n,a:sv(kk,n,2)??""});a.classList.add("on")}
+      if(a.dataset.act==="exquick")render();else save();break;}
+    case"vpick":dlgVendorPick(+a.dataset.qi,v);break;
+    case"vset":{const [vn,pl,pr]=v.split("|");const q=QUOTES[S.vpick.qi],slot=q[S.vpick.key]=q[S.vpick.key]||{};slot.v=vn;if(pr!=="")slot.p=+pr;if(!q.name||/^견적 \d+$/.test(q.name))q.name=pl+" 견적";closeDlg();render();break;}
     case"backup":download(JSON.stringify(snapshot()),`ourwedding_백업_${todayISO()}.json`,"application/json");setMsg("백업 파일을 내려받았어요. 카톡 나에게 보내기나 드라이브에 올려 두면 안전해요.");break;
     case"restore":document.getElementById("restoreFile").click();break;
     case"csv":csv(v);setMsg("엑셀에서 열 수 있는 파일(CSV)을 내려받았어요.");break;
@@ -1146,12 +1344,19 @@ document.addEventListener("change",e=>{
   else if(t.dataset.hs!=null){const[k,r]=t.dataset.hs.split(",");HALLS[k].sc[r]=+t.value;render();}
   else if(t.dataset.hn!=null){HALLS[+t.dataset.hn].name=t.value;save();}
   else if(t.dataset.pf!=null){P[t.dataset.pf]=t.value;later();}
+  else if(t.dataset.qf!=null){const q=QUOTES[+t.dataset.qi],f=t.dataset.qf;
+    if(f==="name")q.name=t.value.trim()||q.name;else if(f==="disc")q.disc=parseFloat(t.value.replace(/,/g,""))||0;
+    else{const slot=q[f[0]]=q[f[0]]||{};if(f[1]==="v")slot.v=t.value.trim();else slot.p=t.value===""?"":(parseFloat(t.value.replace(/,/g,""))||0)}
+    later();}
+  else if(t.dataset.qe!=null){const e=QUOTES[+t.dataset.qi].ex[+t.dataset.qe];e.a=t.value===""?"":(parseFloat(t.value.replace(/,/g,""))||0);later();}
   else if(t.id==="restoreFile"&&t.files[0]){const fr=new FileReader();fr.onload=()=>{try{const d=JSON.parse(fr.result);if(!d||d.v!==1||!Array.isArray(d.exp)||!Array.isArray(d.cats))throw 0;
       if(!confirm("지금 기록을 이 백업 파일 내용으로 바꿀까요?"))return;use(d);P.started=true;P.demo=false;S.view="home";render();window.scrollTo(0,0);}catch(err){setMsg('<span class="red">OUR WEDDING 백업 파일이 아니에요.</span>')}};fr.readAsText(t.files[0]);t.value="";}
 });
 document.addEventListener("input",e=>{
   const t=e.target;
   if(t.id==="pkq"){S.pkq=t.value;pkRefresh();return}
+  if(t.id==="vq"){S.vq=t.value;clearTimeout(S._vq);S._vq=setTimeout(()=>{render();const e=document.getElementById("vq");if(e){e.focus();e.setSelectionRange(e.value.length,e.value.length)}},250);return}
+  if(t.id==="vpq"&&S.vpDraw){S.vpDraw();return}
   if(t.id==="fS"){const c=cat(t.value.trim());if(c){const b=MY[c.small]||0,l=b-paid(c.small)-plan(c.small);toast(`<b>${c.big} · ${c.mid}</b> 항목이에요. ${b?`이 항목 남은 예산 <b class="${l<0?'red':''}">${man(l)}</b>`:"아직 예산을 안 적었어요"}${avgOf(c)!=null?` · 남들 평균 ${man(avgOf(c))}`:""}`)}}
   if(t.dataset.hv!=null){}
 });
