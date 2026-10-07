@@ -307,6 +307,30 @@ a.logo{text-decoration:none;color:inherit}
 .start label,.set label{display:block;font-size:14px;font-weight:600;margin:14px 0 6px}
 .start label .mut,.set label .mut{font-weight:400;font-size:12px}
 .wedpick{display:flex;gap:10px;align-items:center}
+.cashw{margin-bottom:14px}
+.cashk{margin-bottom:12px}
+.cashk .kpi .v{font-size:22px}
+.cashlg{display:flex;gap:16px;font-size:13px;color:var(--sub);margin:2px 0 6px;flex-wrap:wrap}
+.cashlg span{display:flex;align-items:center;gap:6px}
+.cashlg i{width:12px;height:12px;display:inline-block}
+.cashsvg{width:100%;height:auto;display:block;overflow:visible}
+.cashsay{margin-top:10px;font-size:14px;background:#FAFAF7;padding:10px 12px;border-left:3px solid var(--accd)}
+.cashlist{margin-top:12px;border-top:1px solid var(--line)}
+.cm{border-bottom:1px solid var(--line)}
+.cm summary{display:grid;grid-template-columns:92px 1fr auto;gap:10px;align-items:center;padding:9px 4px;cursor:pointer;list-style:none}
+.cm summary::-webkit-details-marker{display:none}
+.cm summary .m{font-weight:700}
+.cm summary .bar{height:8px;background:var(--track);display:flex;gap:2px}
+.cm summary .bar i{display:block;height:100%}
+.cm summary .v{font-weight:800;text-align:right;min-width:80px}
+.cm.top summary{background:var(--accs)}
+.cm .items{padding:0 4px 10px 106px;font-size:13px;color:var(--sub)}
+#app.mo .cm .items{padding-left:8px}
+.cm .items div{display:flex;justify-content:space-between;gap:10px;padding:2px 0}
+.cm .items .k{display:inline-block;width:8px;height:8px;margin-right:6px}
+td.insc{white-space:nowrap}
+td.insc small{display:block;color:#C4521F;font-size:11px;font-weight:700}
+select.c-n{width:84px}
 input.ly.auto{background:#fff;border-style:dashed;color:var(--sub)}
 sup.src{font-size:10px;margin-left:2px;color:var(--muted);vertical-align:super}
 sup.src.est{color:var(--acct)}
@@ -751,6 +775,8 @@ function vHome(){
     <div class="card kpi hl"><div class="l">남은 예산</div><div class="v">${man(left)}</div><div class="s">예산 − 냈어요 − 낼 예정</div></div>
   </div>
 
+  <div class="card mt"><h2>월별로 필요한 돈 <button class="more" data-act="cashgo">지출 탭에서 달별로 ›</button></h2>${cashKpis(cashPlan(),true)}</div>
+
   <div class="grid g2 mt">
     <div class="card">
       <h2>항목별 예산 <button class="more" data-go="budget">예산 탭 ›</button></h2>
@@ -948,6 +974,63 @@ function pkAdd(kind){
 }
 
 /* ================= 화면: 지출 ================= */
+/* ================= 할부·월별로 필요한 돈 ================= */
+const INS_N=[0,2,3,4,5,6,10,12,18,24,36];
+const isCard=p=>/카드/.test(p||"");
+const insN=e=>isCard(e.p)&&+e.n>1?+e.n:0;
+const addMon=(ym,k)=>{let[y,m]=ym.split("-").map(Number);m+=k;y+=Math.floor((m-1)/12);m=((m-1)%12+12)%12+1;return y+"-"+String(m).padStart(2,"0")};
+const monLabel=(ym,now)=>{const y=ym.slice(0,4),m=+ym.slice(5);return (y!==(now||todayISO()).slice(0,4)?`${y.slice(2)}년 `:"")+m+"월"};
+const insOpts=v=>INS_N.map(n=>`<option value="${n}" ${+v===n||(!n&&!(+v>1))?"selected":""}>${n?n+"개월":"일시불"}</option>`).join("");
+const insNote=e=>{const n=insN(e);if(!n)return"";const ym=(e.d||todayISO()).slice(0,7);return `월 ${man(e.a/n)} · ${monLabel(ym)}~${monLabel(addMon(ym,n-1))}`};
+function cashPlan(){
+  const now=todayISO().slice(0,7),M={};
+  const put=(ym,kind,amt,e,note)=>{const m=(M[ym]=M[ym]||{one:0,ins:0,items:[]});m[kind]+=amt;m.items.push({kind,amt,e,note})};
+  EXP.forEach(e=>{const ym=(e.d||todayISO()).slice(0,7),n=insN(e);
+    if(n){const per=e.a/n;for(let i=0;i<n;i++){const m=addMon(ym,i);if(m>=now)put(m,"ins",per,e,`할부 ${i+1}/${n}`)}}
+    else if(e.st==="예정")put(ym<now?now:ym,"one",e.a,e,ym<now?"날짜 지났는데 아직 안 냄":"한 번에")});
+  const keys=Object.keys(M).sort(),wed=P.wed?P.wed.slice(0,7):null;
+  let last=keys.length?keys[keys.length-1]:now;if(wed&&wed>last&&wed>=now)last=wed;
+  const months=[];for(let ym=now;ym<=last&&months.length<60;ym=addMon(ym,1))months.push(ym);
+  const tot=ym=>M[ym]?M[ym].one+M[ym].ins:0;
+  const peak=months.reduce((a,b)=>tot(b)>tot(a)?b:a,months[0]);
+  const after=wed?months.filter(m=>m>wed).reduce((t,m)=>t+(M[m]?M[m].ins:0),0):0;
+  return {now,M,months,tot,peak,wed,after,last};
+}
+function cashKpis(c,link){
+  const {now,M,tot,peak,wed,after,last}=c;
+  return `<div class="grid g3 cashk">
+    <div class="card kpi"><div class="l">이번 달(${+now.slice(5)}월) 필요한 돈</div><div class="v">${man(tot(now))}</div><div class="s">${M[now]&&M[now].ins?"할부 "+man(M[now].ins)+" 포함":"낼 예정 + 할부"}</div></div>
+    <div class="card kpi hl"><div class="l">가장 많이 필요한 달</div><div class="v">${tot(peak)?monLabel(peak)+" · "+man(tot(peak)):"–"}</div><div class="s">${peak===wed?"예식이 있는 달이에요":tot(peak)?"이 달 전에 미리 모아 두세요":"낼 예정 돈을 적으면 보여요"}</div></div>
+    <div class="card kpi"><div class="l">${wed?"결혼식 뒤에도 남는 할부":"할부 남은 돈"}</div><div class="v">${man(wed?after:c.months.reduce((t,m)=>t+(M[m]?M[m].ins:0),0))}</div><div class="s">${wed&&after?`${monLabel(addMon(wed,1))}~${monLabel(last)} 카드값`:link?'<button class="linkb" data-act="cashgo">달별로 자세히 보기 ›</button>':"카드 할부로 남은 돈"}</div></div>
+  </div>`;
+}
+function cashChart(c){
+  const {months,M,tot,peak,wed}=c;if(!months.length||!months.some(tot))return'<p class="empty">낼 예정 돈이나 카드 할부를 적으면 달마다 필요한 돈이 그려져요.</p>';
+  const W=960,H=290,L=58,Rr=8,T=22,B=42,cw=(W-L-Rr)/months.length,bw=Math.min(36,cw*.62),mx=Math.max(...months.map(tot)),step=mx>2e7?1e7:mx>8e6?5e6:mx>3e6?1e6:5e5,yTop=Math.ceil(mx/step)*step||step,y=v=>T+(H-T-B)*(1-v/yTop);
+  let g="";for(let k=0;k<=yTop;k+=step)g+=`<line x1="${L}" x2="${W-Rr}" y1="${y(k).toFixed(1)}" y2="${y(k).toFixed(1)}" stroke="#EEEEEE"/><text x="${L-8}" y="${y(k).toFixed(1)}" text-anchor="end" dominant-baseline="middle" font-size="12" fill="#8B909B">${k?(k/1e4).toLocaleString()+"만":"0"}</text>`;
+  months.forEach((ym,i)=>{const x=L+cw*i+(cw-bw)/2,o=M[ym]?M[ym].one:0,n=M[ym]?M[ym].ins:0,cx=(x+bw/2).toFixed(1);
+    if(ym===wed)g+=`<line x1="${cx}" x2="${cx}" y1="${T-8}" y2="${H-B}" stroke="#D9B300" stroke-width="2" stroke-dasharray="5 4"/><text x="${cx}" y="${T-12}" text-anchor="middle" font-size="12" font-weight="700" fill="#3A3200">예식</text>`;
+    if(o)g+=`<rect x="${x.toFixed(1)}" y="${y(o).toFixed(1)}" width="${bw.toFixed(1)}" height="${(y(0)-y(o)).toFixed(1)}" fill="#2a78d6"/>`;
+    if(n){const yb=o?y(o)-2:y(0),h=y(0)-y(n);g+=`<rect x="${x.toFixed(1)}" y="${(yb-h).toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" fill="#eb6834"/>`}
+    if(ym===peak&&tot(ym))g+=`<text x="${cx}" y="${(y(tot(ym))-(o&&n?10:8)).toFixed(1)}" text-anchor="middle" font-size="12" font-weight="800" fill="#1C1F26">${man(tot(ym))}</text>`;
+    g+=`<text x="${cx}" y="${H-B+16}" text-anchor="middle" font-size="12" fill="${ym===wed?"#3A3200":"#4F5563"}" font-weight="${ym===wed?800:400}">${+ym.slice(5)}월</text>`;
+    if(i===0||ym.slice(5)==="01")g+=`<text x="${cx}" y="${H-B+31}" text-anchor="middle" font-size="11" fill="#8B909B">${ym.slice(0,4)}</text>`;
+    g+=`<rect x="${(L+cw*i).toFixed(1)}" y="${T}" width="${cw.toFixed(1)}" height="${H-T-B}" fill="transparent" data-cashm="${ym}"><title>${monLabel(ym)} · ${man(tot(ym))} (한 번에 ${man(o)} · 할부 ${man(n)})</title></rect>`});
+  return `<div class="cashlg"><span><i style="background:#2a78d6"></i>한 번에 낼 돈</span><span><i style="background:#eb6834"></i>할부로 나갈 돈</span>${wed?'<span><i style="width:14px;height:0;border-top:2px dashed #D9B300"></i>예식</span>':""}</div>
+    <svg class="cashsvg" viewBox="0 0 ${W} ${H}" role="img" aria-label="월별로 필요한 돈">${g}</svg>`;
+}
+function cashList(c){
+  const {months,M,tot,peak,wed}=c,mx=Math.max(1,...months.map(tot));
+  return `<div class="cashlist">${months.map(ym=>{const m=M[ym]||{one:0,ins:0,items:[]},t=tot(ym);
+    return `<details class="cm ${ym===peak&&t?"top":""}" ${S.cashOpen===ym?"open":""} data-cashd="${ym}"><summary><span class="m">${monLabel(ym)}${ym===wed?'<span class="tag y" style="margin-left:4px">예식</span>':""}</span><span class="bar">${m.one?`<i style="width:${m.one/mx*100}%;background:#2a78d6"></i>`:""}${m.ins?`<i style="width:${m.ins/mx*100}%;background:#eb6834"></i>`:""}</span><span class="v">${t?man(t):'<span class="mut">0</span>'}</span></summary>
+      <div class="items">${m.items.map(x=>`<div><span><i class="k" style="background:${x.kind==="one"?"#2a78d6":"#eb6834"}"></i>${esc(x.e.s)}${x.e.v?` · ${esc(x.e.v)}`:""} <span class="mut">${x.note} · ${esc(x.e.p)}</span></span><b>${man(x.amt)}</b></div>`).join("")||"<div>나갈 돈이 없어요</div>"}</div></details>`}).join("")}</div>`;
+}
+function vCash(){
+  const c=cashPlan(),{peak,M,tot}=c;
+  const say=tot(peak)?`<b>${monLabel(peak)}</b>에 <b>${man(tot(peak))}</b>이 필요해요.${M[peak].one?` 그중 한 번에 낼 돈이 ${man(M[peak].one)}이에요.`:""} 미리 모아 둘 통장을 정해 두세요.`:"";
+  return `<div class="card cashw" id="cash"><h2 style="margin-bottom:10px">월별로 필요한 돈 <span class="mut" style="font-size:12px;font-weight:400">낼 예정 + 카드 할부(원금만, 결제한 달부터)</span></h2>
+    ${cashKpis(c,false)}${cashChart(c)}${say?`<div class="cashsay">${say}</div>`:""}${cashList(c)}</div>`;
+}
 function expForm(m){
   const opt=PAY.map(p=>`<option ${p===S.pay?"selected":""}>${p}</option>`).join("");
   if(m) return `<div class="mform">
@@ -958,6 +1041,7 @@ function expForm(m){
     <div class="hint" id="fH">${S.pk.small?hintFor(S.pk.small):""}</div>
     <label>상태</label><div class="seg" id="fSt"><button class="${S.st==="완료"?"on":""}" data-act="st" data-v="완료">냈어요</button><button class="${S.st==="예정"?"on":""}" data-act="st" data-v="예정">낼 예정</button></div>
     <label>결제 수단</label><div class="chips">${PAY.map(p=>`<button class="${p===S.pay?'on':''}" data-act="pay" data-v="${p}">${p}</button>`).join("")}</div>
+    <div id="fNwrap" ${isCard(S.pay)?"":"hidden"}><label>카드 할부 <span class="mut" style="font-weight:400">결제한 달부터 원금을 나눠 계산해요</span></label><select id="fN">${insOpts(0)}</select></div>
     <label>날짜</label><input id="fD" type="date" value="${todayISO()}">
     <label>업체</label><input id="fV" placeholder="선택">
     <label>메모</label><input id="fM" placeholder="계약금, 잔금 등">
@@ -968,6 +1052,7 @@ function expForm(m){
     <div><label>항목 (글자 치면 검색)</label><input id="fS" list="catlist" placeholder="예: 스냅"></div>
     <div><label>금액 (원)</label><input id="fA" inputmode="numeric" placeholder="1500000"></div>
     <div><label>결제 수단</label><select id="fP">${opt}</select></div>
+    <div><label>카드 할부</label><select id="fN" ${isCard(S.pay)?"":"disabled"}>${insOpts(0)}</select></div>
     <div><label>상태</label><div class="seg" id="fSt"><button class="${S.st==="완료"?"on":""}" data-act="st" data-v="완료">냈어요</button><button class="${S.st==="예정"?"on":""}" data-act="st" data-v="예정">낼 예정</button></div></div>
     <div><label>업체</label><input id="fV"></div>
     <div><label>메모</label><input id="fM" placeholder="계약금·잔금"></div>
@@ -986,6 +1071,7 @@ function vExp(){
       <td><input type="hidden" id="fS" value="${esc(cat(S.newS)?S.newS:"")}"><button class="ce c-s pickbtn" id="fSbtn" data-act="pick" data-v="new" data-fk="n-s">${cat(S.newS)?`${esc(S.newS)}<small>${esc(cat(S.newS).big)} › ${esc(cat(S.newS).mid)}</small>`:'<span class="phx">+ 항목 고르기</span><small>대분류 › 중분류 › 항목</small>'}</button></td>
       <td><input class="ce c-a num" id="fA" inputmode="numeric" placeholder="금액" data-fk="n-a"></td>
       <td><select class="ce c-p" id="fP" data-fk="n-p">${opt(S.pay)}</select></td>
+      <td class="insc"><select class="ce c-n" id="fN" data-fk="n-n" ${isCard(S.pay)?"":"disabled"} title="카드로 낼 때만 할부를 고를 수 있어요">${insOpts(0)}</select></td>
       <td><select class="ce c-st" id="fStS" data-fk="n-st">${stOpt(S.st)}</select></td>
       <td><input class="ce c-v" id="fV" placeholder="업체" data-fk="n-v"></td>
       <td><input class="ce c-m" id="fM" placeholder="메모" data-fk="n-m"></td>
@@ -996,6 +1082,7 @@ function vExp(){
       <td><button class="ce c-s pickbtn" data-act="pick" data-v="row:${i}" data-fk="e-${i}-s" data-col="xs">${esc(e.s)}<small>${c?esc(c.big)+" › "+esc(c.mid):""}</small></button></td>
       <td><input class="ce c-a num" inputmode="numeric" value="${e.a.toLocaleString()}" ${k("a")}></td>
       <td><select class="ce c-p" ${k("p")}>${opt(e.p)}</select></td>
+      <td class="insc">${isCard(e.p)?`<select class="ce c-n" ${k("n")}>${insOpts(e.n)}</select>${insN(e)?`<small>${insNote(e)}</small>`:""}`:'<span class="mut" style="font-size:12px">카드만</span>'}</td>
       <td><select class="ce c-st" ${k("st")}>${stOpt(e.st)}</select></td>
       <td><input class="ce c-v" value="${esc(e.v)}" placeholder="–" ${k("v")}></td>
       <td><input class="ce c-m" value="${esc(e.m)}" ${k("m")}></td>
@@ -1003,10 +1090,10 @@ function vExp(){
       <td class="num pad ${l<0?'red b':''}">${l==null?'<span class="mut">예산 없음</span>':man(l)}</td>
       <td><button class="x" data-act="delexp" data-i="${i}" title="이 줄 지우기">×</button></td></tr>`}).join("");
     body=`<div class="hint" id="fH" style="margin:0 0 8px">칸을 눌러 바로 고치세요. <b>Enter</b>나 <b>↓</b>를 누르면 아래 줄로 내려가요. 맨 위 레몬 줄에서 <b>항목 고르기</b>를 누르고 금액을 적은 뒤 Enter를 누르면 새 지출이 추가돼요.</div>
-    <div class="tw"><table class="xl"><thead><tr><th>날짜</th><th>항목</th><th class="num">금액 (원)</th><th>결제 수단</th><th>상태</th><th>업체</th><th>메모</th><th>현금영수증</th><th class="num">이 항목 남은 예산</th><th></th></tr></thead><tbody>${newRow}${rows}</tbody></table></div>`;
+    <div class="tw"><table class="xl"><thead><tr><th>날짜</th><th>항목</th><th class="num">금액 (원)</th><th>결제 수단</th><th>할부</th><th>상태</th><th>업체</th><th>메모</th><th>현금영수증</th><th class="num">이 항목 남은 예산</th><th></th></tr></thead><tbody>${newRow}${rows}</tbody></table></div>`;
   } else {
     const byM={};[...fl].sort((a,b)=>a.d<b.d?1:-1).forEach(e=>{(byM[e.d.slice(0,7)]=byM[e.d.slice(0,7)]||[]).push(e)});
-    body='<p class="mut" style="font-size:13px;margin:0 0 4px">줄을 누르면 고칠 수 있어요.</p>'+Object.keys(byM).map(k=>`<div class="mgh"><span>${k.slice(0,4)}년 ${+k.slice(5)}월</span><span>${man(sum(byM[k],e=>e.a))}</span></div><div class="card" style="padding:4px 16px">${byM[k].map(e=>`<div class="mrow tap" data-act="editexp" data-i="${e.i}"><div class="a"><span class="n">${e.s}</span><b>${man(e.a)}</b></div><div class="s"><span>${+e.d.slice(8)}일 · ${e.v||"업체 미정"} · ${e.p}${e.m?" · "+e.m:""}</span>${e.st==="예정"?'<span class="tag y">낼 예정</span>':""}</div></div>`).join("")}</div>`).join("")+fab();
+    body='<p class="mut" style="font-size:13px;margin:0 0 4px">줄을 누르면 고칠 수 있어요.</p>'+Object.keys(byM).map(k=>`<div class="mgh"><span>${k.slice(0,4)}년 ${+k.slice(5)}월</span><span>${man(sum(byM[k],e=>e.a))}</span></div><div class="card" style="padding:4px 16px">${byM[k].map(e=>`<div class="mrow tap" data-act="editexp" data-i="${e.i}"><div class="a"><span class="n">${e.s}</span><b>${man(e.a)}</b></div><div class="s"><span>${+e.d.slice(8)}일 · ${e.v||"업체 미정"} · ${e.p}${insN(e)?" · 할부 "+insN(e)+"개월":""}${e.m?" · "+e.m:""}</span>${e.st==="예정"?'<span class="tag y">낼 예정</span>':""}</div></div>`).join("")}</div>`).join("")+fab();
   }
   return `<div class="ph"><h1>지출</h1><p>돈 낼 때마다 <b>한 줄</b>. 계약금·잔금처럼 아직 안 낸 돈은 <b>낼 예정</b>으로 적어 두세요.</p></div>
   <div class="grid g3" style="margin-bottom:14px">
@@ -1014,6 +1101,7 @@ function vExp(){
     <div class="card kpi"><div class="l">낼 예정</div><div class="v">${man(tq)}</div></div>
     <div class="card kpi hl"><div class="l">전부 합치면</div><div class="v">${man(tp+tq)}</div></div>
   </div>
+  ${vCash()}
   <div class="pills">${["전체","냈어요","낼 예정"].map(x=>`<button class="${S.ef===x?'on':''}" data-act="ef" data-v="${x}">${x}</button>`).join("")}<button data-act="sortexp" style="margin-left:auto">날짜순으로 다시 정렬</button></div>
   ${body}${foot()}`;
 }
@@ -1544,7 +1632,8 @@ function readExp(){
   if(!cat(s)){toast('<span class="red">어디에 쓴 돈인지 대분류 › 중분류 › 항목을 골라 주세요.</span>');const b=g("fSbtn");if(b)b.focus();return null}
   if(!am){toast('<span class="red">금액을 적어 주세요.</span>');g("fA").focus();return null}
   const pSel=g("fP"),stSel=g("fStS");
-  return {d:g("fD").value||todayISO(),s,a:am,p:pSel?pSel.value:S.pay,st:stSel?stSel.value:S.st,v:g("fV").value,m:g("fM").value,r:g("fR").checked};
+  const pay=pSel?pSel.value:S.pay,nSel=g("fN"),n=nSel&&isCard(pay)?(+nSel.value||0):0;
+  return {d:g("fD").value||todayISO(),s,a:am,p:pay,st:stSel?stSel.value:S.st,v:g("fV").value,m:g("fM").value,r:g("fR").checked,n};
 }
 document.addEventListener("click",e=>{
   const g=e.target.closest("[data-go]");
@@ -1559,7 +1648,8 @@ document.addEventListener("click",e=>{
     case"close":closeDlg();if(S.view==="sdm")render();break;
     case"ef":S.ef=v;render();break;
     case"st":S.st=v;document.querySelectorAll("#fSt button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));break;
-    case"pay":S.pay=v;a.parentNode.querySelectorAll("button").forEach(b=>b.classList.toggle("on",b===a));break;
+    case"pay":{S.pay=v;a.parentNode.querySelectorAll("button").forEach(b=>b.classList.toggle("on",b===a));const w=document.querySelector("#dlg #fNwrap")||document.getElementById("fNwrap");if(w){w.hidden=!isCard(v);if(!isCard(v)){const f=w.querySelector("select");if(f)f.value="0"}}break;}
+    case"cashgo":S.view="exp";render();setTimeout(()=>{const c=document.getElementById("cash");if(c)c.scrollIntoView({block:"start"})},0);break;
     case"mexp":S.pkTarget="form";pkFrom(cat(S.newS)?S.newS:"");openDlg(`<h3>지출 적기</h3>`+expForm(true),true);break;
     case"texp":{S.pkTarget="form";pkFrom(a.dataset.s);openDlg(`<h3>지출 적기</h3>`+expForm(true),S.mode==="mo");document.getElementById("fA").focus();break;}
     case"pick":dlgPick(v==="new"||v==="cat"?v:v,v==="new"?S.newS:v.startsWith("row:")?(EXP[+v.slice(4)]||{}).s:"");break;
@@ -1574,7 +1664,7 @@ document.addEventListener("click",e=>{
     case"addexp":{const x=readExp();if(!x)return;S.pay=x.p;S.st=x.st;EXP.unshift(x);S.clearDraft=true;const inDlg=!!a.closest("#dlg");closeDlg();S.focusNew=!inDlg;render();toast(`<b>${x.s} ${man(x.a)}</b> 추가했어요. 홈·예산·할일에 바로 반영됐어요.`);break;}
     case"saveexp":{const x=readExp();if(!x)return;Object.assign(EXP[+a.dataset.i],x);closeDlg();render();break;}
     case"editexp":{const i=+a.dataset.i,e=EXP[i];S.st=e.st;S.pay=e.p;S.pkTarget="form";pkFrom(e.s);openDlg(`<h3>지출 고치기</h3>`+expForm(true),true);
-      const set=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v};set("fA",e.a.toLocaleString());set("fS",e.s);set("fD",e.d);set("fV",e.v);set("fM",e.m);document.getElementById("fR").checked=e.r;
+      const set=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v};set("fA",e.a.toLocaleString());set("fS",e.s);set("fD",e.d);set("fV",e.v);set("fM",e.m);document.getElementById("fR").checked=e.r;set("fN",String(+e.n>1?e.n:0));{const w=document.getElementById("fNwrap");if(w)w.hidden=!isCard(e.p)}
       const b=document.querySelector('#dlg [data-act="addexp"]');b.dataset.act="saveexp";b.dataset.i=i;b.textContent="고치기";
       b.insertAdjacentHTML("afterend",`<button class="btn wide" data-act="delexp2" data-i="${i}" style="position:static;box-shadow:none;margin-top:8px;background:#fff;border:1px solid var(--line);color:var(--red)">이 지출 지우기</button>`);break;}
     case"delexp":EXP.splice(+a.dataset.i,1);render();break;
@@ -1640,7 +1730,7 @@ document.addEventListener("change",e=>{
   else if(t.dataset.xf!=null){const e=EXP[+t.dataset.xi],f=t.dataset.xf;
     if(f==="s"){const v=t.value.trim();if(!cat(v)){t.classList.add("bad");toast('<span class="red">목록에 있는 항목만 쓸 수 있어요. 글자를 치면 찾아줘요.</span>');t.value=e.s;setTimeout(()=>t.classList.remove("bad"),1500);return}e.s=v}
     else if(f==="a"){const n=parseMoney(t.value,"won");if(!n){moneyNote("금액을 읽지 못했어요. 예: 150만, 1500000");t.value=e.a.toLocaleString();return}e.a=n}
-    else if(f==="r")e.r=t.checked; else e[f]=t.value;
+    else if(f==="r")e.r=t.checked; else if(f==="n")e.n=+t.value||0; else e[f]=t.value;
     later();}
   else if(t.dataset.gf!=null){const g=GUESTS[+t.dataset.gi],f=t.dataset.gf;
     if(f==="plus"||f==="day")g[f]=parseInt(t.value)||0; else if(f==="gift")g.gift=parseMoney(t.value,"won")||0; else g[f]=t.value;
@@ -1656,6 +1746,7 @@ document.addEventListener("change",e=>{
   else if(t.dataset.cmemo!=null){HALLS[+t.dataset.cmemo].memo=t.value;save();}
   else if(t.id==="cphoto"&&t.files.length){const h=HALLS[+t.dataset.k],H=hid(h),fs=[...t.files];t.value="";toast("사진 넣는 중…");
     (async()=>{for(const f of fs){try{const b=await shrinkImg(f);await PDB.put({id:Math.random().toString(36).slice(2,10),hid:H,t:Date.now(),b})}catch(e){toast('<span class="red">사진을 저장하지 못했어요</span>');}}await loadPhotos(H,true);toast("사진을 넣었어요")})();}
+  else if(t.id==="fP"){const n=document.getElementById("fN");if(n){n.disabled=!isCard(t.value);if(n.disabled)n.value="0"}}
   else if(t.dataset.pf!=null){P[t.dataset.pf]=t.value;if(t.dataset.pf==="region"){const n=fillAvg();if(n)moneyNote(`${reg().name} 평균으로 예산 ${n}칸을 바꿨어요 · 직접 적은 칸은 그대로예요`)}later();}
   else if(t.dataset.tbd!=null){const w=document.getElementById(t.dataset.tbd);w.disabled=t.checked;if(t.checked){w.value="";if(t.dataset.tbd==="setW"){P.wed="";later()}}else w.focus();}
   else if(t.id==="stW"||t.id==="setW"){
@@ -1677,6 +1768,7 @@ document.addEventListener("input",e=>{
   if(t.id==="fS"){const c=cat(t.value.trim());if(c){const b=MY[c.small]||0,l=b-paid(c.small)-plan(c.small);toast(`<b>${c.big} · ${c.mid}</b> 항목이에요. ${b?`이 항목 남은 예산 <b class="${l<0?'red':''}">${man(l)}</b>`:"아직 예산을 안 적었어요"}${avgOf(c)!=null?` · 남들 평균 ${man(avgOf(c))}`:""}`)}}
   if(t.dataset.hv!=null){}
 });
+document.addEventListener("toggle",e=>{const d=e.target;if(d.dataset&&d.dataset.cashd){if(d.open)S.cashOpen=d.dataset.cashd;else if(S.cashOpen===d.dataset.cashd)S.cashOpen=null}},true);
 document.addEventListener("focusout",e=>{const t=e.target;if(t.dataset&&t.dataset.hv!=null){const[k,r]=t.dataset.hv.split(",");HALLS[k].v[r]=t.textContent;render();}});
 // 한글은 글자를 조합하는 중에 Enter·↓를 누르면 마지막 글자가 다음 칸으로 튐 → 조합이 끝난 다음에 처리
 addEventListener("keydown",e=>{
