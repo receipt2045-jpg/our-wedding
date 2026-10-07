@@ -402,6 +402,45 @@ tr.newrow .pickbtn{background:#fff}
 .vlist .pp{display:inline-block;border:1px solid var(--line);padding:2px 7px;margin:4px 4px 0 0;font-size:13px;cursor:pointer;background:#fff}
 .vlist .pp:hover{background:var(--acc);border-color:var(--accd)}
 /* 웨딩홀 */
+.cstart{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;margin:0 0 14px}
+.cstart button{display:flex;justify-content:space-between;align-items:center;gap:8px;border:1px solid var(--accl);background:var(--accs);padding:12px 14px;font-size:15px;font-weight:700;cursor:pointer;text-align:left}
+.cstart button:hover{background:var(--acc)}
+.cstart small{font-weight:400;color:var(--sub);font-size:12px;white-space:nowrap}
+.chead{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line);padding:10px 0 0}
+.chead .row{display:flex;gap:8px;align-items:center}
+#app.mo .chead{top:var(--mh,0px)}
+.chead input{flex:1;min-width:0;font-size:18px;font-weight:800;border:1px solid transparent;padding:4px 6px}
+.chead input:focus{border-color:var(--line);outline:0}
+.chead .pg{font-size:13px;color:var(--sub);white-space:nowrap}
+.cgrp{display:flex;gap:6px;overflow-x:auto;padding:10px 0;margin-bottom:4px;scrollbar-width:none}
+.cgrp::-webkit-scrollbar{display:none}
+.cgrp button{flex:none;border:1px solid var(--line);background:#fff;padding:8px 12px;font-size:14px;cursor:pointer;white-space:nowrap}
+.cgrp button.on{background:var(--acc);border-color:var(--accd);font-weight:700}
+.cgrp button small{color:var(--muted);font-size:11px;margin-left:3px}
+.ci{border-bottom:1px solid var(--line);padding:12px 0}
+.ci .cl{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px}
+.ci .cl b{font-size:16px}
+.ci .cl small{display:block;color:var(--muted);font-size:12px;margin-top:1px}
+.ci.ok .cl b:after{content:" ✓";color:var(--green)}
+.cch{display:flex;flex-wrap:wrap;gap:6px}
+.cch button{border:1px solid var(--line);background:#fff;min-height:42px;padding:8px 14px;font-size:15px;cursor:pointer}
+.cch button.on{background:var(--acc);border-color:var(--accd);font-weight:700}
+.cin{display:flex;align-items:center;gap:6px}
+.cin input{font-size:18px;padding:9px 10px;width:130px}
+.cin input.wide{width:100%}
+.cin .u{font-size:15px}
+.csc{display:flex;flex:none;gap:2px}
+.csc button{width:26px;height:26px;padding:0;border:1px solid var(--line);background:#fff;font-size:13px;cursor:pointer}
+.csc button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.cfoot{display:flex;gap:8px;margin:16px 0 8px}
+.cfoot .btn{flex:1}
+.cside{border:1px solid var(--line);padding:12px 14px;margin:12px 0}
+.cside textarea{width:100%;min-height:72px;border:1px solid var(--line);padding:8px;font-size:15px;font-family:inherit;resize:vertical}
+.cphotos{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:6px;margin-top:8px}
+.cphotos .pp{position:relative;aspect-ratio:1;border:1px solid var(--line);overflow:hidden;background:#fafafa}
+.cphotos img{width:100%;height:100%;object-fit:cover;cursor:zoom-in}
+.cphotos .x{position:absolute;top:2px;right:2px;background:#fff;border:1px solid var(--line);width:22px;height:22px;line-height:18px;padding:0}
+.pbtn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--accl);background:var(--accs);padding:9px 14px;font-size:14px;font-weight:700;cursor:pointer}
 .hall td,.hall th{white-space:nowrap}
 .hall td.st,.hall th.st{position:sticky;left:0;background:#fff;z-index:1;border-right:1px solid var(--line)}
 .hall th.st{background:#fff;z-index:2}
@@ -1111,7 +1150,70 @@ function vTodo(){
 }
 
 /* ================= 화면: 웨딩홀 ================= */
+
+/* ================= 웨딩홀 상담 모드 ================= */
+// 항목마다 입력 방식: num=숫자판(단위 붙여 저장), txt=글자, ch=누르는 버튼(앞쪽일수록 좋은 쪽, ns=점수 자동 안 매김)
+const CM={"월":{t:"txt",ch:["3~5월","6~8월","9~11월","12~2월"],ns:1},"요일":{ch:["토요일","일요일","금요일 저녁"],ns:1},"시간":{t:"txt",ch:["11시","12시","13시","14시","15시 이후"],ns:1},"예식 간격":{t:"num",u:"분",ch:["단독","90분","70분","60분"]},
+ "대관료":{t:"num",u:"만"},"계약금":{t:"num",u:"만"},"식대":{t:"num",u:"만",ph:"예: 6.6"},"소인 식대":{t:"num",u:"만"},"최소 보증 인원":{t:"num",u:"명"},
+ "카드 결제":{ch:["가능","일부만","불가"]},"부가세":{ch:["없음(포함)","별도"]},"현금영수증":{ch:["가능","불가"]},"지역 화폐 사용":{ch:["가능","불가"]},
+ "꽃장식":{ch:["생화","생화+조화","조화"]},"플라워샤워":{t:"num",u:"만"},"예도":{t:"num",u:"만"},"기타 추가금":{t:"txt",ph:"예: 폐백실 30만, 영상 40만"},
+ "단독홀 여부":{ch:["단독홀","아님"]},"홀 분위기":{ch:["밝은 홀","어두운 홀","채플","가든"],ns:1},"버진로드 길이":{ch:["긴편","보통","짧은편"]},"층고":{ch:["높음","보통","낮음"]},"예식 전 스냅 촬영":{ch:["가능","불가"]},
+ "크기":{ch:["넓음","보통","좁음"]},"화장실":{ch:["있음","없음"]},"서브 대기실":{ch:["있음","없음"],ns:1},
+ "하객 대기 공간":{ch:["넓음","보통","좁음"]},"포토 테이블":{t:"num",u:"개"},"포토 부스":{ch:["가능","불가"]},"ATM기 개수":{t:"num",u:"개"},
+ "음식 종류 수":{t:"num",u:"가지"},"음료(주류 포함)":{ch:["주류 포함","음료만"]},"맛(상/중/하)":{ch:["상","중","하"]},"시식 인원":{t:"num",u:"명"},
+ "주차 대수":{t:"num",u:"대"},"혼잡도":{ch:["여유로움","보통","혼잡"]},"무료 주차 시간":{t:"num",u:"시간"},"대중교통 접근성":{ch:["역 10분 내","역 20분 내","멀어요"]},"셔틀 제공 여부":{ch:["있음","없음"]},"혼주 가족 주차":{ch:["가능","불가"]},"대절 버스 주차장":{ch:["있음","없음"]}};
+// 체크리스트를 묶음(기본정보·비용…)으로 나누기
+const HGROUPS=(()=>{const g=[];HALLROWS.forEach((r,ri)=>{if(r[0])g.push({n:r[0],rows:[]});g[g.length-1].rows.push(ri)});return g})();
+const hFilled=h=>h.v.filter(x=>String(x||"").trim()).length;
+const hid=h=>h.id||(h.id=Math.random().toString(36).slice(2,9));
+const numOnly=(v,u)=>{const t=String(v||"");return u&&t.endsWith(u)?t.slice(0,-u.length):t};
+
+// 견적서·홀 사진: 용량이 커서 계정 대신 이 기기(IndexedDB)에만 저장
+const PDB={_db:null,
+  open(){return this._db||(this._db=new Promise((res,rej)=>{const r=indexedDB.open("ourwedding-photos",1);r.onupgradeneeded=()=>r.result.createObjectStore("p",{keyPath:"id"});r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}))},
+  async put(o){const db=await this.open();return new Promise((res,rej)=>{const t=db.transaction("p","readwrite");t.objectStore("p").put(o);t.oncomplete=res;t.onerror=()=>rej(t.error)})},
+  async list(h){const db=await this.open();return new Promise(res=>{const out=[],c=db.transaction("p").objectStore("p").openCursor();c.onsuccess=()=>{const cur=c.result;if(cur){if(cur.value.hid===h)out.push(cur.value);cur.continue()}else res(out.sort((a,b)=>a.t-b.t))}})},
+  async del(id){const db=await this.open();return new Promise(res=>{const t=db.transaction("p","readwrite");t.objectStore("p").delete(id);t.oncomplete=res})}};
+S.pcache={};
+async function shrinkImg(file){const img=await createImageBitmap(file);const sc=Math.min(1,1600/Math.max(img.width,img.height));const c=document.createElement("canvas");c.width=Math.round(img.width*sc);c.height=Math.round(img.height*sc);c.getContext("2d").drawImage(img,0,0,c.width,c.height);return new Promise(r=>c.toBlob(r,"image/jpeg",.75))}
+async function loadPhotos(h,force){if(S.pcache[h]&&!force)return;try{const ps=await PDB.list(h);(S.pcache[h]||[]).forEach(p=>URL.revokeObjectURL(p.url));S.pcache[h]=ps.map(p=>({id:p.id,url:URL.createObjectURL(p.b)}));const el=document.getElementById("cphotos");if(el&&el.dataset.hid===h)el.innerHTML=photoGrid(h)}catch(e){S.pcache[h]=[]}}
+const photoGrid=h=>(S.pcache[h]||[]).map(p=>`<div class="pp"><img src="${p.url}" data-act="cpview" data-v="${p.id}" alt="사진"><button class="x" data-act="cpdel" data-v="${p.id}" title="사진 지우기">×</button></div>`).join("");
+
+function vConsult(){
+  const k=S.cs.k,h=HALLS[k];if(!h){S.cs=null;return vHall()}
+  const H=hid(h),g=HGROUPS[S.cs.g]||HGROUPS[0],gi=HGROUPS.indexOf(g);
+  if(!S.pcache[H])setTimeout(()=>loadPhotos(H),0);
+  setTimeout(()=>{const c=document.querySelector(".cgrp"),on=c&&c.querySelector(".on");if(on)c.scrollLeft=on.offsetLeft-c.clientWidth/2+on.offsetWidth/2},0);   // 지금 묶음 버튼이 보이게
+  const item=ri=>{const r=HALLROWS[ri],m=CM[r[1]]||{t:"txt"},val=String(h.v[ri]||"");
+    const chips=m.ch?`<div class="cch">${m.ch.map((c,ci)=>`<button class="${val===c?"on":""}" data-act="cchip" data-v="${k}|${ri}|${ci}">${esc(c)}</button>`).join("")}</div>`:"";
+    const inp=m.t?`<div class="cin" ${m.ch?'style="margin-top:6px"':""}><input class="ly ${m.t==="txt"?"wide":""}" ${m.t==="num"?'inputmode="decimal"':""} data-cv="${k},${ri}" data-fk="cv-${k}-${ri}" value="${esc(m.t==="num"?numOnly(val,m.u):(m.ch&&m.ch.includes(val)?"":val))}" placeholder="${esc(m.ph||(m.ch?"직접 적기":""))}">${m.u?`<span class="u">${m.u}</span>`:""}</div>`:"";
+    return `<div class="ci ${val.trim()?"ok":""}"><div class="cl"><div><b>${esc(r[1])}</b>${r[2]?`<small>좋은 기준 ${esc(r[2])}</small>`:""}</div>
+      <div class="csc" title="점수">${[1,2,3,4,5].map(x=>`<button class="${+h.sc[ri]===x?"on":""}" data-act="cscore" data-v="${k}|${ri}|${x}">${x}</button>`).join("")}</div></div>${chips}${inp}</div>`};
+  const last=gi===HGROUPS.length-1;
+  return `<div class="chead"><div class="row"><button class="btn ghost" data-act="csexit" style="padding:7px 10px">← 비교표</button><input data-hn="${k}" value="${esc(h.name)}" aria-label="홀 이름"><span class="pg">${hFilled(h)}/${HALLROWS.length}</span><label class="pbtn" for="cphoto" style="padding:7px 10px">사진</label></div>
+  <div class="cgrp">${HGROUPS.map((x,i)=>{const f=x.rows.filter(ri=>String(h.v[ri]||"").trim()).length;return `<button class="${i===gi?"on":""}" data-act="cgrp" data-v="${i}">${x.n}<small>${f}/${x.rows.length}</small></button>`}).join("")}</div></div>
+  <p class="mut" style="font-size:13px;margin:2px 0 4px">상담에서 지금 나오는 이야기의 묶음을 위에서 누르세요. 오른쪽 1~5는 점수예요. 버튼을 누르면 점수도 같이 매겨지고, 나중에 바꿀 수 있어요.</p>
+  ${g.rows.map(item).join("")}
+  <div class="cfoot">${gi>0?`<button class="btn ghost" data-act="cgrp" data-v="${gi-1}">← ${HGROUPS[gi-1].n}</button>`:""}${last?`<button class="btn" data-act="csdone" data-v="${k}">상담 끝 · 놓친 것 보기</button>`:`<button class="btn" data-act="cgrp" data-v="${gi+1}">${HGROUPS[gi+1].n} →</button>`}</div>
+  <div class="cside"><b>혜택·조건 메모</b> <span class="mut" style="font-size:12px">식대 할인, 서비스, 계약 기한처럼 말로 들은 것</span>
+    <textarea data-cmemo="${k}" placeholder="예: 이번 달 계약하면 식대 3천원 할인, 폐백실 무료">${esc(h.memo||"")}</textarea></div>
+  <div class="cside"><label class="pbtn"><input type="file" accept="image/*" capture="environment" id="cphoto" data-k="${k}" hidden multiple>견적서·홀 사진 찍기</label>
+    <span class="mut" style="font-size:12px"> 사진은 이 기기에만 저장돼요</span><div class="cphotos" id="cphotos" data-hid="${H}">${photoGrid(H)}</div></div>
+  ${foot()}`;
+}
+function dlgConsultDone(k){
+  const h=HALLS[k],miss=HGROUPS.map(g=>({n:g.n,r:g.rows.filter(ri=>!String(h.v[ri]||"").trim()).map(ri=>HALLROWS[ri][1])})).filter(x=>x.r.length);
+  const txt=`[${h.name}] 다시 물어볼 것\n`+miss.map(x=>`- ${x.n}: ${x.r.join(", ")}`).join("\n");
+  S.missTxt=txt;
+  openDlg(`<h3>${esc(h.name)} 상담 정리</h3><p style="margin:0 0 10px">${HALLROWS.length}개 중 <b>${hFilled(h)}개</b>를 적었어요.</p>
+    ${miss.length?`<p class="mut" style="font-size:13px;margin:0 0 6px">아직 비어 있는 항목이에요. 전화나 문자로 물어보세요.</p>
+    <div style="max-height:46vh;overflow:auto;border:1px solid var(--line);padding:10px 12px;font-size:14px;line-height:1.7">${miss.map(x=>`<div><b>${x.n}</b> · ${x.r.map(esc).join(", ")}</div>`).join("")}</div>
+    <button class="btn wide ghost" data-act="cscopy" style="margin-top:10px">물어볼 목록 복사하기</button>`:'<p>빠진 항목 없이 다 적었어요.</p>'}
+    <button class="btn wide" data-act="csfinish" style="margin-top:8px">비교표로 돌아가기</button>`);
+}
+
 function vHall(){
+  if(S.cs)return vConsult();
   const tot=HALLS.map(h=>sum(h.sc,x=>+x));
   const rank=tot.map(t=>1+tot.filter(x=>x>t).length);
   const best=rank.indexOf(1);
@@ -1124,8 +1226,11 @@ function vHall(){
   });
   body+=`<tr class="sum"><td class="st">점수 합계</td><td></td>${HALLS.map((h,k)=>`<td colspan="2" class="${k===best?'top':''}">${tot[k]}점</td>`).join("")}</tr>`;
   body+=`<tr class="sum"><td class="st">순위</td><td></td>${HALLS.map((h,k)=>`<td colspan="2" class="${k===best?'top':''}">${rank[k]}위 ${k===best?'<span class="tag y">추천</span>':""}</td>`).join("")}</tr>`;
+  if(HALLS.some(h=>h.memo))body+=`<tr><td class="st">혜택·조건 메모</td><td></td>${HALLS.map((h,k)=>`<td colspan="2" class="${k===best?'top':''}" style="white-space:pre-wrap;font-size:13px;max-width:220px">${esc(h.memo||"")}</td>`).join("")}</tr>`;
   body+=`<tr class="sum"><td class="st">총 비용</td><td class="best" style="font-weight:400">대관료+식대×보증</td>${HALLS.map((h,k)=>`<td colspan="2" class="${k===best?'top':''}">${cost[k].toLocaleString()}만</td>`).join("")}</tr>`;
   return `<div class="ph"><h1>웨딩홀 비교</h1><p>투어 전에 홀 이름을 적고, 다녀와서 <b>내용과 점수(1~5)</b>만 채우세요. 점수 합이 제일 높은 홀에 표시돼요.</p></div>
+  <div class="card" style="margin-bottom:14px;padding:14px 16px"><b style="font-size:16px">상담 가서 바로 적기</b> <span class="mut" style="font-size:13px">· 정신없는 상담 중에도 폰으로 버튼·숫자만 누르면 아래 표가 채워져요. 견적서 사진도 같이 남겨요.</span>
+    <div class="cstart" style="margin:10px 0 0">${HALLS.map((h,k)=>`<button data-act="csopen" data-v="${k}"><span>${esc(h.name)}</span><small>${hFilled(h)?`${hFilled(h)}/${HALLROWS.length} 적음`:"상담 모드 열기"} ›</small></button>`).join("")}</div></div>
   ${S.mode==="mo"?'<p class="mut" style="font-size:13px;margin:-8px 0 10px">표를 옆으로 밀면 다른 홀이 보여요 →</p>':""}
   <div class="tw hall"><table><thead><tr><th class="st">항목</th><th>좋은 기준</th>${HALLS.map((h,k)=>`<th class="${k===best?'top':''}"><input data-hn="${k}" value="${esc(h.name)}"></th><th class="${k===best?'top':''}">점수</th>`).join("")}</tr></thead><tbody>${body}</tbody></table></div>
   ${HALLS.length<5?`<div style="margin-top:12px"><button class="addrow" data-act="addhall">+ 홀 추가 (최대 5곳)</button></div>`:""}
@@ -1153,6 +1258,7 @@ function render(){
   document.getElementById("catlist").innerHTML=CATS.map(c=>`<option value="${esc(c.small)}">${c.big} · ${c.mid}</option>`).join("");
   if(S.focusNew){S.focusNew=false;const f=document.getElementById("fSbtn")||document.getElementById("fS");if(f)f.focus();}
   else if(fk){const el=document.querySelector(`[data-fk="${fk}"]`);if(el&&el!==document.activeElement){el.focus();try{el.select()}catch(e){}}}
+  if(S.mode==="mo")document.documentElement.style.setProperty("--mh",document.getElementById("mhead").offsetHeight+"px");
   save();
 }
 
@@ -1281,7 +1387,7 @@ function readExp(){
 }
 document.addEventListener("click",e=>{
   const g=e.target.closest("[data-go]");
-  if(g){const v=g.dataset.go;S.view=v;S.stage=null;closeDlg();render();window.scrollTo(0,0);return}
+  if(g){const v=g.dataset.go;S.view=v;S.stage=null;S.cs=null;closeDlg();render();window.scrollTo(0,0);return}
   const a=e.target.closest("[data-act]");if(!a)return;
   const v=a.dataset.v;
   switch(a.dataset.act){
@@ -1346,6 +1452,16 @@ document.addEventListener("click",e=>{
     case"restore":document.getElementById("restoreFile").click();break;
     case"csv":csv(v);setMsg("엑셀에서 열 수 있는 파일(CSV)을 내려받았어요.");break;
     case"wipe":if(confirm("정말 모든 기록을 지울까요? 되돌릴 수 없어요.")&&confirm("백업 파일이 없으면 복구할 수 없어요. 그래도 지울까요?")){try{localStorage.removeItem(KEY)}catch(e){}use(fresh());S.view="home";render();window.scrollTo(0,0)}break;
+    case"csopen":S.cs={k:+v,g:0};render();window.scrollTo(0,0);break;
+    case"csexit":case"csfinish":S.cs=null;closeDlg();render();window.scrollTo(0,0);break;
+    case"cgrp":S.cs.g=+v;render();window.scrollTo(0,0);break;
+    case"cchip":{const [k,ri,ci]=v.split("|").map(Number),h=HALLS[k],m=CM[HALLROWS[ri][1]],c=m.ch[ci];
+      if(h.v[ri]===c)h.v[ri]="";else{h.v[ri]=c;if(!m.ns)h.sc[ri]=ci===0?5:ci===m.ch.length-1?1:3}render();break;}
+    case"cscore":{const [k,ri,x]=v.split("|").map(Number);HALLS[k].sc[ri]=x;render();break;}
+    case"csdone":dlgConsultDone(+v);break;
+    case"cscopy":try{navigator.clipboard.writeText(S.missTxt);a.textContent="복사했어요 · 카톡이나 메모에 붙여넣으세요"}catch(e){prompt("아래 글을 복사하세요",S.missTxt)}break;
+    case"cpview":{const h=HALLS[S.cs.k],p=(S.pcache[hid(h)]||[]).find(x=>x.id===v);if(p)openDlg(`<img src="${p.url}" alt="사진" style="width:100%;display:block"><button class="btn wide ghost" data-act="close" style="margin-top:10px">닫기</button>`);break;}
+    case"cpdel":if(confirm("이 사진을 지울까요?")){const H=hid(HALLS[S.cs.k]);PDB.del(v).then(()=>loadPhotos(H,true))}break;
     case"addhall":HALLS.push({name:"홀 "+(HALLS.length+1)+" 이름",v:HALLROWS.map(()=>""),sc:HALLROWS.map(()=>3)});render();break;
   }
 });
@@ -1366,6 +1482,11 @@ document.addEventListener("change",e=>{
     c.small=nv;if(MY[old]!=null){MY[nv]=MY[old];delete MY[old]}EXP.forEach(x=>{if(x.s===old)x.s=nv});if(S.newS===old)S.newS=nv;render();}
   else if(t.dataset.hs!=null){const[k,r]=t.dataset.hs.split(",");HALLS[k].sc[r]=+t.value;render();}
   else if(t.dataset.hn!=null){HALLS[+t.dataset.hn].name=t.value;save();}
+  else if(t.dataset.cv!=null){const[k,ri]=t.dataset.cv.split(",").map(Number),m=CM[HALLROWS[ri][1]]||{};let val=t.value.trim();
+    if(m.t==="num"&&/^[\d.,]+$/.test(val))val=val.replace(/,/g,"")+m.u;HALLS[k].v[ri]=val;later();}
+  else if(t.dataset.cmemo!=null){HALLS[+t.dataset.cmemo].memo=t.value;save();}
+  else if(t.id==="cphoto"&&t.files.length){const h=HALLS[+t.dataset.k],H=hid(h),fs=[...t.files];t.value="";toast("사진 넣는 중…");
+    (async()=>{for(const f of fs){try{const b=await shrinkImg(f);await PDB.put({id:Math.random().toString(36).slice(2,10),hid:H,t:Date.now(),b})}catch(e){toast('<span class="red">사진을 저장하지 못했어요</span>');}}await loadPhotos(H,true);toast("사진을 넣었어요")})();}
   else if(t.dataset.pf!=null){P[t.dataset.pf]=t.value;later();}
   else if(t.dataset.qf!=null){const q=QUOTES[+t.dataset.qi],f=t.dataset.qf;
     if(f==="name")q.name=t.value.trim()||q.name;else if(f==="disc")q.disc=parseFloat(t.value.replace(/,/g,""))||0;
