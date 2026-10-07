@@ -307,6 +307,12 @@ a.logo{text-decoration:none;color:inherit}
 .start label,.set label{display:block;font-size:14px;font-weight:600;margin:14px 0 6px}
 .start label .mut,.set label .mut{font-weight:400;font-size:12px}
 .wedpick{display:flex;gap:10px;align-items:center}
+.hpk{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+#app.mo .hpk{grid-template-columns:1fr}
+.hpki{border:1px solid var(--line);padding:10px 12px;font-size:13px;text-decoration:none;color:var(--ink);display:block}
+.hpki:hover{background:var(--accs)}
+.hpki b{display:block;font-size:15px;margin:3px 0 1px}
+.adm{display:block;margin:6px 0 0;font-size:13px;font-weight:700;color:var(--red);text-decoration:none}
 .cashw{margin-bottom:14px}
 .cashk{margin-bottom:12px}
 .cashk .kpi .v{font-size:22px}
@@ -578,6 +584,7 @@ tr.newrow .pickbtn{background:#fff}
 <script src="sdm.js"></script>
 <script src="vendors.js"></script>
 <script src="hex.js"></script>
+<script src="perks-ui.js"></script>
 <script>
 /* ================= 데이터 ================= */
 const RAW = [["결혼식", "인사", "첫인사 식사"], ["결혼식", "인사", "첫인사 선물"], ["결혼식", "인사", "상견례 식사"], ["결혼식", "인사", "상견례 선물"], ["결혼식", "인사", "청첩장"], ["결혼식", "인사", "청첩장 모임"], ["결혼식", "인사", "주선자"], ["결혼식", "웨딩홀", "대관료"], ["결혼식", "웨딩홀", "식대"], ["결혼식", "웨딩홀", "와인"], ["결혼식", "웨딩홀", "꽃장식"], ["결혼식", "스드메", "패키지"], ["결혼식", "스드메", "스튜디오 추가금"], ["결혼식", "스드메", "드레스 추가금"], ["결혼식", "스드메", "메이크업 추가금"], ["결혼식", "스드메", "예복"], ["결혼식", "스드메", "구두"], ["결혼식", "스드메", "부케"], ["결혼식", "본식진행", "헬퍼비"], ["결혼식", "본식진행", "사회자"], ["결혼식", "본식진행", "축하 무대"], ["결혼식", "본식진행", "스냅"], ["결혼식", "본식진행", "영상"], ["결혼식", "혼주", "한복"], ["결혼식", "혼주", "양복"], ["결혼식", "혼주", "메이크업"], ["결혼식", "예물", "반지"], ["결혼식", "예물", "가방"], ["결혼식", "예물", "시계"], ["결혼식", "관리", "마사지"], ["결혼식", "관리", "시술"], ["결혼식", "관리", "네일"], ["결혼식", "관리", "머리"], ["결혼식", "하객", "교통비"], ["결혼식", "하객", "답례품"], ["신혼여행", "신혼여행", "여행사 패키지"], ["신혼여행", "신혼여행", "항공권"], ["신혼여행", "신혼여행", "숙소"], ["신혼여행", "신혼여행", "경비"], ["신혼여행", "신혼여행", "선물"], ["혼수", "가전", "가전 패키지"], ["혼수", "가구", "침실"], ["혼수", "가구", "거실"], ["혼수", "가구", "서재"], ["혼수", "가구", "주방"], ["혼수", "가구", "생활용품"], ["혼수", "가구", "침구"], ["혼수", "가구", "식기류"], ["신혼집", "인테리어", "벽지"], ["신혼집", "인테리어", "타일"], ["신혼집", "인테리어", "샷시"], ["신혼집", "집", "계약금"], ["신혼집", "집", "중도금"], ["신혼집", "집", "잔금"], ["신혼집", "집", "보증금"], ["신혼집", "집", "세금"], ["신혼집", "집", "법무사비"], ["신혼집", "집", "부동산중개비"]];  // [대분류, 중분류, 소분류]
@@ -776,6 +783,7 @@ function vHome(){
   </div>
 
   <div class="card mt"><h2>월별로 필요한 돈 <button class="more" data-act="cashgo">지출 탭에서 달별로 ›</button></h2>${cashKpis(cashPlan(),true)}</div>
+  ${homePerks()}
 
   <div class="grid g2 mt">
     <div class="card">
@@ -894,7 +902,7 @@ function vBudget(){
     g.items.forEach(c=>{
       const b=MY[c.small]||0,p=paid(c.small),q=plan(c.small),l=b-p-q,a=avgOf(c),pct=b?Math.round((p+q)/b*100):0;
       const nm=c.custom?`<input class="nmin" data-ren="${c.id}" value="${esc(c.small)}">`:c.small;
-      const af=(!p&&!q&&AFF[c.small])?`<span class="aff">${AFF[c.small]}</span>`:"";
+      const af=window.PERKS?pkChip(PERKS.forItem(c.small),"budget"):"";
       rows+=`<tr><td class="nm">${nm}</td><td class="num mut" title="${a!=null?SRC_NAME[avgSrc(c)]:""}">${a!=null?man(a)+(avgSrc(c)==="kca"?"":`<sup class="src ${avgSrc(c)}">${avgSrc(c)==="est"?"추정":"참고"}</sup>`):'<span class="soon">–</span>'}</td>
         <td class="num"><input class="ly ${isAvgB(c.small)?"auto":""}" data-bud="${esc(c.small)}" data-fk="b-${c.id}" data-col="bud" value="${b?(b/10000).toLocaleString():""}" placeholder="0" inputmode="numeric" title="${isAvgB(c.small)?"지역 평균으로 넣은 값이에요. 바로 고칠 수 있어요":""}"><span class="u">만</span></td>
         <td class="num">${p?man(p):'<span class="mut">0</span>'}</td><td class="num">${q?man(q):'<span class="mut">0</span>'}</td>
@@ -1030,6 +1038,25 @@ function vCash(){
   const say=tot(peak)?`<b>${monLabel(peak)}</b>에 <b>${man(tot(peak))}</b>이 필요해요.${M[peak].one?` 그중 한 번에 낼 돈이 ${man(M[peak].one)}이에요.`:""} 미리 모아 둘 통장을 정해 두세요.`:"";
   return `<div class="card cashw" id="cash"><h2 style="margin-bottom:10px">월별로 필요한 돈 <span class="mut" style="font-size:12px;font-weight:400">낼 예정 + 카드 할부(원금만, 결제한 달부터)</span></h2>
     ${cashKpis(c,false)}${cashChart(c)}${say?`<div class="cashsay">${say}</div>`:""}${cashList(c)}</div>`;
+}
+/* ================= 혜택 ================= */
+const PK=()=>window.PERKS&&PERKS.list().length?PERKS:null;
+const pkChip=(xs,place)=>xs&&xs.length&&window.PERKS?PERKS.chip(xs[0],place):"";
+function vPerks(){
+  const L=window.PERKS?PERKS.list():[],saved=P.savedPerks||[],st=stageNow();
+  const cats=["지금 단계에 맞는 것","전체",...(window.PERKS?PERKS.CATS.filter(c=>L.some(p=>p.cat===c)):[]),...(saved.length?["담은 혜택"]:[])];
+  if(!S.pkCat||!cats.includes(S.pkCat))S.pkCat=L.length&&PERKS.forStage(st).length?"지금 단계에 맞는 것":"전체";
+  const xs=S.pkCat==="전체"?L:S.pkCat==="지금 단계에 맞는 것"?PERKS.forStage(st):S.pkCat==="담은 혜택"?L.filter(p=>saved.includes(p.id)):L.filter(p=>p.cat===S.pkCat);
+  const extra=p=>`<button data-act="pksave" data-v="${p.id}">${saved.includes(p.id)?"담았어요 ✓":"가계부에 담기"}</button>`;
+  return `<div class="ph"><h1>혜택</h1><p>예비부부가 쓸 수 있는 할인과 혜택이에요. 예산·할일에서 그 항목을 준비할 때도 옆에 떠요.</p></div>
+  ${L.length?PERKS.NOTE+`<div class="pills">${cats.map(c=>`<button class="${S.pkCat===c?"on":""}" data-act="pkcat" data-v="${c}">${c}${c==="지금 단계에 맞는 것"?` <span class="mut" style="font-size:11px">${st}</span>`:""}</button>`).join("")}</div>`:""}
+  ${!window.PERKS?'<p class="empty">혜택을 불러오지 못했어요.</p>':L.length?(xs.length?`<div class="pkgrid">${xs.map(p=>PERKS.card(p,"app",extra(p))).join("")}</div>`:'<p class="empty">이 분류에는 아직 혜택이 없어요.</p>'):PERKS.EMPTY}
+  <div class="card" style="margin-top:16px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><span class="mut" style="font-size:14px">예비부부에게 혜택을 소개하고 싶은 업체인가요?</span><a class="btn" href="partner.html" style="text-decoration:none">광고·제휴 신청하기</a></div>
+  ${foot()}`;
+}
+function homePerks(){
+  const L=window.PERKS?PERKS.forStage(stageNow()).slice(0,3):[];if(!L.length)return"";
+  return `<div class="card mt"><h2>지금 쓸 만한 혜택 <button class="more" data-go="perks">혜택 탭 ›</button></h2><div class="hpk">${L.map(p=>`<a class="hpki" href="#" data-pkchip="${p.id}" data-pkplace="home"><span class="pkad">광고</span><b>${esc(p.offer)}</b><span class="mut">${esc(p.cat)} · ${esc(p.name)} · ${PERKS.dday(p.until)}</span></a>`).join("")}</div></div>`;
 }
 function expForm(m){
   const opt=PAY.map(p=>`<option ${p===S.pay?"selected":""}>${p}</option>`).join("");
@@ -1217,7 +1244,7 @@ function vVendors(){
     ${list.map(g=>{const vals=showPL.map(n=>g.by[n]?rep(g.by[n]):null),ps=vals.map(x=>x?priceOf(x):null);
       // 다른 플래너의 최저가보다 이 칸의 최고가가 낮을 때만 '제일 싼 곳'으로 칠함 (범위끼리 겹치면 안 칠함)
       const best=ps.map((p,i)=>p&&p.lo!=null&&ps.filter(Boolean).length>1&&ps.every((o,j)=>j===i||!o||o.lo==null||p.hi<o.lo));
-      return `<tr><td class="vn">${esc(g.v)}${Object.keys(g.by).length>1?`<small>플래너 ${Object.keys(g.by).length}곳</small>`:""}</td>
+      return `<tr><td class="vn">${esc(g.v)}${Object.keys(g.by).length>1?`<small>플래너 ${Object.keys(g.by).length}곳</small>`:""}${window.PERKS?pkChip(PERKS.forVendor(g.v),"sdm"):""}</td>
         ${vals.map((x,i)=>x?`<td class="num ${best[i]?"best":""}"><span class="pv">${esc(ps[i].main)}</span>${sub(x,ps[i])}</td>`:'<td class="num mut">–</td>').join("")}
         <td>${rateOf(g.min<9999?g.min:null,lo,hi)}</td></tr>`}).join("")||'<tr><td colspan="6" class="mut">찾는 업체가 없어요</td></tr>'}
   </tbody></table></div><p class="mut" style="font-size:12px">가격이 시간대·조건별로 다르면 최저~최고로 줄여 보여주고, 작은 글씨에 원래 조건을 적어 뒀어요. 한 플래너가 다른 곳보다 확실히 쌀 때만(가격대가 겹치지 않을 때) 칠해 뒀어요. 드레스·메이크업은 본식+촬영 가격(메이크업은 실장 기준)이에요.</p>`;
@@ -1329,9 +1356,9 @@ function vTodo(){
     <div class="card kpi"><div class="l">${cur} 단계 예산</div><div class="v">${man(sb)}</div><div class="s">연결된 항목 ${uniq.length}개</div></div>
     <div class="card kpi"><div class="l">냈어요 · 낼 예정</div><div class="v">${man(sp)} <span style="font-size:15px;color:var(--muted);font-weight:600">+ ${man(sq)}</span></div><div class="s">${bar(sb,sp,sq)}</div></div>
     <div class="card kpi ${sb-sp-sq<0?"warn":"hl"}" style="display:block"><div class="l">${sb-sp-sq<0?"예산 넘음":"남은 돈"}</div><div class="v ${sb-sp-sq<0?"red":""}">${man(Math.abs(sb-sp-sq))}</div><div class="s">이 단계 항목만</div></div></div>`;
-  const list=`<div class="card todo">${items.map(t=>{const a=isAuto(t),d=isDone(t);const af=TODO_AFF[t[2]];
+  const list=`<div class="card todo">${items.map(t=>{const a=isAuto(t),d=isDone(t);const af=window.PERKS?pkChip(PERKS.forTodo(t[2]),"todo"):"";
     return `<div class="it ${d?'done':''}"><button class="cb ${a?'auto':d?'on':''}" data-act="todo" data-t="${esc(t[2])}" ${a?"disabled":""}>${d?"✔":""}</button>
-      <div class="tx"><span>${t[2]}</span><small>${t[1]}${a?" · 냈어요 기록돼서 자동 완료":isPlanned(t)?" · 낼 예정 지출 있음":""}${af&&!d?` · <span class="aff">${af}</span>`:""}</small>${S.mode==="mo"?moneyCell(t,true):""}</div>
+      <div class="tx"><span>${t[2]}</span><small>${t[1]}${a?" · 냈어요 기록돼서 자동 완료":isPlanned(t)?" · 낼 예정 지출 있음":""}${af&&!d?` · ${af}`:""}</small>${S.mode==="mo"?moneyCell(t,true):""}</div>
       ${S.mode==="pc"?moneyCell(t,false):""}</div>`}).join("")}</div>`;
   const head=`<div class="ph"><h1>할 일</h1><p>체크하면서 옆에서 <b>예산·쓴 돈</b>까지 같이 봐요. 예산 칸을 고치면 예산 탭에도 그대로 반영돼요. 전체 ${TODO.length}개 중 ${doneN}개 끝.</p></div>`;
   if(S.mode==="pc") return head+`<div style="display:grid;grid-template-columns:240px minmax(0,1fr);gap:16px;align-items:start"><div class="stages">${STAGES.map(stageBtn).join("")}</div><div>${sumCard}${list}</div></div>${foot()}`;
@@ -1474,9 +1501,9 @@ function vHall(){
 
 /* ================= 공통 ================= */
 const fab=()=>`<div class="fabw"><button class="fab" data-act="mexp"><i>+</i>지출 적기</button></div>`;
-const foot=()=>`<div class="foot">${CL.id?"기록은 계정에 저장돼요. 로그인하면 폰·PC 어디서든 이어서 써요.":`기록은 이 브라우저에만 저장돼요. <button class="linkb" data-go="set">설정·백업</button>에서 가끔 백업해 두세요.`} · 남들 평균 출처: 한국소비자원 참가격(2026년 8월), 듀오 2026 결혼비용 보고서 · <a href="./">남들은 얼마 쓸까</a> · <a href="privacy.html">개인정보처리방침</a></div>`;
-const NAV=[["home","홈"],["budget","예산"],["exp","지출"],["sdm","스드메 견적"],["guest","하객"],["todo","할일"],["hall","웨딩홀"],["set","설정·백업"]];
-const VIEWS={home:vHome,budget:vBudget,exp:vExp,sdm:vSdm,guest:vGuest,todo:vTodo,hall:vHall,set:vSet};
+const foot=()=>`<div class="foot">${CL.id?"기록은 계정에 저장돼요. 로그인하면 폰·PC 어디서든 이어서 써요.":`기록은 이 브라우저에만 저장돼요. <button class="linkb" data-go="set">설정·백업</button>에서 가끔 백업해 두세요.`} · 남들 평균 출처: 한국소비자원 참가격(2026년 8월), 듀오 2026 결혼비용 보고서 · <a href="./">남들은 얼마 쓸까</a> · <a href="perks.html">혜택</a> · <a href="partner.html">광고·제휴 신청</a> · <a href="privacy.html">개인정보처리방침</a></div>`;
+const NAV=[["home","홈"],["budget","예산"],["exp","지출"],["sdm","스드메 견적"],["guest","하객"],["todo","할일"],["hall","웨딩홀"],["perks","혜택"],["set","설정·백업"]];
+const VIEWS={home:vHome,budget:vBudget,exp:vExp,sdm:vSdm,guest:vGuest,todo:vTodo,hall:vHall,perks:vPerks,set:vSet};
 
 let _rt;const later=()=>{clearTimeout(_rt);_rt=setTimeout(render,0)};
 function render(){
@@ -1485,7 +1512,7 @@ function render(){
   document.getElementById("side").innerHTML=`<a class="logo" href="./"><i></i>OUR WEDDING</a>
     <div class="couple"><div class="n">${names()}</div><div class="d">${ddText()}</div><div class="s">${wedText()}</div></div>
     <div class="nav">${NAV.map(([k,l],i)=>`${k==="set"?'<div class="sep"></div>':""}<button class="${S.view===k?'on':''}" data-go="${k}">${l}</button>`).join("")}
-      <a class="navlink" href="./">남들은 얼마 쓸까 ›</a><a class="navlink" href="halls.html">웨딩홀 리스트 ›</a></div>
+      <a class="navlink" href="./">남들은 얼마 쓸까 ›</a><a class="navlink" href="halls.html">웨딩홀 리스트 ›</a>${CL.admin?`<a class="adm" href="admin.html">운영자 페이지${CL.newInq?` · 새 제휴 신청 ${CL.newInq}건`:""} ›</a>`:""}</div>
     <div class="side-foot">${acctBox()}</div>`;
   document.getElementById("mhead").innerHTML=`<div class="mtop"><a class="logo" href="./" style="padding:0;font-size:16px"><i></i>OUR WEDDING</a><div class="r">${names()}<br><b>${ddText()}</b></div></div>
     <div class="mtabs">${!CL.id&&SB?'<button class="mlogin" data-act="login">로그인</button>':""}${NAV.map(([k,l])=>`<button class="${S.view===k?'on':''}" data-go="${k}">${l}</button>`).join("")}<a href="./">남들 평균</a></div>`;
@@ -1518,6 +1545,9 @@ const coreOf=d=>{const c=Object.assign({},d);delete c.saved;return stab(c)};
 const getJoin=()=>{try{return sessionStorage.getItem("ow-join")}catch(e){return null}};
 const userName=()=>{const u=CL.user;if(!u)return"";const m=u.user_metadata||{};return m.full_name||m.name||m.nickname||m.user_name||u.email||"내 계정"};
 const inviteLink=()=>location.origin+location.pathname+"?join="+CL.invite;
+// 운영자(결영) 계정이면 새 제휴 신청 수를 가져와 사이드바에 알림
+async function adminCheck(){try{if(!SB||!CL.user||CL.user.email!=="receipt2045@gmail.com")return;CL.admin=true;
+  const {count}=await SB.from("partner_inquiries").select("id",{count:"exact",head:true}).eq("status","new");CL.newInq=count||0;render()}catch(e){}}
 function acctBox(){
   if(CL.id)return `<div class="acct"><span class="dot ${/실패/.test(CL.state)?"bad":/중/.test(CL.state)?"wait":""}"></span><b>${esc(userName())}</b><br><span id="cloudState">${esc(CL.state||"저장됨")}</span> · <button class="linkb" data-go="set">계정</button></div>`;
   if(SB)return `<button class="loginbtn" data-act="login">로그인하고 둘이 같이 쓰기</button><div class="acct">지금은 이 브라우저에만 저장돼요</div>`;
@@ -1558,11 +1588,11 @@ async function cloudInit(){
   if(nv){const {error}=await SB.auth.verifyOtp({token_hash:nv,type:"magiclink"});if(error)setTimeout(()=>alert("네이버 로그인을 마치지 못했어요. 다시 시도해 주세요."),300)}
   if(q.get("error"))setTimeout(()=>alert("로그인하지 못했어요. 다시 시도해 주세요.\n("+(q.get("error_description")||q.get("error"))+")"),300);
   SB.auth.onAuthStateChange((ev,ses)=>{
-    if(ses&&ses.user&&(!CL.user||CL.user.id!==ses.user.id)){CL.user=ses.user;setTimeout(cloudStart,0)}
+    if(ses&&ses.user&&(!CL.user||CL.user.id!==ses.user.id)){CL.user=ses.user;setTimeout(()=>{cloudStart();adminCheck()},0)}
     if(ev==="SIGNED_OUT"&&CL.id){CL.user=null;CL.id=null;render()}
   });
   const {data}=await SB.auth.getSession();
-  if(data&&data.session){if(!CL.user){CL.user=data.session.user;await cloudStart()}}
+  if(data&&data.session){if(!CL.user){CL.user=data.session.user;await cloudStart();adminCheck()}}
   else{render();if(getJoin())dlgLogin(true)}
 }
 let _starting=false;
@@ -1638,6 +1668,7 @@ function readExp(){
 document.addEventListener("click",e=>{
   const g=e.target.closest("[data-go]");
   if(g){const v=g.dataset.go;S.view=v;S.stage=null;S.cs=null;closeDlg();render();window.scrollTo(0,0);return}
+  const pc=e.target.closest("[data-pkchip]");if(pc&&document.getElementById("app")){e.preventDefault();S.view="perks";S.pkCat="전체";render();setTimeout(()=>{const el=document.getElementById("pk-"+pc.dataset.pkchip);if(el){el.scrollIntoView({block:"center"});el.classList.add("flash");setTimeout(()=>el.classList.remove("flash"),1800)}else window.scrollTo(0,0)},0);return}
   const a=e.target.closest("[data-act]");if(!a)return;
   const v=a.dataset.v;
   switch(a.dataset.act){
@@ -1649,6 +1680,8 @@ document.addEventListener("click",e=>{
     case"ef":S.ef=v;render();break;
     case"st":S.st=v;document.querySelectorAll("#fSt button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));break;
     case"pay":{S.pay=v;a.parentNode.querySelectorAll("button").forEach(b=>b.classList.toggle("on",b===a));const w=document.querySelector("#dlg #fNwrap")||document.getElementById("fNwrap");if(w){w.hidden=!isCard(v);if(!isCard(v)){const f=w.querySelector("select");if(f)f.value="0"}}break;}
+    case"pkcat":S.pkCat=v;render();break;
+    case"pksave":{const sv=P.savedPerks=P.savedPerks||[];const i=sv.indexOf(v);if(i>=0)sv.splice(i,1);else sv.push(v);render();break;}
     case"cashgo":S.view="exp";render();setTimeout(()=>{const c=document.getElementById("cash");if(c)c.scrollIntoView({block:"start"})},0);break;
     case"mexp":S.pkTarget="form";pkFrom(cat(S.newS)?S.newS:"");openDlg(`<h3>지출 적기</h3>`+expForm(true),true);break;
     case"texp":{S.pkTarget="form";pkFrom(a.dataset.s);openDlg(`<h3>지출 적기</h3>`+expForm(true),S.mode==="mo");document.getElementById("fA").focus();break;}
@@ -1817,6 +1850,7 @@ function addHallFromList(){
   document.body.appendChild(sc);
 }
 render();
+if(window.PERKS)PERKS.load().then(()=>render());
 addHallFromList();
 cloudInit();
 </script>

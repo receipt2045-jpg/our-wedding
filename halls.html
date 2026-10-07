@@ -147,11 +147,13 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:20px 0 40px;font
   <div>사진은 각 웨딩홀 공식 홈페이지의 대표 이미지예요. 사진을 누르면 공식 홈페이지로 가요. 지도는 OpenStreetMap이고, 위치는 주소로 찾은 거라 조금 어긋날 수 있어요.</div>
   <div>후기 육각형은 후기 요약을 6칸(가격·홀·음식·주차·교통·하객 편의)으로 나눠, 칸마다 좋은 말만 있으면 '좋다는 말 많음', 확인할 점만 있으면 '확인해 볼 점 있음', 둘 다 있으면 '좋은 말·확인할 점', 이야기가 없으면 '자료 부족'으로 보여줘요. 점수가 아니라 참고용이에요.</div>
   <div>좋은 점과 '상담 때 확인할 점'은 여러 후기에서 겹쳐 나온 내용을 우리 말로 줄인 거예요. 확인할 점은 홀에 대한 평가가 아니라, 상담 때 직접 물어보고 확인해 보시라는 목록이에요. 잘못된 정보가 있으면 알려 주세요.</div>
-  <div style="margin-top:8px">© OUR WEDDING · <a href="privacy.html">개인정보처리방침</a></div>
+  <div style="margin-top:8px">© OUR WEDDING · <a href="perks.html">혜택</a> · <a href="partner.html">광고·제휴 신청</a> · <a href="privacy.html">개인정보처리방침</a></div>
 </div></footer>
 
 <script src="halls.js"></script>
 <script src="hex.js"></script>
+<script src="config.js"></script>
+<script src="perks-ui.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 const D=window.OW_HALLS||{items:[]},ALL=D.items;
@@ -193,7 +195,7 @@ function card(h){
   const f=[["보증인원",h.guarantee],["식대",h.meal],["주차",h.parking],["가는 길",h.station],["홀",h.halls]].filter(x=>x[1]);
   const photo=h.image?`<div class="ph"><a href="${esc(h.site||h.image)}" target="_blank" rel="noopener"><img src="${esc(IMG(h.image))}" alt="${esc(h.name)} 대표 사진" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.ph').remove()"></a>${h.site?`<a class="cr" href="${esc(h.site)}" target="_blank" rel="noopener">공식 홈페이지</a>`:""}</div>`:"";
   return `<article class="h" id="h-${h.id}">${photo}<div class="body">
-    <div class="top"><div><h3>${esc(h.name)}</h3><div class="meta">${esc(h.area||"")}${h.type?` · ${esc(h.type)}`:""}</div></div>${h.single===true?'<span class="tag y">단독홀</span>':""}</div>
+    <div class="top"><div><h3>${esc(h.name)}</h3>${window.PERKS&&PERKS.forHall(h.name).length?`<div style="margin:4px 0 2px">${PERKS.chip(PERKS.forHall(h.name)[0],"halls")}</div>`:""}<div class="meta">${esc(h.area||"")}${h.type?` · ${esc(h.type)}`:""}</div></div>${h.single===true?'<span class="tag y">단독홀</span>':""}</div>
     ${f.length?`<dl class="facts">${f.map(([k,v])=>`<dt>${k}</dt><dd>${esc(v)}</dd>`).join("")}</dl>`:""}
     ${hexBox(h)}
     ${(h.pros&&h.pros.length)||(h.checks&&h.checks.length)?`<div class="pc"><div class="p"><b>후기 좋은 점</b><ul>${(h.pros||[]).map(x=>`<li>${esc(x)}</li>`).join("")||"<li>–</li>"}</ul></div><div class="c"><b>상담 때 확인할 점</b><ul>${(h.checks||[]).map(x=>`<li>${esc(x)}</li>`).join("")||"<li>–</li>"}</ul></div></div>`:""}
@@ -242,6 +244,7 @@ document.getElementById("type").addEventListener("change",e=>{st.type=e.target.v
 document.getElementById("good").addEventListener("change",e=>{st.good=e.target.value;draw()});
 document.getElementById("q").addEventListener("input",e=>{st.q=e.target.value;draw()});
 draw();
+if(window.PERKS)PERKS.load().then(l=>{if(l.length)draw()});
 </script>
 </body>
 </html>

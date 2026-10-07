@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>OUR WEDDING · 운영자</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{--acc:#FFF0A6;--accs:#FFFCEC;--accl:#F1DC6E;--accd:#D9B300;--acct:#3A3200;--ink:#1C1F26;--sub:#4F5563;--muted:#8B909B;--line:#EEEEEE;--red:#DC4449;--green:#1C9A57}
+*,*::before,*::after{box-sizing:border-box;border-radius:0!important}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:#fff;color:var(--ink);font-family:Pretendard,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-size:15px;line-height:1.55;word-break:keep-all}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:inherit}
+.wrap{max-width:1120px;margin:0 auto;padding:0 16px}
+header{border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff;z-index:10}
+header .wrap{display:flex;justify-content:space-between;align-items:center;height:56px;gap:8px}
+.logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:16px;letter-spacing:.05em;text-decoration:none}
+.logo i{width:20px;height:20px;background:var(--acc);border:1px solid var(--accl);display:inline-block}
+.who{font-size:13px;color:var(--sub);display:flex;gap:8px;align-items:center}
+main{padding:20px 0 60px}
+.tabs{display:flex;border-bottom:1px solid var(--line);margin-bottom:16px;overflow-x:auto}
+.tabs button{border:0;border-bottom:3px solid transparent;background:none;padding:10px 14px;font-size:15px;color:var(--sub);cursor:pointer;white-space:nowrap}
+.tabs button.on{border-bottom-color:var(--accd);color:var(--ink);font-weight:800}
+.badge{display:inline-block;background:var(--red);color:#fff;font-size:11px;font-weight:800;padding:0 6px;margin-left:4px}
+.btn{border:1px solid var(--line);background:#fff;padding:8px 14px;font-size:14px;cursor:pointer}
+.btn.y{background:var(--acc);border-color:var(--accl);font-weight:700;color:var(--acct)}
+.btn.r{color:var(--red)}
+.btn:disabled{opacity:.5;cursor:default}
+.lay{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:20px;align-items:start}
+@media (max-width:900px){.lay{grid-template-columns:1fr}}
+.list .it{border:1px solid var(--line);padding:10px 12px;margin-bottom:8px;cursor:pointer;background:#fff;display:block;width:100%;text-align:left}
+.list .it:hover,.list .it.on{background:var(--accs);border-color:var(--accl)}
+.list .it b{display:block}
+.list .it small{color:var(--muted);font-size:12px}
+.st{display:inline-block;font-size:11px;font-weight:700;padding:0 6px;border:1px solid var(--line);margin-left:4px}
+.st.new{background:#FFF0F0;color:var(--red);border-color:#F6D4D5}.st.live{background:#E9F7EF;color:var(--green);border-color:#BFE6CF}.st.draft{background:#F3F3EE}.st.paused{background:#F3F3EE;color:var(--muted)}.st.rejected,.st.done{color:var(--muted)}
+.pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.pills button{border:1px solid var(--line);background:#fff;padding:5px 10px;font-size:13px;cursor:pointer}
+.pills button.on{background:var(--acc);border-color:var(--accd);font-weight:700}
+.panel{border:1px solid var(--line);padding:16px;position:sticky;top:72px}
+@media (max-width:900px){.panel{position:static}}
+.panel h3{margin:0 0 8px;font-size:17px}
+dl.kv{display:grid;grid-template-columns:90px 1fr;gap:4px 10px;font-size:14px;margin:0}
+dl.kv dt{color:var(--muted)}
+dl.kv dd{margin:0;white-space:pre-wrap;word-break:break-all}
+label.l{display:block;font-size:13px;font-weight:600;margin:10px 0 4px}
+label.l .mut{font-weight:400;font-size:12px;color:var(--muted)}
+input[type=text],input[type=url],input[type=date],input[type=tel],input[type=number],select,textarea{width:100%;border:1px solid #DAD9D2;padding:8px 10px;font-size:15px;background:#fff}
+textarea{min-height:60px;resize:vertical}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 10px}
+@media (max-width:520px){.g2,.g3{grid-template-columns:1fr}}
+.tagin{border:1px solid #DAD9D2;padding:6px;display:flex;flex-wrap:wrap;gap:4px;background:#fff}
+.tagin span{background:var(--accs);border:1px solid var(--accl);font-size:13px;padding:1px 6px;display:inline-flex;gap:4px;align-items:center}
+.tagin span button{border:0;background:none;padding:0;cursor:pointer;color:var(--muted)}
+.tagin input{border:0!important;flex:1;min-width:120px;padding:4px!important;outline:0}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.prevbox{margin-top:14px;max-width:340px}
+.prevbox .t{font-size:12px;color:var(--muted);margin-bottom:6px}
+.msg{font-size:13px;margin-top:8px;min-height:18px}
+.msg.ok{color:var(--green)}.msg.no{color:var(--red)}
+table.ck{width:100%;border-collapse:collapse;font-size:14px}
+table.ck th,table.ck td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left}
+table.ck th{font-size:12px;color:var(--muted);font-weight:600}
+table.ck td.n{text-align:right;font-variant-numeric:tabular-nums}
+.gate{max-width:420px;margin:60px auto;border:1px solid var(--line);padding:24px;text-align:center}
+.mut{color:var(--muted)}
+.help{background:#FAFAF7;border-left:3px solid var(--accd);padding:10px 12px;font-size:13px;color:var(--sub);margin-bottom:14px}
+</style>
+</head>
+<body>
+<header><div class="wrap"><a class="logo" href="./"><i></i>OUR WEDDING <span style="font-size:12px;color:var(--muted);letter-spacing:0;font-weight:600">운영자</span></a><div class="who" id="who"></div></div></header>
+<main class="wrap" id="main"><p class="mut">불러오는 중…</p></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="perks-ui.js"></script>
+<script src="halls.js"></script>
+<script src="vendors.js"></script>
+<script>
+const LISTS={"items": ["첫인사 식사", "첫인사 선물", "상견례 식사", "상견례 선물", "청첩장", "청첩장 모임", "주선자", "대관료", "식대", "와인", "꽃장식", "패키지", "스튜디오 추가금", "드레스 추가금", "메이크업 추가금", "예복", "구두", "부케", "헬퍼비", "사회자", "축하 무대", "스냅", "영상", "한복", "양복", "메이크업", "반지", "가방", "시계", "마사지", "시술", "네일", "머리", "교통비", "답례품", "여행사 패키지", "항공권", "숙소", "경비", "선물", "가전 패키지", "침실", "거실", "서재", "주방", "생활용품", "침구", "식기류", "벽지", "타일", "샷시", "계약금", "중도금", "잔금", "보증금", "세금", "법무사비", "부동산중개비"], "todos": ["결혼 허락 받기", "웨딩홀 투어 예약", "홀 투어", "홀 계약", "(홀 계약 후)스냅 계약", "(홀 계약 후)DVD 계약", "(홀 계약 후)사회자 섭외", "신혼집 매물 검색", "부동산 연락", "신혼집 계약", "첫인사 선물 구입", "신랑집 첫인사", "신부집 첫인사", "웨딩 박람회 투어", "플래너 알아보기", "스드메 계약", "웨딩링 투어", "웨딩링 계약", "대출 알아보기", "인테리어 계약", "잔금 치루기", "기타 비용 처리", "상견례 식당 예약", "상견례 선물 구입", "드레스 투어", "촬영 가봉", "헤어변형 예약", "스튜디오 촬영", "웨딩링 수령", "다이어트", "촬영 네일", "여행사 투어", "항공권 예약", "호텔 예약", "일정 짜기", "인테리어 시공", "입주 청소", "이사", "청첩장 샘플 수령", "청첩장 주문", "모바일 청첩장 제작", "예복 투어", "예복 구매", "사진 셀렉 및 보정", "축가,축사 부탁", "가방순이", "부케순이", "혼주 메이크업 예약", "여자 혼주 한복 가봉", "남자 혼주 양복 구매", "액세서리 구매", "청첩장 모임", "축의대", "웨딩카", "예단 준비", "예단 전달", "피부과 관리", "피부과 시술", "하객 버스 대절", "버스 도우미 섭외", "웨딩홀 뷔페 시식", "본식 드레스 가봉", "부케 주문", "식순 정하기", "배경음악 선정", "식전 영상 제작", "이바지 음식 예약", "미용실 가기", "버스 도시락 주문", "환전하기", "웨딩홀 최종 점검", "웨딩홀에 파일 전달", "부케 예약 확인", "드레스샵 예약 확인", "메이크업샵 예약 확인", "헬퍼비 준비", "사례비 준비", "스냅, DVD 예약 확인", "혼주 한복 수령", "본식 네일 받기", "짐싸기", "행진 연습", "예식 비용 정산", "감사 인사 전하기", "회사 답례품 주문", "TV", "에어컨", "냉장고", "식기세척기", "밥솥", "정수기", "세탁기", "건조기", "청소기", "공기청정기", "소파", "거실장 or 소파테이블", "식탁", "매트리스", "프레임", "서랍", "책상,의자", "러그", "식기", "식기 건조대", "이불", "옷걸이", "쓰레기통", "분리수거함", "도배", "장판", "싱크대", "화장실", "샤시", "조명", "콘센트", "타일", "중문", "필름", "몰딩"]};
+const ADMIN="receipt2045@gmail.com";
+const C=window.OW_CONF,SB=window.supabase.createClient(C.supabaseUrl,C.supabaseKey,{auth:{flowType:"pkce",persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const $=id=>document.getElementById(id);
+const HALLN=((window.OW_HALLS||{}).items||[]).map(h=>h.name);
+const VENN=[...new Set(((window.OW_VENDORS||{}).rows||[]).map(r=>r.v))];
+const ST={tab:"inq",inqF:"new",sel:null,perkSel:null,edit:null,inq:[],perks:[],clicks:[]};
+const INQ_ST={new:"새 신청",live:"혜택 올림",done:"처리 끝",rejected:"거절"},PK_ST={draft:"초안",live:"올라감",paused:"내림"};
+const fmt=t=>t?new Date(t).toLocaleString("ko-KR",{month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit"}):"";
+
+async function boot(){
+  const {data:{session}}=await SB.auth.getSession();
+  const u=session&&session.user;
+  if(!u){$("who").innerHTML="";$("main").innerHTML=`<div class="gate"><b style="font-size:18px">운영자 로그인</b><p class="mut" style="font-size:14px">결영님 구글 계정(${ADMIN})으로 로그인하면 제휴 신청을 보고 혜택을 올릴 수 있어요.</p><button class="btn y" id="login" style="width:100%;padding:12px">구글로 로그인</button></div>`;
+    $("login").onclick=()=>SB.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.origin+location.pathname}});return}
+  $("who").innerHTML=`${esc(u.email)} <button class="btn" id="out" style="padding:4px 10px">로그아웃</button>`;$("out").onclick=async()=>{await SB.auth.signOut();location.reload()};
+  if(u.email!==ADMIN){$("main").innerHTML=`<div class="gate">이 계정(${esc(u.email)})은 운영자가 아니에요.<br>운영자 계정으로 다시 로그인해 주세요.</div>`;return}
+  await reload();
+}
+async function reload(){
+  const [a,b,c]=await Promise.all([
+    SB.from("partner_inquiries").select("*").order("created_at",{ascending:false}),
+    SB.from("perks").select("*").order("sort",{ascending:false}).order("created_at",{ascending:false}),
+    SB.from("perk_clicks").select("perk_id,place,at").gte("at",new Date(Date.now()-180*864e5).toISOString()).limit(20000)]);
+  if(a.error||b.error){$("main").innerHTML=`<p class="mut">불러오지 못했어요: ${esc((a.error||b.error).message)}</p>`;return}
+  ST.inq=a.data||[];ST.perks=b.data||[];ST.clicks=(c.data||[]);draw();
+}
+function draw(){
+  const nNew=ST.inq.filter(x=>x.status==="new").length;
+  $("main").innerHTML=`<div class="tabs"><button class="${ST.tab==="inq"?"on":""}" data-tab="inq">제휴 신청${nNew?`<span class="badge">${nNew}</span>`:""}</button><button class="${ST.tab==="perk"?"on":""}" data-tab="perk">혜택 관리 <span class="mut" style="font-size:12px">${ST.perks.filter(p=>p.status==="live").length}개 올라감</span></button><button class="${ST.tab==="ck"?"on":""}" data-tab="ck">클릭 수</button></div><div id="body"></div>`;
+  ({inq:drawInq,perk:drawPerk,ck:drawClicks})[ST.tab]();
+}
+// ---------- 제휴 신청 ----------
+function drawInq(){
+  const xs=ST.inq.filter(x=>ST.inqF==="all"||x.status===ST.inqF);
+  const sel=ST.inq.find(x=>x.id===ST.sel);
+  $("body").innerHTML=`<div class="help">업체가 <a href="partner.html" target="_blank">제휴 신청서</a>로 보낸 내용이에요. 신청을 누르고 <b>[혜택 만들어 검수하기]</b>를 누르면 혜택 칸이 채워진 채로 열려요. 고칠 건 고친 뒤 <b>[바로 올리기]</b>를 누르면 사이트에 바로 떠요.</div>
+  <div class="pills">${[["new","새 신청"],["live","혜택 올림"],["done","처리 끝"],["rejected","거절"],["all","전체"]].map(([k,l])=>`<button class="${ST.inqF===k?"on":""}" data-inqf="${k}">${l} <span class="mut">${k==="all"?ST.inq.length:ST.inq.filter(x=>x.status===k).length}</span></button>`).join("")}</div>
+  <div class="lay"><div class="list">${xs.map(x=>`<button class="it ${x.id===ST.sel?"on":""}" data-inq="${x.id}"><b>${esc(x.company)} <span class="st ${x.status}">${INQ_ST[x.status]}</span></b>${esc(x.category||"")} · ${esc(x.offer||"혜택 미입력")}<br><small>${fmt(x.created_at)} · ${esc(x.contact_name)}</small></button>`).join("")||'<p class="mut">신청이 없어요.</p>'}</div>
+  <div>${sel?inqPanel(sel):'<div class="panel mut">왼쪽에서 신청을 고르세요.</div>'}</div></div>`;
+}
+function inqPanel(x){
+  const kv=[["분야",x.category],["담당자",x.contact_name],["전화",x.phone?`<a href="tel:${esc(x.phone)}">${esc(x.phone)}</a>`:""],["이메일",x.email?`<a href="mailto:${esc(x.email)}">${esc(x.email)}</a>`:""],["지역",x.region],["혜택",x.offer],["조건",x.cond],["마감일",x.until],["받는 방법",{link:"링크",code:"쿠폰 코드",say:"'보고 왔어요'",phone:"전화"}[x.how]||""],["쿠폰 코드",x.code],["링크",x.url?`<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.url)}</a>`:""],["사진",x.image_url?`<a href="${esc(x.image_url)}" target="_blank" rel="noopener">보기</a>`:""],["하고 싶은 말",x.detail]].filter(r=>r[1]);
+  const made=ST.perks.filter(p=>p.inquiry_id===x.id);
+  return `<div class="panel"><h3>${esc(x.company)} <span class="st ${x.status}">${INQ_ST[x.status]}</span></h3><p class="mut" style="font-size:12px;margin:-4px 0 10px">${fmt(x.created_at)} 신청</p>
+    <dl class="kv">${kv.map(([k,v])=>`<dt>${k}</dt><dd>${["전화","이메일","링크","사진"].includes(k)?v:esc(v)}</dd>`).join("")}</dl>
+    ${made.length?`<p style="font-size:13px;margin:12px 0 0">이 신청으로 만든 혜택: ${made.map(p=>`<a href="#" data-goperk="${p.id}">${esc(p.offer)}</a> <span class="st ${p.status}">${PK_ST[p.status]}</span>`).join(", ")}</p>`:""}
+    <label class="l">운영 메모 <span class="mut">나만 보여요</span></label><textarea id="memo">${esc(x.memo||"")}</textarea>
+    <div class="acts"><button class="btn y" data-mkperk="${x.id}">혜택 만들어 검수하기</button><button class="btn" data-inqsave="${x.id}">메모 저장</button><button class="btn" data-inqst="done">처리 끝</button><button class="btn r" data-inqst="rejected">거절</button></div><div class="msg" id="imsg"></div></div>`;
+}
+// ---------- 혜택 관리 ----------
+const blank=()=>({id:null,status:"draft",cat:"",name:"",offer:"",cond:"",region:"",until:null,how:"link",code:"",url:"",phone:"",img:"",items:[],todos:[],halls:[],vendors:[],sort:0,inquiry_id:null});
+function fromInq(x){return {...blank(),cat:PERKS.CATS.includes(x.category)?x.category:"기타",name:x.company,offer:(x.offer||"").slice(0,60),cond:x.cond||"",region:x.region||"",until:x.until||null,how:x.how||"link",code:x.code||"",url:x.url||"",phone:x.how==="phone"?(x.phone||""):"",img:x.image_url||"",inquiry_id:x.id}}
+function drawPerk(){
+  const e=ST.edit;
+  $("body").innerHTML=`<div class="help">사이트에는 <b>올라감</b> 상태이면서 마감일이 안 지난 혜택만 보여요. 마감일이 지나면 저절로 사라져요. 위로 올릴수록(순서 숫자가 클수록) 먼저 보여요.</div>
+  <div class="lay"><div><div class="acts" style="margin:0 0 10px"><button class="btn y" data-newperk="1">+ 새 혜택 직접 만들기</button></div>
+    <div class="list">${ST.perks.map(p=>{const n=ST.clicks.filter(c=>c.perk_id===p.id).length;return `<button class="it ${e&&e.id===p.id?"on":""}" data-perk="${p.id}"><b>${esc(p.offer)} <span class="st ${p.status}">${PK_ST[p.status]}</span></b>${esc(p.cat)} · ${esc(p.name)}<br><small>${p.until?"~"+p.until:"상시"} · 클릭 ${n}번${p.until&&p.until<new Date().toISOString().slice(0,10)?" · 마감 지남":""}</small></button>`}).join("")||'<p class="mut">아직 혜택이 없어요.</p>'}</div></div>
+    <div>${e?editor(e):'<div class="panel mut">왼쪽에서 혜택을 고르거나 새로 만드세요.</div>'}</div></div>`;
+  if(e)prev();
+}
+const tagBox=(k,list,ph)=>`<div class="tagin" data-tagk="${k}">${(ST.edit[k]||[]).map((t,i)=>`<span>${esc(t)}<button data-untag="${k}|${i}" title="빼기">×</button></span>`).join("")}<input list="dl-${k}" data-tagin="${k}" placeholder="${ph}"></div><datalist id="dl-${k}">${list.map(x=>`<option value="${esc(x)}">`).join("")}</datalist>`;
+function editor(e){
+  return `<div class="panel"><h3>${e.id?"혜택 고치기":"새 혜택"} ${e.id?`<span class="st ${e.status}">${PK_ST[e.status]}</span>`:""}</h3>
+    <div class="g2"><div><label class="l">분야</label><select data-f="cat">${PERKS.CATS.map(c=>`<option ${e.cat===c?"selected":""}>${c}</option>`).join("")}</select></div><div><label class="l">업체 이름</label><input type="text" data-f="name" maxlength="60" value="${esc(e.name)}"></div></div>
+    <label class="l">혜택 한 줄 <span class="mut">카드에 크게 · 60자</span></label><input type="text" data-f="offer" maxlength="60" value="${esc(e.offer)}">
+    <label class="l">조건</label><textarea data-f="cond" maxlength="300">${esc(e.cond||"")}</textarea>
+    <div class="g3"><div><label class="l">지역</label><input type="text" data-f="region" maxlength="40" value="${esc(e.region||"")}"></div><div><label class="l">마감일</label><input type="date" data-f="until" value="${e.until||""}"></div><div><label class="l">순서 <span class="mut">클수록 위</span></label><input type="number" data-f="sort" value="${e.sort||0}"></div></div>
+    <div class="g2"><div><label class="l">받는 방법</label><select data-f="how">${[["link","링크로 신청"],["code","쿠폰 코드"],["say","'보고 왔어요' 말하기"],["phone","전화 상담"]].map(([k,l])=>`<option value="${k}" ${e.how===k?"selected":""}>${l}</option>`).join("")}</select></div><div><label class="l">쿠폰 코드</label><input type="text" data-f="code" maxlength="40" value="${esc(e.code||"")}"></div></div>
+    <div class="g2"><div><label class="l">링크</label><input type="url" data-f="url" maxlength="300" value="${esc(e.url||"")}" placeholder="https://"></div><div><label class="l">전화</label><input type="tel" data-f="phone" maxlength="30" value="${esc(e.phone||"")}"></div></div>
+    <label class="l">사진 링크 <span class="mut">업체가 준 이미지 주소</span></label><input type="url" data-f="img" maxlength="300" value="${esc(e.img||"")}" placeholder="https://">
+    <h3 style="font-size:14px;margin:16px 0 0">어디에 띄울까요? <span class="mut" style="font-weight:400;font-size:12px">글자를 치면 목록에서 골라져요. Enter로 넣기</span></h3>
+    <label class="l">예산 항목</label>${tagBox("items",LISTS.items,"예: 가전 패키지")}
+    <label class="l">할일</label>${tagBox("todos",LISTS.todos,"예: 청첩장 주문")}
+    <label class="l">웨딩홀 리스트의 홀</label>${tagBox("halls",HALLN,"홀 이름")}
+    <label class="l">스드메 업체</label>${tagBox("vendors",VENN,"업체 이름")}
+    <div class="prevbox"><div class="t">사이트에 이렇게 보여요</div><div id="pprev"></div></div>
+    <div class="acts"><button class="btn y" data-save="live">바로 올리기</button><button class="btn" data-save="draft">초안으로 저장</button>${e.id&&e.status==="live"?'<button class="btn" data-save="paused">내리기</button>':""}${e.id?'<button class="btn r" data-delperk="1">지우기</button>':""}<button class="btn" data-cancel="1">닫기</button></div><div class="msg" id="pmsg"></div></div>`;
+}
+function prev(){const e=ST.edit,p=$("pprev");if(!p)return;p.innerHTML=PERKS.card({...e,id:"preview",name:e.name||"업체 이름",offer:e.offer||"혜택 한 줄",cat:e.cat||"분야",url:e.url||(e.how==="link"?"#":"")},"admin")}
+async function savePerk(status){
+  const e=ST.edit,m=$("pmsg");m.className="msg";m.textContent="";
+  if(!e.name||!e.offer||!e.cat){m.className="msg no";m.textContent="분야·업체 이름·혜택 한 줄은 꼭 적어 주세요.";return}
+  if(status==="live"&&e.how==="link"&&!e.url){m.className="msg no";m.textContent="'링크로 신청'이면 링크가 있어야 해요.";return}
+  if(status==="live"&&e.how==="code"&&!e.code){m.className="msg no";m.textContent="쿠폰 코드를 적어 주세요.";return}
+  for(const k of ["url","img"])if(e[k]&&!/^https?:\/\//.test(e[k])){m.className="msg no";m.textContent="링크는 https:// 로 시작해야 해요.";return}
+  const row={status,cat:e.cat,name:e.name.trim(),offer:e.offer.trim(),cond:e.cond||null,region:e.region||null,until:e.until||null,how:e.how,code:e.code||null,url:e.url||null,phone:e.phone||null,img:e.img||null,items:e.items,todos:e.todos,halls:e.halls,vendors:e.vendors,sort:+e.sort||0,inquiry_id:e.inquiry_id||null,updated_at:new Date().toISOString()};
+  const r=e.id?await SB.from("perks").update(row).eq("id",e.id).select().single():await SB.from("perks").insert(row).select().single();
+  if(r.error){m.className="msg no";m.textContent="저장하지 못했어요: "+r.error.message;return}
+  if(e.inquiry_id&&status==="live")await SB.from("partner_inquiries").update({status:"live"}).eq("id",e.inquiry_id);
+  try{sessionStorage.removeItem("ow-perks")}catch(x){}
+  ST.edit={...r.data};await reload();
+  const mm=$("pmsg");if(mm){mm.className="msg ok";mm.textContent=status==="live"?"올렸어요. 사이트에 바로 보여요.":status==="paused"?"내렸어요. 사이트에서 사라졌어요.":"초안으로 저장했어요. 사이트에는 안 보여요."}
+}
+// ---------- 클릭 수 ----------
+function drawClicks(){
+  const since=d=>new Date(Date.now()-d*864e5).toISOString();
+  const rows=ST.perks.map(p=>{const cs=ST.clicks.filter(c=>c.perk_id===p.id);return {p,all:cs.length,w:cs.filter(c=>c.at>=since(7)).length,m:cs.filter(c=>c.at>=since(30)).length,
+    by:Object.entries(cs.reduce((o,c)=>{const k=c.place||"기타";o[k]=(o[k]||0)+1;return o},{})).sort((a,b)=>b[1]-a[1])}}).sort((a,b)=>b.all-a.all);
+  const PL={card:"카드 버튼",copy:"쿠폰 복사",perks:"혜택 페이지","chip-budget":"예산 칩","chip-todo":"할일 칩","chip-halls":"웨딩홀 리스트","chip-sdm":"스드메 견적",app:"가계부 혜택 탭",home:"홈"};
+  $("body").innerHTML=`<div class="help">최근 180일 동안 혜택이 눌린 횟수예요. 누가 눌렀는지는 남기지 않아요. <b>[보고서 복사]</b>를 누르면 업체에 보낼 글이 복사돼요.</div>
+  <table class="ck"><tr><th>혜택</th><th class="n">7일</th><th class="n">30일</th><th class="n">전체</th><th>어디서</th><th></th></tr>
+  ${rows.map(r=>`<tr><td><b>${esc(r.p.offer)}</b><br><span class="mut" style="font-size:12px">${esc(r.p.name)} · <span class="st ${r.p.status}">${PK_ST[r.p.status]}</span></span></td><td class="n">${r.w}</td><td class="n">${r.m}</td><td class="n"><b>${r.all}</b></td><td style="font-size:12px">${r.by.map(([k,n])=>`${PL[k]||k} ${n}`).join(" · ")||"–"}</td><td><button class="btn" data-report="${r.p.id}" style="padding:4px 8px;font-size:12px">보고서 복사</button></td></tr>`).join("")||'<tr><td colspan="6" class="mut">아직 혜택이 없어요.</td></tr>'}</table><div class="msg" id="cmsg"></div>`;
+}
+// ---------- 이벤트 ----------
+document.addEventListener("click",async ev=>{
+  const t=ev.target.closest("button,a");if(!t)return;const d=t.dataset;
+  if(d.tab){ST.tab=d.tab;draw();return}
+  if(d.inqf){ST.inqF=d.inqf;drawInq();return}
+  if(d.inq){ST.sel=+d.inq;drawInq();return}
+  if(d.goperk){ev.preventDefault();ST.tab="perk";ST.edit={...ST.perks.find(p=>p.id===d.goperk)};draw();return}
+  if(d.mkperk){const x=ST.inq.find(i=>i.id===+d.mkperk);ST.edit=fromInq(x);ST.tab="perk";draw();return}
+  if(d.inqsave||d.inqst){const x=ST.inq.find(i=>i.id===ST.sel);const up=d.inqst?{status:d.inqst,memo:$("memo").value||null}:{memo:$("memo").value||null};
+    if(d.inqst==="rejected"&&!confirm(`'${x.company}' 신청을 거절로 둘까요? (업체에 따로 알림이 가지는 않아요)`))return;
+    const r=await SB.from("partner_inquiries").update(up).eq("id",x.id);if(r.error){$("imsg").className="msg no";$("imsg").textContent=r.error.message;return}await reload();const m=$("imsg");if(m){m.className="msg ok";m.textContent="저장했어요."}return}
+  if(d.newperk){ST.edit=blank();drawPerk();return}
+  if(d.perk){ST.edit={...ST.perks.find(p=>p.id===d.perk)};drawPerk();return}
+  if(d.cancel){ST.edit=null;drawPerk();return}
+  if(d.untag){const[k,i]=d.untag.split("|");ST.edit[k].splice(+i,1);drawPerk();return}
+  if(d.save){await savePerk(d.save);return}
+  if(d.delperk){if(!confirm("이 혜택을 지울까요? 되돌릴 수 없어요. 잠깐 내리려면 [내리기]를 쓰세요."))return;const r=await SB.from("perks").delete().eq("id",ST.edit.id);if(r.error){$("pmsg").textContent=r.error.message;return}ST.edit=null;try{sessionStorage.removeItem("ow-perks")}catch(x){}await reload();return}
+  if(d.report){const p=ST.perks.find(x=>x.id===d.report),cs=ST.clicks.filter(c=>c.perk_id===p.id),w=cs.filter(c=>c.at>=new Date(Date.now()-7*864e5).toISOString()).length,m=cs.filter(c=>c.at>=new Date(Date.now()-30*864e5).toISOString()).length;
+    const txt=`[OUR WEDDING 혜택 성과]\n${p.name} · ${p.offer}\n최근 7일 ${w}번 · 최근 30일 ${m}번 · 전체 ${cs.length}번 눌렸어요.\n(${new Date().toLocaleDateString("ko-KR")} 기준, 혜택 버튼·쿠폰 복사·관련 화면 칩 클릭 합계)`;
+    try{await navigator.clipboard.writeText(txt);$("cmsg").className="msg ok";$("cmsg").textContent="보고서를 복사했어요. 카톡이나 메일에 붙여넣으세요."}catch(x){prompt("아래 글을 복사하세요",txt)}return}
+});
+document.addEventListener("input",ev=>{const t=ev.target;if(t.dataset.f&&ST.edit){ST.edit[t.dataset.f]=t.value;prev()}});
+document.addEventListener("change",ev=>{const t=ev.target;if(t.dataset.f&&ST.edit){ST.edit[t.dataset.f]=t.value||(t.dataset.f==="until"?null:"");prev()}
+  if(t.dataset.tagin)addTag(t)});
+document.addEventListener("keydown",ev=>{const t=ev.target;if(t.dataset&&t.dataset.tagin&&ev.key==="Enter"&&!ev.isComposing){ev.preventDefault();addTag(t)}});
+function addTag(t){const k=t.dataset.tagin,v=t.value.trim();if(!v)return;const arr=ST.edit[k]=ST.edit[k]||[];if(!arr.includes(v))arr.push(v);drawPerk();const n=document.querySelector(`[data-tagin="${k}"]`);if(n)n.focus()}
+boot();
+</script>
+</body>
+</html>

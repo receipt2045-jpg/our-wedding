@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OUR WEDDING · 예비부부 웨딩 혜택</title>
+<meta name="description" content="웨딩홀·스드메·예물·혼수·신혼여행·청첩장까지, 예비부부가 쓸 수 있는 할인과 혜택을 한곳에 모았어요.">
+<meta property="og:title" content="OUR WEDDING · 예비부부 웨딩 혜택">
+<meta property="og:description" content="웨딩홀·스드메·예물·혼수·신혼여행 혜택을 한곳에.">
+<meta name="theme-color" content="#FFF0A6">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{--acc:#FFF0A6;--accs:#FFFCEC;--accl:#F1DC6E;--accd:#D9B300;--acct:#3A3200;--ink:#1C1F26;--sub:#4F5563;--muted:#8B909B;--line:#EEEEEE}
+*,*::before,*::after{box-sizing:border-box;border-radius:0!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:#fff;color:var(--ink);font-family:Pretendard,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-size:15px;line-height:1.55;word-break:keep-all}
+button{font:inherit;color:inherit;cursor:pointer}
+a{color:inherit}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+header{border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff;z-index:10}
+header .wrap{display:flex;justify-content:space-between;align-items:center;height:58px;gap:8px}
+.logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:16px;letter-spacing:.05em;text-decoration:none}
+.logo i{width:20px;height:20px;background:var(--acc);border:1px solid var(--accl);display:inline-block}
+.nav{display:flex;gap:6px}
+.nav a{font-size:13px;color:var(--sub);border:1px solid var(--line);padding:6px 10px;text-decoration:none;white-space:nowrap}
+.nav a.go{background:var(--acc);border-color:var(--accl);color:var(--acct);font-weight:700}
+@media (max-width:480px){.nav .lg{display:none}}
+main{padding:28px 0 20px}
+h1{font-size:24px;margin:0 0 6px;letter-spacing:-.5px}
+.lead{color:var(--sub);font-size:14px;margin:0 0 16px}
+.pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.pills button{border:1px solid var(--line);background:#fff;padding:7px 12px;font-size:14px}
+.pills button.on{background:var(--acc);border-color:var(--accd);font-weight:700}
+.pills small{color:var(--muted);font-size:11px;margin-left:2px}
+.cta{margin-top:28px;border:1px solid var(--line);padding:16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.cta a{background:var(--acc);border:1px solid var(--accl);padding:9px 14px;font-weight:700;text-decoration:none;color:var(--acct)}
+footer{border-top:1px solid var(--line);margin-top:40px;padding:20px 0 40px;font-size:13px;color:var(--muted);line-height:1.7}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <a class="logo" href="./"><i></i>OUR WEDDING</a>
+  <div class="nav"><a href="halls.html" class="lg">웨딩홀 리스트</a><a href="app.html" class="go">우리 가계부</a></div>
+</div></header>
+<main class="wrap">
+  <h1>웨딩 혜택</h1>
+  <p class="lead">웨딩홀·스드메·예물·혼수·신혼여행까지, 예비부부가 쓸 수 있는 할인과 혜택을 모았어요. 가계부에서 그 항목을 준비할 때도 옆에 떠요.</p>
+  <div id="note"></div>
+  <div class="pills" id="cats"></div>
+  <div id="list"></div>
+  <div class="cta"><span>예비부부에게 혜택을 소개하고 싶은 업체인가요?</span><a href="partner.html">광고·제휴 신청하기</a></div>
+</main>
+<footer><div class="wrap">혜택 내용과 조건은 업체가 정한 거예요. 계약 전에 꼭 직접 확인하세요.<br>© OUR WEDDING · <a href="partner.html">광고·제휴 신청</a> · <a href="privacy.html">개인정보처리방침</a></div></footer>
+<script src="config.js"></script>
+<script src="perks-ui.js"></script>
+<script>
+let cur="전체";
+async function draw(){
+  const L=await PERKS.load();
+  document.getElementById("note").innerHTML=L.length?PERKS.NOTE:"";
+  const cs=["전체",...PERKS.CATS.filter(c=>L.some(p=>p.cat===c))];
+  document.getElementById("cats").innerHTML=L.length?cs.map(c=>`<button class="${c===cur?"on":""}" data-c="${c}">${c}<small>${c==="전체"?L.length:L.filter(p=>p.cat===c).length}</small></button>`).join(""):"";
+  const xs=cur==="전체"?L:L.filter(p=>p.cat===cur);
+  document.getElementById("list").innerHTML=xs.length?`<div class="pkgrid">${xs.map(p=>PERKS.card(p,"perks")).join("")}</div>`:PERKS.EMPTY;
+  const h=location.hash.match(/^#pk-(.+)$/);if(h){const el=document.getElementById("pk-"+h[1]);if(el){el.scrollIntoView({block:"center"});el.classList.add("flash");setTimeout(()=>el.classList.remove("flash"),1800)}}
+}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-c]");if(b){cur=b.dataset.c;draw()}});
+draw();
+</script>
+</body>
+</html>
