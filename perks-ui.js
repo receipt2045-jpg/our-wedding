@@ -35,13 +35,14 @@
   function click(id, place) {
     try { fetch(C.supabaseUrl + "/rest/v1/perk_clicks", { method: "POST", keepalive: true, headers: { apikey: C.supabaseKey, "Content-Type": "application/json", Prefer: "return=minimal" }, body: JSON.stringify({ perk_id: String(id).slice(0, 40), place: String(place || "").slice(0, 20) }) }); } catch (e) { }
   }
+  const isHttp = u => /^https?:\/\//i.test(String(u || ""));
   const howBox = p => p.how === "code" && p.code ? `<button class="pkcode" data-pkcopy="${esc(p.code)}" data-pkid="${p.id}"><span>쿠폰 코드 <b>${esc(p.code)}</b></span><span class="pkm">눌러서 복사</span></button>`
     : p.how === "say" ? `<div class="pkcode"><span>상담 때 <b>"OUR WEDDING 보고 왔어요"</b>라고 말하기</span></div>`
     : p.how === "phone" && p.phone ? `<div class="pkcode"><span>전화 상담 <b>${esc(p.phone)}</b></span></div>` : "";
-  const goBtn = (p, place) => p.url ? `<a class="pkgo" href="${esc(p.url)}" target="_blank" rel="noopener sponsored" data-pkid="${p.id}" data-pkplace="${place}">${p.how === "link" ? "혜택 받으러 가기" : "업체 보러 가기"}</a>`
+  const goBtn = (p, place) => isHttp(p.url) ? `<a class="pkgo" href="${esc(p.url)}" target="_blank" rel="noopener sponsored" data-pkid="${p.id}" data-pkplace="${place}">${p.how === "link" ? "혜택 받으러 가기" : "업체 보러 가기"}</a>`
     : p.how === "phone" && p.phone ? `<a class="pkgo" href="tel:${esc(p.phone.replace(/[^0-9+]/g, ""))}" data-pkid="${p.id}" data-pkplace="${place}">전화하기</a>` : "";
   function card(p, place, extra) {
-    return `<article class="pk" id="pk-${p.id}"><div class="pkim${p.img ? "" : " noimg"}">${p.img ? `<img src="${esc(p.img)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : ""}<span class="pkad">광고</span><span class="pkdd">${dday(p.until)}</span></div>
+    return `<article class="pk" id="pk-${p.id}"><div class="pkim${isHttp(p.img) ? "" : " noimg"}">${isHttp(p.img) ? `<img src="${esc(p.img)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : ""}<span class="pkad">광고</span><span class="pkdd">${dday(p.until)}</span></div>
       <div class="pkbd"><div class="pkcat">${esc(p.cat)}${p.region ? " · " + esc(p.region) : ""}</div><div class="pknm">${esc(p.name)}</div><div class="pkof">${esc(p.offer)}</div>
       ${p.cond ? `<div class="pkcd">${esc(p.cond)}</div>` : ""}${p.until ? `<div class="pkcd">~ ${p.until.replace(/-/g, ".")}까지</div>` : ""}${howBox(p)}
       <div class="pkact">${goBtn(p, place)}${extra || ""}</div></div></article>`;

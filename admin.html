@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; font-src https://cdn.jsdelivr.net; img-src * data:; connect-src https://bgcvkriygfeclidzvlfc.supabase.co wss://bgcvkriygfeclidzvlfc.supabase.co; base-uri 'self'; form-action 'self'; object-src 'none'">
+<script>if(window.top!==window.self){document.documentElement.style.display="none";try{window.top.location=window.self.location}catch(e){}}</script>
 <title>OUR WEDDING · 운영자</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
@@ -90,6 +92,7 @@ const HALLN=((window.OW_HALLS||{}).items||[]).map(h=>h.name);
 const VENN=[...new Set(((window.OW_VENDORS||{}).rows||[]).map(r=>r.v))];
 const ST={tab:"inq",inqF:"new",sel:null,perkSel:null,edit:null,inq:[],perks:[],clicks:[]};
 const INQ_ST={new:"새 신청",live:"혜택 올림",done:"처리 끝",rejected:"거절"},PK_ST={draft:"초안",live:"올라감",paused:"내림"};
+const isHttp=u=>/^https?:\/\//i.test(String(u||""));   // javascript: 같은 주소는 링크로 만들지 않음
 const fmt=t=>t?new Date(t).toLocaleString("ko-KR",{month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit"}):"";
 
 async function boot(){
@@ -124,7 +127,7 @@ function drawInq(){
   <div>${sel?inqPanel(sel):'<div class="panel mut">왼쪽에서 신청을 고르세요.</div>'}</div></div>`;
 }
 function inqPanel(x){
-  const kv=[["분야",x.category],["담당자",x.contact_name],["전화",x.phone?`<a href="tel:${esc(x.phone)}">${esc(x.phone)}</a>`:""],["이메일",x.email?`<a href="mailto:${esc(x.email)}">${esc(x.email)}</a>`:""],["지역",x.region],["혜택",x.offer],["조건",x.cond],["마감일",x.until],["받는 방법",{link:"링크",code:"쿠폰 코드",say:"'보고 왔어요'",phone:"전화"}[x.how]||""],["쿠폰 코드",x.code],["링크",x.url?`<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.url)}</a>`:""],["사진",x.image_url?`<a href="${esc(x.image_url)}" target="_blank" rel="noopener">보기</a>`:""],["하고 싶은 말",x.detail]].filter(r=>r[1]);
+  const kv=[["분야",x.category],["담당자",x.contact_name],["전화",x.phone?`<a href="tel:${esc(x.phone)}">${esc(x.phone)}</a>`:""],["이메일",x.email?`<a href="mailto:${esc(x.email)}">${esc(x.email)}</a>`:""],["지역",x.region],["혜택",x.offer],["조건",x.cond],["마감일",x.until],["받는 방법",{link:"링크",code:"쿠폰 코드",say:"'보고 왔어요'",phone:"전화"}[x.how]||""],["쿠폰 코드",x.code],["링크",x.url?(isHttp(x.url)?`<a href="${esc(x.url)}" target="_blank" rel="noopener noreferrer">${esc(x.url)}</a>`:esc(x.url)):""],["사진",x.image_url?(isHttp(x.image_url)?`<a href="${esc(x.image_url)}" target="_blank" rel="noopener noreferrer">보기</a>`:esc(x.image_url)):""],["하고 싶은 말",x.detail]].filter(r=>r[1]);
   const made=ST.perks.filter(p=>p.inquiry_id===x.id);
   return `<div class="panel"><h3>${esc(x.company)} <span class="st ${x.status}">${INQ_ST[x.status]}</span></h3><p class="mut" style="font-size:12px;margin:-4px 0 10px">${fmt(x.created_at)} 신청</p>
     <dl class="kv">${kv.map(([k,v])=>`<dt>${k}</dt><dd>${["전화","이메일","링크","사진"].includes(k)?v:esc(v)}</dd>`).join("")}</dl>
