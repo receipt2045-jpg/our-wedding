@@ -90,7 +90,7 @@ const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&
 const $=id=>document.getElementById(id);
 const HALLN=((window.OW_HALLS||{}).items||[]).map(h=>h.name);
 const VENN=[...new Set(((window.OW_VENDORS||{}).rows||[]).map(r=>r.v))];
-const ST={tab:"inq",inqF:"new",sel:null,perkSel:null,edit:null,inq:[],perks:[],clicks:[]};
+const ST={tab:"inq",inqF:"new",sel:null,perkSel:null,edit:null,inq:[],perks:[],clicks:[],reps:[],rpT:{}};
 const INQ_ST={new:"새 신청",live:"혜택 올림",done:"처리 끝",rejected:"거절"},PK_ST={draft:"초안",live:"올라감",paused:"내림"};
 const isHttp=u=>/^https?:\/\//i.test(String(u||""));   // javascript: 같은 주소는 링크로 만들지 않음
 const fmt=t=>t?new Date(t).toLocaleString("ko-KR",{month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit"}):"";
@@ -110,12 +110,46 @@ async function reload(){
     SB.from("perks").select("*").order("sort",{ascending:false}).order("created_at",{ascending:false}),
     SB.from("perk_clicks").select("perk_id,place,at").gte("at",new Date(Date.now()-180*864e5).toISOString()).limit(20000)]);
   if(a.error||b.error){$("main").innerHTML=`<p class="mut">불러오지 못했어요: ${esc((a.error||b.error).message)}</p>`;return}
-  ST.inq=a.data||[];ST.perks=b.data||[];ST.clicks=(c.data||[]);draw();
+  ST.inq=a.data||[];ST.perks=b.data||[];ST.clicks=(c.data||[]);
+  await loadReps();draw();
+}
+// 신고와 신고된 글·댓글 내용 (신고는 처리하면 지워서, 남아 있는 것 = 처리할 것)
+async function loadReps(){
+  const r=await SB.from("board_reports").select("id,kind,target_id,reason,created_at").order("created_at",{ascending:false});
+  ST.reps=r.data||[];ST.rpT={};
+  const pid=[...new Set(ST.reps.filter(x=>x.kind==="post").map(x=>x.target_id))],cid=[...new Set(ST.reps.filter(x=>x.kind==="comment").map(x=>x.target_id))];
+  const [p,c]=await Promise.all([pid.length?SB.from("board_posts").select("id,board,title,body,nick,hidden,created_at,comment_count").in("id",pid):{data:[]},
+    cid.length?SB.from("board_comments").select("id,post_id,body,nick,hidden,created_at").in("id",cid):{data:[]}]);
+  (p.data||[]).forEach(x=>ST.rpT["post:"+x.id]=x);(c.data||[]).forEach(x=>ST.rpT["comment:"+x.id]=x);
 }
 function draw(){
   const nNew=ST.inq.filter(x=>x.status==="new").length;
-  $("main").innerHTML=`<div class="tabs"><button class="${ST.tab==="inq"?"on":""}" data-tab="inq">제휴 신청${nNew?`<span class="badge">${nNew}</span>`:""}</button><button class="${ST.tab==="perk"?"on":""}" data-tab="perk">혜택 관리 <span class="mut" style="font-size:12px">${ST.perks.filter(p=>p.status==="live").length}개 올라감</span></button><button class="${ST.tab==="ck"?"on":""}" data-tab="ck">클릭 수</button></div><div id="body"></div>`;
-  ({inq:drawInq,perk:drawPerk,ck:drawClicks})[ST.tab]();
+  $("main").innerHTML=`<div class="tabs"><button class="${ST.tab==="inq"?"on":""}" data-tab="inq">제휴 신청${nNew?`<span class="badge">${nNew}</span>`:""}</button><button class="${ST.tab==="perk"?"on":""}" data-tab="perk">혜택 관리 <span class="mut" style="font-size:12px">${ST.perks.filter(p=>p.status==="live").length}개 올라감</span></button><button class="${ST.tab==="ck"?"on":""}" data-tab="ck">클릭 수</button><button class="${ST.tab==="rep"?"on":""}" data-tab="rep">게시판 신고${repGroups().length?`<span class="badge">${repGroups().length}</span>`:""}</button></div><div id="body"></div>`;
+  ({inq:drawInq,perk:drawPerk,ck:drawClicks,rep:drawReps})[ST.tab]();
+}
+// ---------- 게시판 신고 ----------
+function repGroups(){
+  const g={};ST.reps.forEach(r=>{const k=r.kind+":"+r.target_id;(g[k]=g[k]||{k,kind:r.kind,id:r.target_id,rs:[]}).rs.push(r)});
+  return Object.values(g).sort((a,b)=>b.rs.length-a.rs.length||(b.rs[0].created_at>a.rs[0].created_at?1:-1));
+}
+function drawReps(){
+  const G=repGroups();
+  $("body").innerHTML=`<div class="help">묻고 답하기·가이드 댓글에서 신고된 것들이에요. 같은 글에 신고가 <b>3건</b> 쌓이면 사이트에서 저절로 숨겨져요. <b>[숨기기]</b>나 <b>[지우기]</b>를 하거나, 괜찮으면 <b>[문제없음]</b>을 누르세요. 누르면 이 목록에서 빠져요.</div>
+  ${G.length?G.map(x=>{const t=ST.rpT[x.k],isP=x.kind==="post",link=t?`board.html?p=${isP?t.id:t.post_id}`:"";
+    return `<div class="panel" style="margin-bottom:10px"><h3 style="font-size:15px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">${isP?(t&&t.board==="guide"?"가이드 글":"질문 글"):"댓글·답변"} <span class="badge" style="margin:0">신고 ${x.rs.length}건</span>${t&&t.hidden?'<span class="st paused">숨겨짐</span>':""}${t?"":'<span class="st rejected">이미 지워짐</span>'}</h3>
+    ${t?`<p style="margin:6px 0 4px;font-size:13px" class="mut">${esc(t.nick||"")} · ${fmt(t.created_at)}${link?` · <a href="${link}" target="_blank" rel="noopener">사이트에서 보기</a>`:""}</p>
+      ${isP?`<b>${esc(t.title)}</b>`:""}<div style="white-space:pre-wrap;font-size:14px;background:#FAFAFA;padding:10px;margin-top:6px;max-height:180px;overflow:auto">${esc((t.body||"").slice(0,1200))}</div>`:""}
+    <p style="font-size:13px;margin:8px 0 0"><b>신고 이유</b> ${x.rs.map(r=>`<span class="mut">·</span> ${esc(r.reason||"(안 적음)")} <span class="mut" style="font-size:11px">${fmt(r.created_at)}</span>`).join(" ")}</p>
+    <div class="acts">${t?`<button class="btn" data-rphide="${x.k}" data-h="${t.hidden?0:1}">${t.hidden?"숨김 풀기":"숨기기"}</button><button class="btn r" data-rpdel="${x.k}">지우기</button>`:""}<button class="btn y" data-rpok="${x.k}">${t?"문제없음":"목록에서 빼기"}</button></div></div>`}).join("")
+    :'<p class="mut">처리할 신고가 없어요.</p>'}<div class="msg" id="rmsg"></div>`;
+}
+async function repAct(k,act,h){
+  const [kind,id]=k.split(":"),tb=kind==="post"?"board_posts":"board_comments";let r={};
+  if(act==="hide")r=await SB.from(tb).update({hidden:h==="1"}).eq("id",+id);
+  if(act==="del"){if(!confirm(kind==="post"?"이 글을 지울까요? 달린 댓글도 같이 지워져요.":"이 댓글을 지울까요?"))return;r=await SB.from(tb).delete().eq("id",+id)}
+  if(r.error){$("rmsg").className="msg no";$("rmsg").textContent=r.error.message;return}
+  if(act!=="hide"||h==="1")await SB.from("board_reports").delete().eq("kind",kind).eq("target_id",+id);   // 숨김 풀기만 할 땐 신고를 남겨 둠
+  await loadReps();draw();const m=$("rmsg");if(m){m.className="msg ok";m.textContent=act==="hide"?(h==="1"?"숨겼어요.":"숨김을 풀었어요."):act==="del"?"지웠어요.":"목록에서 뺐어요."}
 }
 // ---------- 제휴 신청 ----------
 function drawInq(){
@@ -193,6 +227,9 @@ function drawClicks(){
 document.addEventListener("click",async ev=>{
   const t=ev.target.closest("button,a");if(!t)return;const d=t.dataset;
   if(d.tab){ST.tab=d.tab;draw();return}
+  if(d.rphide){await repAct(d.rphide,"hide",d.h);return}
+  if(d.rpdel){await repAct(d.rpdel,"del");return}
+  if(d.rpok){await repAct(d.rpok,"ok");return}
   if(d.inqf){ST.inqF=d.inqf;drawInq();return}
   if(d.inq){ST.sel=+d.inq;drawInq();return}
   if(d.goperk){ev.preventDefault();ST.tab="perk";ST.edit={...ST.perks.find(p=>p.id===d.goperk)};draw();return}

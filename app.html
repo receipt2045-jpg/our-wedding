@@ -1522,7 +1522,7 @@ function render(){
   document.getElementById("side").innerHTML=`<a class="logo" href="./"><i></i>OUR WEDDING</a>
     <div class="couple"><div class="n">${names()}</div><div class="d">${ddText()}</div><div class="s">${wedText()}</div></div>
     <div class="nav">${NAV.map(([k,l],i)=>`${k==="set"?'<div class="sep"></div>':""}<button class="${S.view===k?'on':''}" data-go="${k}">${l}</button>`).join("")}
-      <a class="navlink" href="cost.html">남들은 얼마 쓸까 ›</a><a class="navlink" href="halls.html">웨딩홀 리스트 ›</a><a class="navlink" href="board.html">결혼 준비 가이드 ›</a><a class="navlink" href="board.html?b=qna">묻고 답하기 ›</a>${CL.admin?`<a class="adm" href="admin.html">운영자 페이지${CL.newInq?` · 새 제휴 신청 ${CL.newInq}건`:""} ›</a>`:""}</div>
+      <a class="navlink" href="cost.html">남들은 얼마 쓸까 ›</a><a class="navlink" href="halls.html">웨딩홀 리스트 ›</a><a class="navlink" href="board.html">결혼 준비 가이드 ›</a><a class="navlink" href="board.html?b=qna">묻고 답하기 ›</a>${CL.admin?`<a class="adm" href="admin.html">운영자 페이지${CL.newInq?` · 새 제휴 신청 ${CL.newInq}건`:""}${CL.newRep?` · 게시판 신고 ${CL.newRep}건`:""} ›</a>`:""}</div>
     <div class="side-foot">${acctBox()}</div>`;
   document.getElementById("mhead").innerHTML=`<div class="mtop"><a class="logo" href="./" style="padding:0;font-size:16px"><i></i>OUR WEDDING</a><div class="r">${names()}<br><b>${ddText()}</b></div></div>
     <div class="mtabs">${!CL.id&&SB?'<button class="mlogin" data-act="login">로그인</button>':""}${NAV.map(([k,l])=>`<button class="${S.view===k?'on':''}" data-go="${k}">${l}</button>`).join("")}<a href="cost.html">남들 평균</a><a href="board.html">가이드</a></div>`;
@@ -1557,7 +1557,8 @@ const userName=()=>{const u=CL.user;if(!u)return"";const m=u.user_metadata||{};r
 const inviteLink=()=>location.origin+location.pathname+"?join="+CL.invite;
 // 운영자(결영) 계정이면 새 제휴 신청 수를 가져와 사이드바에 알림
 async function adminCheck(){try{if(!SB||!CL.user||CL.user.email!=="receipt2045@gmail.com")return;CL.admin=true;
-  const {count}=await SB.from("partner_inquiries").select("id",{count:"exact",head:true}).eq("status","new");CL.newInq=count||0;render()}catch(e){}}
+  const [a,b]=await Promise.all([SB.from("partner_inquiries").select("id",{count:"exact",head:true}).eq("status","new"),SB.from("board_reports").select("id",{count:"exact",head:true})]);
+  CL.newInq=a.count||0;CL.newRep=b.count||0;render()}catch(e){}}
 function acctBox(){
   if(CL.id)return `<div class="acct"><span class="dot ${/실패/.test(CL.state)?"bad":/중/.test(CL.state)?"wait":""}"></span><b>${esc(userName())}</b><br><span id="cloudState">${esc(CL.state||"저장됨")}</span> · <button class="linkb" data-go="set">계정</button></div>`;
   if(SB)return `<button class="loginbtn" data-act="login">로그인하고 둘이 같이 쓰기</button><div class="acct">지금은 이 브라우저에만 저장돼요</div>`;
