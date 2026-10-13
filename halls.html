@@ -50,6 +50,7 @@ h1{font-size:24px;margin:0 0 6px;letter-spacing:-.5px}
 .lead{color:var(--sub);font-size:14px;margin:0 0 18px}
 
 /* 거르기 */
+@media (max-width:860px){.filters{top:54px!important}}
 .filters{position:sticky;top:58px;z-index:5;background:#fff;padding:10px 0;border-bottom:1px solid var(--line);margin-bottom:14px}
 .row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
 .row+.row{margin-top:8px}
@@ -111,6 +112,11 @@ select,#q{border:1px solid var(--line);padding:8px 10px;font-size:14px;backgroun
 .pin{width:14px;height:14px;background:var(--accd);border:2px solid #fff;box-shadow:0 0 0 1px var(--ink)}
 .pin.on{background:var(--red);width:18px;height:18px}
 .h.flash{outline:3px solid var(--accd)}
+.hv{border:1px solid var(--line);background:#fff;width:36px;height:36px;display:grid;place-items:center;flex:0 0 auto;color:var(--muted);cursor:pointer}
+.hv svg{width:20px;height:20px}
+.hv.on{color:#E5484D;border-color:#E5484D}
+.hv.on svg{fill:#E5484D}
+.h .top .r{display:flex;gap:6px;align-items:center}
 /* 후기 육각형 */
 .rvx{border-top:1px solid var(--line);margin-top:12px;padding-top:10px}
 .rvx .hd{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:13px}
@@ -131,10 +137,7 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:20px 0 40px;font
 </style>
 </head>
 <body>
-<header><div class="wrap">
-  <a class="logo" href="./"><i></i>OUR WEDDING</a>
-  <div class="nav"><a href="cost.html" class="lg">결혼 비용</a><a href="board.html">가이드</a><a href="app.html" class="go">가계부</a></div>
-</div></header>
+<div id="ownav" data-tab="halls"></div><script src="nav.js"></script>
 
 <main class="wrap">
   <h1>웨딩홀 리스트</h1>
@@ -209,7 +212,7 @@ function card(h){
   const f=[["보증인원",h.guarantee],["식대",h.meal],["주차",h.parking],["가는 길",h.station],["홀",h.halls]].filter(x=>x[1]);
   const photo=h.image?`<div class="ph"><a href="${esc(h.site||h.image)}" target="_blank" rel="noopener"><img src="${esc(IMG(h.image))}" alt="${esc(h.name)} 대표 사진" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.ph').remove()"></a>${h.site?`<a class="cr" href="${esc(h.site)}" target="_blank" rel="noopener">공식 홈페이지</a>`:""}</div>`:"";
   return `<article class="h" id="h-${h.id}">${photo}<div class="body">
-    <div class="top"><div><h3>${esc(h.name)}</h3>${window.PERKS&&PERKS.forHall(h.name).length?`<div style="margin:4px 0 2px">${PERKS.chip(PERKS.forHall(h.name)[0],"halls")}</div>`:""}<div class="meta">${esc(h.area||"")}${h.type?` · ${esc(h.type)}`:""}</div></div>${h.single===true?'<span class="tag y">단독홀</span>':""}</div>
+    <div class="top"><div><h3>${esc(h.name)}</h3>${window.PERKS&&PERKS.forHall(h.name).length?`<div style="margin:4px 0 2px">${PERKS.chip(PERKS.forHall(h.name)[0],"halls")}</div>`:""}<div class="meta">${esc(h.area||"")}${h.type?` · ${esc(h.type)}`:""}</div></div><div class="r">${h.single===true?'<span class="tag y">단독홀</span>':""}<button class="hv${window.OWNAV&&OWNAV.isSaved("hall:"+h.id)?" on":""}" data-save="${h.id}" title="찜하기" aria-label="${esc(h.name)} 찜하기">${window.OWNAV?OWNAV.ic("heart"):"♡"}</button></div></div>
     ${f.length?`<dl class="facts">${f.map(([k,v])=>`<dt>${k}</dt><dd>${esc(v)}</dd>`).join("")}</dl>`:""}
     ${hexBox(h)}
     ${(h.pros&&h.pros.length)||(h.checks&&h.checks.length)?`<div class="pc"><div class="p"><b>후기 좋은 점</b><ul>${(h.pros||[]).map(x=>`<li>${esc(x)}</li>`).join("")||"<li>–</li>"}</ul></div><div class="c"><b>상담 때 확인할 점</b><ul>${(h.checks||[]).map(x=>`<li>${esc(x)}</li>`).join("")||"<li>–</li>"}</ul></div></div>`:""}
@@ -245,7 +248,10 @@ function draw(focus){
   document.getElementById("cnt").textContent=`${xs.length}곳`;
   document.getElementById("list").innerHTML=xs.map(card).join("")||'<p class="empty">조건에 맞는 웨딩홀이 없어요</p>';
 }
+const hallItem=h=>({k:"hall:"+h.id,t:h.name,s:[h.area,h.type].filter(Boolean).join(" · "),u:"halls.html#h-"+h.id,i:"hall"});
 document.addEventListener("click",e=>{
+  const sv=e.target.closest("[data-save]");if(sv&&window.OWNAV){const h=ALL.find(x=>x.id===sv.dataset.save);const on=OWNAV.toggleSave(hallItem(h));sv.classList.toggle("on",on);OWNAV.track(hallItem(h));return}
+  const card=e.target.closest("article.h");if(card&&window.OWNAV&&e.target.closest("a,button")){const h=ALL.find(x=>"h-"+x.id===card.id);if(h)OWNAV.track(hallItem(h))}   // 홀 안의 버튼·링크를 누르면 최근 본 것에
   const b=e.target.closest("[data-rg]");if(b){st.rg=b.dataset.rg;st.area="";draw();return}
   const v=e.target.closest("[data-view]");if(v){st.view=v.dataset.view;draw();return}
   const m=e.target.closest("[data-onmap]");if(m){st.view="map";draw(m.dataset.onmap);window.scrollTo(0,0);return}
@@ -258,6 +264,8 @@ document.getElementById("type").addEventListener("change",e=>{st.type=e.target.v
 document.getElementById("good").addEventListener("change",e=>{st.good=e.target.value;draw()});
 document.getElementById("q").addEventListener("input",e=>{st.q=e.target.value;draw()});
 draw();
+// 내 것·최근 본 것에서 #h-홀번호 로 들어오면 그 홀로 내려가서 표시
+(function(){const m=location.hash.match(/^#h-(.+)$/);if(!m)return;const el=document.getElementById("h-"+decodeURIComponent(m[1]));if(el){setTimeout(()=>{el.scrollIntoView({block:"start"});window.scrollBy(0,-120);el.classList.add("flash");setTimeout(()=>el.classList.remove("flash"),1800)},50)}})();
 if(window.PERKS)PERKS.load().then(l=>{if(l.length)draw()});
 </script>
 </body>

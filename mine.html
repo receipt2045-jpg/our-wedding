@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OUR WEDDING · 내 것</title>
+<meta name="description" content="하트 누른 가이드 글, 찜한 웨딩홀, 최근 본 것을 모아 봐요.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#FFF0A6">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+h1,h2,h3,h4,button,.btn,th,label,dt,.lead{text-wrap:balance}
+p,li,dd,td,.m,.s,small{text-wrap:pretty}
+:root{--acc:#FFF0A6;--acc2:#FFF6C9;--accs:#FFFCEC;--accl:#F1DC6E;--accd:#D9B300;--acct:#3A3200;--ink:#1C1F26;--sub:#4F5563;--muted:#8B909B;--line:#EEEEEE}
+*,*::before,*::after{box-sizing:border-box;border-radius:0!important}
+body{margin:0;background:#fff;color:var(--ink);font-family:Pretendard,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-size:15px;line-height:1.55;word-break:keep-all}
+button{font:inherit;color:inherit;cursor:pointer}
+a{color:inherit}
+.wrap{max-width:1160px;margin:0 auto;padding:0 16px}
+main{padding:30px 0 40px}
+.lay{display:grid;grid-template-columns:240px minmax(0,1fr);gap:36px;align-items:start}
+@media (max-width:860px){.lay{grid-template-columns:1fr;gap:14px}}
+h1{font-size:28px;letter-spacing:-.6px;margin:0 0 4px}
+.sub{color:var(--sub);margin:0 0 14px}
+.seg{border-top:2px solid var(--ink)}
+.seg button{width:100%;display:flex;align-items:center;gap:10px;border:0;border-bottom:1px solid var(--line);background:#fff;padding:13px 10px;font-size:15px;text-align:left;color:var(--sub)}
+.seg button svg{width:19px;height:19px}
+.seg button small{margin-left:auto;font-size:12px;color:var(--muted)}
+.seg button.on{background:var(--acc);color:var(--acct);font-weight:800}
+@media (max-width:860px){.seg{display:flex;border:1px solid var(--ink)}.seg button{flex:1;justify-content:center;border:0;padding:10px 4px;font-size:14px;gap:5px}.seg button small{display:none}.seg button.on{background:var(--ink);color:#fff}}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:1000px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.grid{grid-template-columns:1fr;gap:0;border-top:1px solid var(--line)}}
+.it{position:relative;border:1px solid var(--line);padding:16px;display:grid;gap:8px;text-decoration:none;background:#fff}
+.it:hover{border-color:var(--ink)}
+.it .bx{width:42px;height:42px;display:grid;place-items:center;background:var(--accs);border:1px solid var(--accl);color:var(--acct)}
+.it .bx svg{width:22px;height:22px}
+.it b{font-size:16px;line-height:1.4;padding-right:28px}
+.it span{font-size:13px;color:var(--muted)}
+.it .x{position:absolute;right:8px;top:8px;border:0;background:none;color:#B5B9C0;padding:6px}
+.it .x svg{width:17px;height:17px}
+.it .x:hover{color:#E5484D}
+@media (max-width:560px){.it{grid-template-columns:42px 1fr;align-items:center;border:0;border-bottom:1px solid var(--line);padding:12px 2px}.it .bx{grid-row:span 2}.it b{font-size:15px}.it .x{top:50%;transform:translateY(-50%)}}
+.empty{border:1px dashed #DDD;padding:34px 16px;text-align:center;color:var(--muted)}
+.empty a{display:inline-block;margin-top:12px;background:var(--acc);border:1px solid var(--accd);color:var(--acct);font-weight:800;padding:9px 14px;text-decoration:none}
+.foot{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:16px;font-size:13px;color:var(--muted)}
+.foot button{border:0;background:none;color:var(--muted);text-decoration:underline;padding:0}
+footer{border-top:1px solid var(--line);margin-top:30px;padding:20px 0 30px;font-size:13px;color:var(--muted);line-height:1.7}
+footer a{color:var(--sub)}
+</style>
+</head>
+<body>
+<div id="ownav" data-tab="mine"></div><script src="nav.js"></script>
+<main class="wrap">
+  <div class="lay">
+    <div><h1>내 것</h1><p class="sub">하트 누른 것, 본 것이 여기 남아요</p><div class="seg" id="seg"></div></div>
+    <div><div id="list"></div><div class="foot" id="foot"></div></div>
+  </div>
+</main>
+<footer><div class="wrap">© OUR WEDDING · <a href="privacy.html">개인정보처리방침</a><br>운영 마이머니플랜 · 사업자등록번호 223-29-01904 · 문의 <a href="mailto:receipt2045@gmail.com">receipt2045@gmail.com</a></div></footer>
+<script>
+(function(){
+  const N = window.OWNAV, ic = N.ic, esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const SEG = [["guide","heart","저장한 글"],["hall","hall","찜한 웨딩홀"],["recent","clock","최근 본 것"]];
+  let seg = (location.hash || "").slice(1); if (!SEG.some(s => s[0] === seg)) seg = "guide";
+  const data = k => k === "recent" ? N.recent() : N.saved(k);
+  const EMPTY = {
+    guide: ["가이드 글 끝에 있는 하트를 누르면 여기로 와요.", "board.html", "가이드 보러 가기"],
+    hall: ["웨딩홀 리스트에서 하트를 누르면 여기로 와요.", "halls.html", "웨딩홀 보러 가기"],
+    recent: ["아직 본 게 없어요. 가이드 글이나 결혼 비용을 열어 보면 여기 쌓여요.", "./", "홈으로"],
+  };
+  function draw(){
+    document.getElementById("seg").innerHTML = SEG.map(([k,i,l]) => `<button data-s="${k}" class="${seg===k?"on":""}">${ic(i)}${l}<small>${data(k).length}</small></button>`).join("");
+    const L = data(seg), E = EMPTY[seg];
+    document.getElementById("list").innerHTML = L.length
+      ? '<div class="grid">' + L.map(x => `<a class="it" href="${esc(x.u)}"><span class="bx">${ic(x.i || "book")}</span><b>${esc(x.t)}</b><span>${esc(x.s || "")}${seg==="recent"?" · "+N.ago(x.at):""}</span>${seg==="recent"?"":`<button class="x" data-x="${esc(x.k)}" title="빼기" aria-label="빼기">${ic("trash")}</button>`}</a>`).join("") + "</div>"
+      : `<div class="empty">${E[0]}<br><a href="${E[1]}">${E[2]}</a></div>`;
+    document.getElementById("foot").innerHTML = `<span>이 기기의 브라우저에만 남아요. 다른 폰·PC에는 안 보여요.</span>${L.length && seg==="recent" ? '<button data-clear="recent">최근 본 것 지우기</button>' : ""}`;
+  }
+  document.addEventListener("click", e => {
+    const s = e.target.closest("[data-s]"); if (s){ seg = s.dataset.s; history.replaceState(null, "", "#" + seg); return draw(); }
+    const x = e.target.closest("[data-x]"); if (x){ e.preventDefault(); const it = N.saved().find(v => v.k === x.dataset.x); if (it) N.toggleSave(it); return draw(); }
+    const c = e.target.closest("[data-clear]"); if (c){ N.clear("recent"); return draw(); }
+  });
+  draw();
+})();
+</script>
+</body>
+</html>

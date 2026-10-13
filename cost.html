@@ -134,10 +134,7 @@ footer a{color:var(--sub)}
 </style>
 </head>
 <body>
-<header><div class="wrap">
-  <a class="logo" href="./"><i></i>OUR WEDDING</a>
-  <div style="display:flex;gap:6px"><a class="soon lg" href="halls.html" style="text-decoration:none">웨딩홀</a><a class="soon" href="board.html" style="text-decoration:none">가이드</a><a class="soon go" href="app.html"><span class="lg">우리 </span>가계부 ›</a></div>
-</div></header>
+<div id="ownav" data-tab="cost"></div><script src="nav.js"></script>
 
 <main class="wrap">
   <h1>결혼 비용, 남들은 얼마 쓸까</h1>
@@ -259,6 +256,7 @@ footer a{color:var(--sub)}
       '<div class="s"><span>' + x.sub + '</span><span class="src' + (x.local ? " local" : "") + '">' + (x.local ? (r.id === "all" ? "전국" : (x.house ? D.houseName[r.house] : r.name)) + " 실제" : "전국 평균") + '</span></div></div>'
     ).join("");
     try { const u = new URL(location.href); if (S.r === "all") u.searchParams.delete("r"); else u.searchParams.set("r", S.r); history.replaceState(null, "", u); } catch (e) {}
+    if (window.OWNAV) OWNAV.track({ k: "page:cost", t: "결혼 비용 · " + r.name, s: "평균 " + fmt(total) + "만원" + (S.house ? " (신혼집 포함)" : ""), u: "cost.html" + (S.r === "all" ? "" : "?r=" + S.r), i: "won" });
   }
 
   function renderSplit() {
