@@ -3,19 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>OUR WEDDING · 막막한 결혼 준비, 한 번에</title>
-<meta name="description" content="남들은 결혼에 얼마 쓰는지, 무엇부터 어떤 순서로 하는지, 어느 웨딩홀이 괜찮은지. 흩어진 결혼 준비 정보를 한곳에 모은 결혼 가계부.">
-<meta property="og:title" content="OUR WEDDING · 막막한 결혼 준비, 한 번에">
-<meta property="og:description" content="남들은 얼마 쓰는지, 어떤 순서로 하는지. 흩어진 결혼 준비 정보를 한곳에서 봐요.">
+<title>OUR WEDDING · 결혼 준비, 이것부터 시작하세요</title>
+<meta name="description" content="결혼 준비 처음이면 이것부터. 지역별 평균 결혼 비용, 웨딩홀 하객 후기, 준비 순서와 웨딩 용어를 모아 둔 결혼 가계부예요.">
+<meta property="og:title" content="OUR WEDDING · 결혼 준비, 이것부터 시작하세요">
+<meta property="og:description" content="신혼집 빼고 전국 평균 6,194만원. 웨딩홀은 하객 후기로, 모르는 말은 용어 사전으로.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="OUR WEDDING">
 <meta property="og:url" content="https://ourwedding.kr/">
-<meta property="og:image" content="https://ourwedding.kr/og/main.png?v=2">
+<meta property="og:image" content="https://ourwedding.kr/og/main.png?v=3">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="막막한 결혼 준비, 여기서 한 번에 - OUR WEDDING">
+<meta property="og:image:alt" content="결혼 준비, 이것부터 시작하세요 - OUR WEDDING">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://ourwedding.kr/og/main.png?v=2">
+<meta name="twitter:image" content="https://ourwedding.kr/og/main.png?v=3">
 <meta name="theme-color" content="#FFF0A6">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
@@ -24,267 +24,156 @@
   (function(){ var q = location.search; if (/[?&]r=/.test(q)) location.replace("cost.html" + q); })();
 </script>
 <style>
-/* 줄바꿈: 제목·버튼은 줄 길이를 고르게, 문단은 마지막 줄에 한두 글자만 남지 않게 */
 h1,h2,h3,h4,button,.btn,th,label,dt,.lead{text-wrap:balance}
 p,li,dd,td,.m,.s,small{text-wrap:pretty}
-
-:root{--acc:#FFF0A6;--acc2:#FFF6C9;--accs:#FFFCEC;--accl:#F1DC6E;--accd:#D9B300;--acct:#3A3200;--ink:#1C1F26;--sub:#4F5563;--muted:#8B909B;--line:#EEEEEE;--track:#F2F2F2}
+:root{--acc:#FFF0A6;--acc2:#FFF6C9;--accs:#FFFCEC;--accl:#F1DC6E;--accd:#D9B300;--acct:#3A3200;--ink:#1C1F26;--sub:#4F5563;--muted:#8B909B;--line:#EEEEEE}
 *,*::before,*::after{box-sizing:border-box;border-radius:0!important}
 html{-webkit-text-size-adjust:100%}
-body{margin:0;background:#fff;color:var(--ink);font-family:Pretendard,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-size:16px;line-height:1.6;word-break:keep-all;font-variant-numeric:tabular-nums}
+body{margin:0;background:#fff;color:var(--ink);font-family:Pretendard,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-size:15px;line-height:1.55;word-break:keep-all;font-variant-numeric:tabular-nums}
 a{color:inherit}
-.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
-header{border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(255,255,255,.96);z-index:10}
-header .wrap{display:flex;justify-content:space-between;align-items:center;height:58px;gap:8px}
-.logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:16px;letter-spacing:.05em;text-decoration:none;white-space:nowrap}
-.logo i{width:20px;height:20px;background:var(--acc);border:1px solid var(--accl);display:inline-block}
-.nav{display:flex;gap:6px}
-.nav a{font-size:13px;color:var(--sub);border:1px solid var(--line);padding:6px 10px;text-decoration:none;white-space:nowrap}
-.nav a.go{background:var(--acc);border-color:var(--accl);color:var(--acct);font-weight:700}
-@media (max-width:620px){.nav .lg{display:none}}
+button{font:inherit;color:inherit;cursor:pointer}
+svg.owi{flex:0 0 auto}
+.wrap{max-width:1160px;margin:0 auto;padding:0 16px}
+main.wrap{padding-top:34px;padding-bottom:30px}
+@media (max-width:860px){main.wrap{padding-top:20px;padding-bottom:20px}}
 
-.btn{display:inline-block;text-decoration:none;font-weight:700;font-size:16px;padding:14px 22px;border:1px solid var(--ink)}
-.btn.y{background:var(--acc);border-color:var(--accd);color:var(--acct)}
-.btn.w{background:#fff}
-.more{display:inline-block;margin-top:14px;font-size:15px;font-weight:700;text-decoration:none;border-bottom:2px solid var(--accd);padding-bottom:1px}
-.mark{background:linear-gradient(transparent 58%,var(--acc) 58%)}
-.eyebrow{font-size:14px;font-weight:700;color:var(--acct);background:var(--acc2);display:inline-block;padding:3px 9px;margin-bottom:14px}
+.hero{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:36px;align-items:start}
+@media (max-width:980px){.hero{grid-template-columns:1fr;gap:18px}}
+h1{font-size:42px;letter-spacing:-1.4px;line-height:1.25;margin:0}
+h1 em{font-style:normal;background:linear-gradient(transparent 58%,var(--acc) 58%)}
+@media (max-width:560px){h1{font-size:28px;letter-spacing:-.8px}}
+.hero .sub{font-size:16px;color:var(--sub);margin:10px 0 22px}
+@media (max-width:560px){.hero .sub{font-size:14px;margin:6px 0 14px}}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:760px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}}
+.tile{border:1px solid var(--line);background:#fff;padding:18px 16px;display:grid;gap:9px;align-content:start;text-decoration:none;transition:border-color .15s}
+.tile:hover{border-color:var(--ink)}
+.tile .bx{width:46px;height:46px;background:var(--acc);display:grid;place-items:center;color:var(--acct)}
+.tile .bx svg{width:26px;height:26px}
+.tile b{font-size:17px}
+.tile span{font-size:13px;color:var(--muted);line-height:1.45}
+@media (max-width:560px){.tile{padding:14px 12px}.tile .bx{width:40px;height:40px}.tile .bx svg{width:23px;height:23px}.tile b{font-size:15.5px}.tile span{font-size:12px}}
 
-/* 첫 화면 */
-.hero{padding:56px 0 48px;border-bottom:1px solid var(--line)}
-.hero .wrap{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:40px;align-items:center}
-@media (max-width:860px){.hero{padding:36px 0}.hero .wrap{grid-template-columns:1fr;gap:28px}}
-.hero h1{font-size:44px;line-height:1.3;letter-spacing:-1.4px;margin:0 0 18px;font-weight:800}
-@media (max-width:480px){.hero h1{font-size:33px;letter-spacing:-1px}}
-.hero p.sub{font-size:17px;color:var(--sub);margin:0 0 26px;max-width:520px}
-.ctas{display:flex;gap:8px;flex-wrap:wrap}
-.free{font-size:13px;color:var(--muted);margin-top:12px}
-.glance{border:1px solid var(--ink);background:#fff}
-.glance .hd{background:var(--ink);color:#fff;font-size:13px;font-weight:700;padding:9px 16px;letter-spacing:.03em}
-.glance a{display:grid;grid-template-columns:1fr auto;gap:2px 12px;align-items:baseline;padding:15px 16px;border-bottom:1px solid var(--line);text-decoration:none}
-.glance a:last-child{border-bottom:0}
-.glance a:hover{background:var(--accs)}
-.glance .q{font-size:14px;color:var(--sub)}
-.glance .v{font-size:24px;font-weight:800;letter-spacing:-.6px;grid-row:span 2;align-self:center;white-space:nowrap}
-.glance .v small{font-size:14px;font-weight:600;margin-left:1px}
-.glance .s{font-size:12px;color:var(--muted)}
+.side{border:1px solid var(--line)}
+.side h3{font-size:15px;margin:0;padding:13px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:7px;justify-content:space-between}
+.side h3 span{display:flex;align-items:center;gap:7px}
+.side h3 svg{width:17px;height:17px;color:var(--muted)}
+.side h3 a{font-size:12px;color:var(--muted);font-weight:500;text-decoration:none}
+.side .r{display:flex;gap:10px;align-items:center;padding:11px 16px;border-bottom:1px solid var(--line);font-size:14px;text-decoration:none}
+.side .r:last-child{border-bottom:0}
+.side .r:hover{background:var(--accs)}
+.side .r svg{width:17px;height:17px;color:var(--muted)}
+.side .r em{font-style:normal;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.side .r small{color:var(--muted);font-size:12px;white-space:nowrap}
+.side .none{padding:16px;font-size:13px;color:var(--muted);line-height:1.6}
+@media (max-width:980px){.side{margin-top:30px}.side.empty{display:none}}
 
-section.blk{padding:64px 0;border-bottom:1px solid var(--line)}
-@media (max-width:620px){section.blk{padding:44px 0}}
-.blk h2{font-size:30px;letter-spacing:-.8px;line-height:1.35;margin:0 0 10px}
-@media (max-width:480px){.blk h2{font-size:25px}}
-.blk .lead{color:var(--sub);font-size:16px;margin:0 0 26px;max-width:620px}
-.num{font-size:13px;font-weight:800;color:var(--muted);letter-spacing:.08em;margin-bottom:6px}
-.two{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:40px;align-items:start}
-@media (max-width:860px){.two{grid-template-columns:1fr;gap:20px}}
+.sec{margin-top:44px}
+@media (max-width:860px){.sec{margin-top:30px}}
+.sec .hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:10px}
+.sec h2{font-size:22px;letter-spacing:-.4px;margin:0}
+@media (max-width:560px){.sec h2{font-size:18px}}
+.arr{display:flex;gap:6px}
+.arr button{width:40px;height:40px;border:1px solid var(--line);background:#fff;display:grid;place-items:center}
+.arr button svg{width:19px;height:19px}
+.hint{font-size:12px;color:var(--muted);display:none}
+@media (max-width:760px){.arr{display:none}.hint{display:block}}
+.car{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;scroll-behavior:smooth;margin:0 -16px;padding:2px 16px 4px;scroll-padding:0 16px}
+.car::-webkit-scrollbar{display:none}
+.card{flex:0 0 calc((100% - 42px)/4);scroll-snap-align:start;border:2px solid var(--ink);padding:22px 20px;display:flex;flex-direction:column;gap:10px;min-height:230px;background:#fff;text-decoration:none}
+.card:hover{background:var(--accs)}
+.card.y{background:var(--acc);border-color:var(--accd)}
+.card.y:hover{background:var(--acc)}
+@media (max-width:980px){.card{flex-basis:calc((100% - 28px)/3)}}
+@media (max-width:760px){.card{flex-basis:78%;min-height:200px;padding:18px 16px}}
+.card .k{font-size:13px;font-weight:800;color:var(--acct);display:flex;align-items:center;gap:6px}
+.card .k svg{width:18px;height:18px}
+.card .big{font-size:46px;font-weight:900;letter-spacing:-2px;line-height:1}
+.card .big small{font-size:19px;margin-left:2px;letter-spacing:-.4px}
+.card .one{font-size:20px;font-weight:800;line-height:1.35;letter-spacing:-.4px}
+.card p{margin:0;font-size:14px;color:var(--sub);line-height:1.5}
+.card .go{margin-top:auto;font-size:14px;font-weight:800;display:flex;align-items:center;gap:4px}
+.card .go svg{width:16px;height:16px}
+@media (max-width:560px){.card .big{font-size:38px}.card .one{font-size:18px}}
+.dots{display:none;gap:5px;justify-content:center;margin-top:12px}
+.dots i{width:6px;height:6px;background:#DDD}
+.dots i.on{background:var(--ink);width:16px}
+@media (max-width:760px){.dots{display:flex}}
 
-/* 1. 얼마 */
-.big{font-size:64px;font-weight:800;letter-spacing:-2.5px;line-height:1}
-.big small{font-size:24px;letter-spacing:-.5px;margin-left:3px}
-@media (max-width:480px){.big{font-size:50px}}
-.bignote{font-size:14px;color:var(--muted);margin-top:10px}
-.bars .it{display:grid;grid-template-columns:72px minmax(0,1fr) 74px;gap:10px;align-items:center;padding:7px 0}
-.bars .n{font-size:15px;font-weight:600}
-.bars .b{height:14px;background:var(--track)}
-.bars .b i{display:block;height:100%;background:var(--acc);border-right:2px solid var(--accd)}
-.bars .v{text-align:right;font-weight:800;font-size:15px;white-space:nowrap}
-
-/* 2. 순서 */
-.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--ink);border-left:1px solid var(--line)}
-@media (max-width:860px){.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (max-width:480px){.steps{grid-template-columns:1fr}}
-.st{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:16px 16px 18px;position:relative}
-.st .w{font-size:13px;font-weight:800;color:var(--acct);background:var(--acc);display:inline-block;padding:2px 8px}
-.st .i{font-size:12px;color:var(--muted);margin-left:6px}
-.st ul{margin:10px 0 0;padding:0;list-style:none}
-.st li{font-size:15px;padding:3px 0 3px 14px;position:relative}
-.st li::before{content:"";position:absolute;left:0;top:12px;width:6px;height:6px;background:var(--accd)}
-.st a{font-size:13px;color:var(--sub);display:inline-block;margin-top:8px}
-
-/* 3. 웨딩홀 */
-.hexw{display:flex;justify-content:center}
-.hexw svg{width:100%;max-width:340px;height:auto}
-.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 4px}
-.chips span{font-size:14px;border:1px solid var(--line);padding:5px 10px}
-
-/* 4. 가이드 */
-.gl{border-top:1px solid var(--ink)}
-.gl a{display:flex;justify-content:space-between;gap:12px;align-items:baseline;padding:14px 4px;border-bottom:1px solid var(--line);text-decoration:none}
-.gl a:nth-child(even){background:#FAFAFA}
-.gl a:hover{background:var(--accs)}
-.gl b{font-size:16px;font-weight:600}
-.gl span{font-size:13px;color:var(--muted);white-space:nowrap}
-.qa{background:var(--accs);border:1px solid var(--accl);padding:20px;margin-top:18px}
-.qa b{font-size:17px}
-.qa p{margin:6px 0 12px;color:var(--sub);font-size:15px}
-
-/* 5. 가계부 */
-.feats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border-top:1px solid var(--line);border-left:1px solid var(--line)}
-@media (max-width:860px){.feats{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (max-width:480px){.feats{grid-template-columns:1fr}}
-.ft{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:20px 18px}
-.ft b{display:block;font-size:17px;margin-bottom:4px}
-.ft b::before{content:"";display:inline-block;width:10px;height:10px;background:var(--acc);border:1px solid var(--accd);margin-right:8px;vertical-align:1px}
-.ft p{margin:0;font-size:14px;color:var(--sub)}
-
-.src{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-@media (max-width:760px){.src{grid-template-columns:1fr}}
-.src div{border:1px solid var(--line);padding:16px}
-.src b{display:block;font-size:15px;margin-bottom:4px}
-.src p{margin:0;font-size:14px;color:var(--sub)}
-
-.end{background:var(--acc);padding:56px 0;text-align:center;border-bottom:1px solid var(--accl)}
-.end h2{font-size:30px;letter-spacing:-.8px;margin:0 0 8px;color:var(--acct)}
-.end p{margin:0 0 22px;color:var(--acct)}
-.end .btn{background:var(--ink);color:#fff;border-color:var(--ink)}
-footer{padding:22px 0 40px;font-size:13px;color:var(--muted);line-height:1.8}
+footer{border-top:1px solid var(--line);margin-top:40px;padding:20px 0 30px;font-size:13px;color:var(--muted);line-height:1.8}
 footer a{color:var(--sub)}
 </style>
 </head>
 <body>
 <div id="ownav" data-tab="home"></div><script src="nav.js"></script>
 
-<section class="hero"><div class="wrap">
-  <div>
-    <div class="eyebrow">결혼 준비, 한곳에서</div>
-    <h1>막막한 결혼 준비,<br><span class="mark">여기서 한 번에</span> 봐요</h1>
-    <p class="sub">카페·블로그·박람회에 흩어진 결혼 정보를 한곳에 모았어요. 남들은 얼마 쓰는지, 무엇부터 어떤 순서로 하는지, 어느 웨딩홀이 괜찮은지 실제 통계와 경험으로 정리했어요.</p>
-    <div class="ctas"><a class="btn y" href="app.html">우리 결혼 가계부 시작하기</a><a class="btn w" href="cost.html">남들은 얼마 쓸까</a></div>
-    <div class="free">회원가입 없이 바로 써요</div>
-  </div>
-  <div class="glance" aria-label="한눈에 보기">
-    <div class="hd">결혼 준비 한눈에</div>
-    <a href="cost.html"><span class="q">전국 평균 결혼 비용</span><span class="v"><span id="gTotal">-</span><small>만원</small></span><span class="s">신혼집 빼고 · 소비자원·듀오 2026</span></a>
-    <a href="app.html"><span class="q">결혼 준비 할 일</span><span class="v">120<small>개</small></span><span class="s">1년 전부터 입주까지 10단계</span></a>
-    <a href="halls.html"><span class="q">하객 후기로 본 웨딩홀</span><span class="v">154<small>곳</small></span><span class="s">서울·경기·인천</span></a>
-    <a href="board.html"><span class="q">결혼 준비 가이드</span><span class="v">88<small>편</small></span><span class="s">상견례부터 혼수까지</span></a>
-  </div>
-</div></section>
-
-<section class="blk"><div class="wrap two">
-  <div>
-    <div class="num">01 · 얼마나</div>
-    <h2>남들은 결혼에<br>얼마 쓸까</h2>
-    <p class="lead">한국소비자원이 모은 실제 계약 금액과 최근 2년 안에 결혼한 1,000쌍 조사로 계산했어요. 지역을 고르면 그 지역 평균으로 바뀌어요.</p>
-    <div class="big"><span id="bTotal">-</span><small>만원</small></div>
-    <div class="bignote">전국 평균 · 신혼집 빼고</div>
-    <a class="more" href="cost.html">우리 지역 평균 보기 →</a>
-  </div>
-  <div class="bars" id="bars" aria-label="항목별 평균 비용"></div>
-</div></section>
-
-<section class="blk"><div class="wrap">
-  <div class="num">02 · 무엇부터</div>
-  <h2>어떤 순서로 하면 될까</h2>
-  <p class="lead">결혼 준비는 웨딩홀 계약이 첫 단추예요. 날짜가 정해지면 나머지가 그 날짜를 기준으로 줄줄이 따라와요. 가계부 할 일 탭에 120개가 이 순서대로 들어 있어요.</p>
-  <div class="steps">
-    <div class="st"><span class="w">가장 먼저</span><span class="i">1년 이상 전</span><ul><li>양가에 결혼 허락 받기</li><li>웨딩홀 투어·계약</li><li>신혼집 알아보기</li></ul><a href="board.html?s=g8">왜 웨딩홀부터일까 ›</a></div>
-    <div class="st"><span class="w">D-365</span><span class="i">1년 전</span><ul><li>양가 첫인사</li><li>스드메·본식 스냅 계약</li><li>웨딩링 고르기</li></ul><a href="board.html?s=g11">첫인사 선물은 ›</a></div>
-    <div class="st"><span class="w">5~6개월 전</span><ul><li>상견례</li><li>드레스 투어·웨딩 촬영</li><li>신혼여행 예약</li></ul><a href="board.html?s=g19">상견례 식당 고르기 ›</a></div>
-    <div class="st"><span class="w">4개월 전</span><ul><li>청첩장 주문</li><li>신랑 예복 맞추기</li><li>혼주 한복·메이크업 예약</li></ul><a href="board.html?s=g24">청첩장, 몇 장 뽑을까 ›</a></div>
-    <div class="st"><span class="w">2~3개월 전</span><ul><li>청첩장 모임</li><li>하객 버스 대절</li><li>예단 준비</li></ul><a href="board.html?s=g38">하객 수 예상하는 법 ›</a></div>
-    <div class="st"><span class="w">D-30</span><ul><li>웨딩홀 뷔페 시식</li><li>본식 드레스 가봉</li><li>식순·음악 정하기</li></ul><a href="board.html?s=g45">드레스 추가금 막기 ›</a></div>
-    <div class="st"><span class="w">D-7</span><ul><li>모든 예약 다시 확인</li><li>헬퍼비·사례비 봉투 준비</li><li>본식 네일</li></ul><a href="board.html?s=g80">헬퍼비는 현금일까 ›</a></div>
-    <div class="st"><span class="w">본식 후</span><ul><li>식대 정산</li><li>감사 인사·답례품</li><li>도와준 사람 답례</li></ul><a href="board.html?s=g83">답례 금액 정하기 ›</a></div>
-    <div class="st"><span class="w">입주 전</span><ul><li>가전·가구 사기</li><li>인테리어</li><li>이사</li></ul><a href="board.html?s=g84">가전 싸게 사는 법 ›</a></div>
-  </div>
-  <a class="more" href="app.html">우리 예식일로 할 일 보기 →</a>
-</div></section>
-
-<section class="blk"><div class="wrap two">
-  <div class="hexw" aria-hidden="true">
-    <svg viewBox="-170 -150 340 300" role="img">
-      <g fill="none" stroke="#EEEEEE" stroke-width="1">
-        <polygon points="0,-110 95.3,-55 95.3,55 0,110 -95.3,55 -95.3,-55"/>
-        <polygon points="0,-73 63.5,-36.7 63.5,36.7 0,73 -63.5,36.7 -63.5,-36.7"/>
-        <polygon points="0,-37 31.8,-18.3 31.8,18.3 0,37 -31.8,18.3 -31.8,-18.3"/>
-        <path d="M0,-110V110M95.3,-55L-95.3,55M95.3,55L-95.3,-55"/>
-      </g>
-      <polygon points="0,-90 82,-47 60,35 0,96 -72,42 -52,-30" fill="#FFF0A6" fill-opacity=".75" stroke="#D9B300" stroke-width="2"/>
-      <g font-family="Pretendard,sans-serif" font-size="14" font-weight="700" fill="#1C1F26" text-anchor="middle">
-        <text x="0" y="-122">가격</text><text x="122" y="-58">홀</text><text x="122" y="70">음식</text>
-        <text x="0" y="134">주차</text><text x="-122" y="70">교통</text><text x="-124" y="-58">하객 편의</text>
-      </g>
-    </svg>
-  </div>
-  <div>
-    <div class="num">03 · 어디서</div>
-    <h2>웨딩홀은 하객 후기로<br>먼저 걸러요</h2>
-    <p class="lead">하객이 기억하는 건 드레스보다 밥과 주차예요. 서울·경기·인천 웨딩홀 154곳의 하객 후기를 여섯 가지로 나눠 육각형으로 보여 드려요. 사진·지도·보증 인원·식대도 같이 봐요.</p>
-    <div class="chips"><span>후기 육각형</span><span>대표 사진·지도</span><span>상담 때 확인할 점</span><span>후기 원문 링크</span></div>
-    <a class="more" href="halls.html">웨딩홀 리스트 보기 →</a>
-  </div>
-</div></section>
-
-<section class="blk"><div class="wrap two">
-  <div>
-    <div class="num">04 · 모르는 것</div>
-    <h2>처음 보는 말,<br>처음 해 보는 일</h2>
-    <p class="lead">베뉴, 촬드, 헬퍼비, 보증 인원… 결혼 준비 순서대로 정리한 가이드 88편이 있어요. 글마다 댓글로 물어볼 수 있고, 따로 질문을 올리면 먼저 해 본 사람이 답해 줘요.</p>
-    <a class="more" href="board.html">가이드 전체 보기 →</a>
-  </div>
-  <div>
-    <div class="gl">
-      <a href="board.html?s=g0"><b>결혼 준비 순서별 웨딩 용어 사전</b><span>웨딩 용어</span></a>
-      <a href="board.html?s=g8"><b>결혼 준비 뭐부터 해야 할까?</b><span>가장 먼저</span></a>
-      <a href="board.html?s=g35"><b>최소 보증 인원은 몇 명이 좋나요?</b><span>웨딩홀</span></a>
-      <a href="board.html?s=g42"><b>스튜디오 추가금 종류와 평균 비용</b><span>스드메</span></a>
-      <a href="board.html?s=g4"><b>결혼 전 돈 이야기 확실하게 하는 방법</b><span>가장 먼저</span></a>
+<main class="wrap">
+  <div class="hero">
+    <div>
+      <h1>결혼 준비,<br><em>이것부터 시작하세요</em></h1>
+      <p class="sub">처음이면 1번부터 차례로요</p>
+      <div class="tiles" id="tiles"></div>
     </div>
-    <div class="qa"><b>묻고 답하기</b><p>“보증 인원 250명이면 많은 걸까요?” 막히는 건 바로 물어보세요. 구글로 로그인하고 닉네임만 정하면 돼요.</p><a class="btn y" style="font-size:15px;padding:10px 16px" href="board.html?b=qna">질문 보러 가기</a></div>
+    <div class="side" id="recent"></div>
   </div>
-</div></section>
 
-<section class="blk"><div class="wrap">
-  <div class="num">05 · 끝까지</div>
-  <h2>준비하는 동안은 가계부 하나로</h2>
-  <p class="lead">위에서 본 평균·순서·웨딩홀이 가계부 안에서 그대로 이어져요. 둘이 같이 쓰면 누가 얼마 냈는지도 다툴 일이 없어요.</p>
-  <div class="feats">
-    <div class="ft"><b>예산이 저절로 채워져요</b><p>지역을 고르면 항목마다 평균 금액이 들어가요. 우리 상황에 맞게 고치기만 하면 돼요.</p></div>
-    <div class="ft"><b>둘이 같이 써요</b><p>구글로 로그인하고 초대 링크를 보내면 폰·PC 어디서든 같은 가계부를 봐요.</p></div>
-    <div class="ft"><b>달마다 필요한 현금</b><p>계약금·잔금·카드 할부를 적어 두면 어느 달에 얼마가 나가는지 한눈에 보여요.</p></div>
-    <div class="ft"><b>스드메 견적 비교</b><p>소비자원 실제 가격으로 우리 지역 스드메 견적이 비싼지 싼지 바로 알 수 있어요.</p></div>
-    <div class="ft"><b>웨딩홀 상담 모드</b><p>정신없는 상담 중에도 금액·조건을 빠르게 적고, 홀끼리 육각형으로 비교해요.</p></div>
-    <div class="ft"><b>하객·축의금</b><p>하객 명단으로 보증 인원을 가늠하고, 받은 축의금과 답례까지 기록해요.</p></div>
+  <div class="sec">
+    <div class="hd"><h2>알고 시작하면 덜 헤매요</h2><div class="arr"><button id="pv" aria-label="이전 카드"></button><button id="nx" aria-label="다음 카드"></button></div><span class="hint">옆으로 밀어 보세요 →</span></div>
+    <div class="car" id="car"></div>
+    <div class="dots" id="dots"></div>
   </div>
-</div></section>
-
-<section class="blk"><div class="wrap">
-  <div class="num">어디서 온 숫자인지</div>
-  <h2 style="font-size:24px">출처를 밝혀요</h2>
-  <div class="src">
-    <div><b>한국소비자원 참가격</b><p>지역별 예식장·스드메 실제 계약 금액 (<span id="asKca">2026년 8월</span> 기준)</p></div>
-    <div><b>듀오 2026 결혼비용 보고서</b><p>최근 2년 안에 결혼한 1,000명 조사 — 혼수·신혼여행·예단·예물</p></div>
-    <div><b>하객 후기·업체 홈페이지</b><p>웨딩홀 후기는 요약과 원문 링크를 함께, 사진은 각 업체 홈페이지 대표 이미지</p></div>
-  </div>
-</div></section>
-
-<section class="end"><div class="wrap">
-  <h2>결혼 준비, 오늘 첫 줄부터</h2>
-  <p>예식일과 지역만 고르면 예산과 할 일이 바로 채워져요.</p>
-  <a class="btn" href="app.html">우리 결혼 가계부 시작하기</a>
-</div></section>
+</main>
 
 <footer><div class="wrap">
-  평균과 중간값은 참고용이에요. 실제 계약 금액은 업체·날짜·옵션에 따라 달라요.<br>
-  © OUR WEDDING · <a href="cost.html">결혼 비용</a> · <a href="board.html">가이드</a> · <a href="perks.html">혜택</a> · <a href="partner.html">광고·제휴 신청</a> · <a href="privacy.html">개인정보처리방침</a><br>
+  평균 금액은 한국소비자원 참가격(실제 계약)과 듀오 2026 결혼비용 보고서 기준이에요. 업체·날짜·옵션에 따라 달라요.<br>
+  © OUR WEDDING · <a href="perks.html">혜택</a> · <a href="partner.html">광고·제휴 신청</a> · <a href="privacy.html">개인정보처리방침</a><br>
   운영 마이머니플랜 · 사업자등록번호 223-29-01904 · 문의 <a href="mailto:receipt2045@gmail.com">receipt2045@gmail.com</a>
 </div></footer>
 
 <script src="data.js"></script>
 <script>
 (function(){
-  var D = window.OW; if (!D) return;
-  var r = D.regions[0], fmt = function(n){ return Math.round(n).toLocaleString("ko-KR"); };
-  var items = [{n:"예식장", v:r.meal + r.rental + r.deco}, {n:"스드메", v:r.sdm}].concat(D.national.map(function(x){ return {n:x.name, v:x.v}; }));
-  items.sort(function(a, b){ return b.v - a.v; });
-  var total = items.reduce(function(t, x){ return t + x.v; }, 0), max = items[0].v;
-  document.getElementById("gTotal").textContent = fmt(total);
-  document.getElementById("bTotal").textContent = fmt(total);
-  document.getElementById("asKca").textContent = D.asOf.kca + " 기준";
-  document.getElementById("bars").innerHTML = items.map(function(x){
-    return '<div class="it"><span class="n">' + x.n + '</span><span class="b"><i style="width:' + Math.max(3, x.v / max * 100) + '%"></i></span><span class="v">' + fmt(x.v) + '만</span></div>';
-  }).join("");
+  const N = window.OWNAV, ic = N.ic;
+  const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  // 전국 평균 (신혼집 빼고) — 결혼 비용 페이지와 같은 계산
+  let total = "6,194";
+  try { const D = window.OW, r = D.regions[0]; total = Math.round(r.meal + r.rental + r.deco + r.sdm + D.national.reduce((t, x) => t + x.v, 0)).toLocaleString("ko-KR"); } catch (e) {}
+
+  const TILES = [
+    ["won", "1. 예산 감 잡기", `신혼집 빼고 평균 ${total}만원`, "cost.html"],
+    ["hall", "2. 웨딩홀 먼저", "날짜가 정해져야 나머지가 돼요", "halls.html"],
+    ["check", "3. 할 일 순서", "1년 전부터 입주까지 120개", "app.html?go=todo"],
+    ["book", "4. 모르는 말", "베뉴, 촬드, 헬퍼비..", "board.html?s=g0"],
+  ];
+  document.getElementById("tiles").innerHTML = TILES.map(([i, b, s, u]) => `<a class="tile" href="${u}"><span class="bx">${ic(i)}</span><b>${b}</b><span>${s}</span></a>`).join("");
+
+  const CARDS = [
+    {k:["won","예산"], big:`${total}<small>만원</small>`, p:"신혼집 빼고 전국 평균이에요. 서울이면 더 올라가요", go:"우리 지역은 얼마", u:"cost.html", y:true},
+    {k:["hall","웨딩홀"], one:"“날 잡았어?”<br>제일 먼저 듣는 말", p:"인기 홀은 투어 예약도 전화 수십 통이래요", go:"웨딩홀부터인 이유", u:"board.html?s=g8"},
+    {k:["utensils","하객"], one:"드레스는 아무도 기억 못 해요", p:"밥 맛이랑 주차는 몇 년 가요", go:"후기로 홀 거르기", u:"halls.html"},
+    {k:["users","보증 인원"], one:"250명 잡고 230명 오면", p:"안 온 20명 밥값 120만원은 그냥 나가요", go:"하객 수 계산", u:"app.html?go=guest"},
+    {k:["mail","청첩장"], one:"종이 청첩장, 많이 뽑지 마세요", p:"보증 인원만큼이면 얼추 맞아요. 남은 건 다 버려요", go:"청첩장 글 보기", u:"board.html?s=g24"},
+    {k:["wallet","가계부"], one:"계약금·잔금, 언제 얼마 나가는지", p:"적어 두면 달마다 필요한 돈이 나와요", go:"가계부 쓰기", u:"app.html?go=exp"},
+  ];
+  const car = document.getElementById("car");
+  car.innerHTML = CARDS.map(c => `<a class="card${c.y ? " y" : ""}" href="${c.u}"><div class="k">${ic(c.k[0])}${c.k[1]}</div>${c.big ? `<div class="big">${c.big}</div>` : `<div class="one">${c.one}</div>`}<p>${c.p}</p><div class="go">${c.go} ${ic("right")}</div></a>`).join("");
+  document.getElementById("dots").innerHTML = CARDS.map((_, i) => `<i class="${i ? "" : "on"}"></i>`).join("");
+  document.getElementById("pv").innerHTML = ic("left"); document.getElementById("nx").innerHTML = ic("right");
+  const step = () => (car.querySelector(".card").getBoundingClientRect().width + 14);
+  document.getElementById("pv").onclick = () => car.scrollBy({left: -step() * 2});
+  document.getElementById("nx").onclick = () => car.scrollBy({left: step() * 2});
+  car.addEventListener("scroll", () => { const i = Math.round(car.scrollLeft / step()); document.querySelectorAll("#dots i").forEach((d, j) => d.classList.toggle("on", j === i)); }, {passive: true});
+
+  // 최근 본 것
+  const R = N.recent().slice(0, 5), box = document.getElementById("recent");
+  box.innerHTML = `<h3><span>${ic("clock")}최근 본 것</span>${R.length ? '<a href="mine.html#recent">전체 ›</a>' : ""}</h3>` +
+    (R.length ? R.map(x => `<a class="r" href="${esc(x.u)}">${ic(x.i || "book")}<em>${esc(x.t)}</em><small>${N.ago(x.at)}</small></a>`).join("")
+              : '<div class="none">가이드 글이나 웨딩홀을 보면 여기 남아요. 다음에 들어와서 바로 이어 보면 돼요.</div>');
+  box.classList.toggle("empty", !R.length);
+  // 폰·태블릿에서는 카드 아래로, PC에서는 오른쪽 위로
+  const hero = document.querySelector(".hero"), sec = document.querySelector(".sec");
+  const place = () => { const narrow = innerWidth <= 980; if (narrow && box.parentNode === hero) sec.after(box); else if (!narrow && box.parentNode !== hero) hero.appendChild(box); };
+  place(); addEventListener("resize", place);
 })();
 </script>
 </body>
