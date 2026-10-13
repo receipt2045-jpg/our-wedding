@@ -131,6 +131,16 @@ footer a{color:var(--sub)}
 .opts button{border:1px solid var(--line);background:#fff;padding:12px 6px;font-size:15px}
 .opts button.on{background:var(--acc);border-color:var(--accd);font-weight:700}
 .opts button small{display:block;font-size:12px;color:var(--muted);font-weight:400}
+
+/* 페이지 안 탭: 한 화면에 한 가지씩 */
+.ptabs{display:flex;gap:0;border-bottom:2px solid var(--ink);margin:4px 0 18px;overflow-x:auto;scrollbar-width:none;position:sticky;top:58px;background:#fff;z-index:6}
+.ptabs::-webkit-scrollbar{display:none}
+.ptabs button{flex:1 0 auto;border:0;background:#fff;padding:12px 16px;font-size:15px;font-weight:700;color:var(--muted);white-space:nowrap}
+.ptabs button.on{background:var(--acc);color:var(--acct)}
+@media (max-width:860px){.ptabs{top:54px}.ptabs button{padding:11px 12px;font-size:14px}}
+.pane{margin-top:0}
+.pane[hidden]{display:none!important}
+.cta p{font-size:15px}
 </style>
 </head>
 <body>
@@ -138,7 +148,11 @@ footer a{color:var(--sub)}
 
 <main class="wrap">
   <h1>결혼 비용, 남들은 얼마 쓸까</h1>
+  <div class="ptabs" id="ptabs" role="tablist">
+    <button data-pane="avg" role="tab">평균 비용</button><button data-pane="split" role="tab">예산 나눠 보기</button><button data-pane="hall" role="tab">예식장</button><button data-pane="month" role="tab">언제가 쌀까</button>
+  </div>
 
+  <section class="pane" data-pane="avg">
   <div class="grid2">
     <div class="card">
       <p class="headline"><button class="pick" id="pickRegion">전국</button>에서 결혼하면<br>평균</p>
@@ -151,14 +165,14 @@ footer a{color:var(--sub)}
     </div>
     <div class="card">
       <h2>어디에 얼마나 쓸까</h2>
-      <p class="lead" style="margin-bottom:4px">큰 돈부터 차례로 보여줘요.</p>
+      <p class="lead" style="margin-bottom:4px">큰 돈부터 순서대로요.</p>
       <div id="items"></div>
     </div>
   </div>
+  </section>
 
-  <section>
-    <h2>우리 예산으로 나눠보기</h2>
-    <p class="lead">결혼 예산을 고르면 평균 비율대로 항목마다 얼마쯤 쓰면 되는지 나눠드려요. 신혼집은 빼고 계산해요.</p>
+  <section class="pane" data-pane="split">
+    <p class="lead">예산을 고르면 평균 비율대로 항목마다 나눠 줘요. 신혼집은 빼고요.</p>
     <div class="card">
       <div class="chips" id="budgetChips">
         <button data-b="3000">3천만원</button><button data-b="5000">5천만원</button><button data-b="7000">7천만원</button><button data-b="10000">1억원</button>
@@ -168,39 +182,31 @@ footer a{color:var(--sub)}
     </div>
   </section>
 
-  <section>
-    <h2>예식장 자세히</h2>
-    <p class="lead">한국소비자원이 모은 실제 계약의 <b>중간값</b>이에요. 딱 가운데 있는 계약 금액이라 너무 비싸거나 싼 곳에 덜 흔들려요.</p>
+  <section class="pane" data-pane="hall">
+    <p class="lead">소비자원이 모은 실제 계약의 <b>중간값</b>이에요. 딱 가운데 금액이라 아주 비싼 곳, 아주 싼 곳에 덜 흔들려요.</p>
     <div class="grid2">
       <div class="card">
         <div class="chips zonechips" id="zoneChips"></div>
         <table><tbody id="zoneTable"></tbody></table>
       </div>
       <div class="card">
-        <h2 style="font-size:16px">추가로 드는 것들</h2>
-        <p class="lead" style="margin-bottom:6px">예식장에서 따로 고르는 항목이에요. 단위 만원.</p>
+        <h2 style="font-size:16px">따로 고르는 것들</h2>
+        <p class="lead" style="margin-bottom:6px">꽃장식, 폐백실 같은 것. 단위는 만원이에요.</p>
         <table><thead><tr><th>항목</th><th class="num" id="optHead">전국</th><th class="num">전국</th></tr></thead><tbody id="optTable"></tbody></table>
       </div>
     </div>
   </section>
 
-  <section>
-    <h2>언제 결혼하면 쌀까</h2>
-    <p class="lead">예식 달마다 결혼식장 계약 금액의 중간값이에요. 가장 싼 달을 진하게 표시했어요. 먼 달일수록 아직 계약이 적어서 달라질 수 있어요.</p>
+  <section class="pane" data-pane="month">
+    <p class="lead">예식 달마다 계약 금액 중간값이에요. 제일 싼 달은 진하게 칠했어요. 먼 달은 아직 계약이 적어서 바뀔 수 있어요.</p>
     <div class="card"><div class="months" id="months"></div></div>
   </section>
 
   <section>
     <div class="cta">
-      <h2>우리 결혼 가계부, 지금 바로 써 보세요</h2>
-      <ul>
-        <li>회원가입 없이 바로 시작해요. 항목마다 예산을 적고 돈 낼 때마다 한 줄씩 적으면 남은 돈이 바로 계산돼요.</li>
-        <li>계약금·잔금은 "낼 예정"으로 적어 두면 언제 얼마 나가는지 챙겨줘요.</li>
-        <li>하객 명단·보증 인원·축의금, 시기별 할 일 120개, 웨딩홀 비교표까지 한곳에서 관리해요.</li>
-        <li>뭐부터 할지 막막하면 <a href="board.html">결혼 준비 가이드</a>를 순서대로 읽어 보세요.</li>
-      </ul>
-      <a class="gobtn" href="app.html">가계부 쓰러 가기</a>
-      <p style="font-size:13px;color:var(--muted);margin:12px 0 0">로그인 없이 쓰면 이 브라우저에 저장되고, 구글로 로그인하면 폰·PC 어디서든 둘이 같이 쓸 수 있어요.</p>
+      <h2>우리 예산은 가계부에서</h2>
+      <p style="margin:6px 0 0;color:var(--sub)">지역을 고르면 이 평균이 예산 칸에 바로 들어가요. 고치고 싶은 칸만 고치면 돼요.</p>
+      <a class="gobtn" href="app.html?go=budget">가계부에 넣어 보기</a>
     </div>
   </section>
 </main>
@@ -319,6 +325,17 @@ footer a{color:var(--sub)}
   function renderAll() { renderTop(); renderSplit(); renderZone(); }
   $("srcKca").href = D.sources.kca.url; $("srcDuo").href = D.sources.duo.url; $("asKca").textContent = D.asOf.kca;
   renderAll(); renderMonths();
+})();
+</script>
+
+<script>
+(function(){
+  const tabs = [...document.querySelectorAll("#ptabs button")], panes = [...document.querySelectorAll(".pane")];
+  const show = k => { if(!panes.some(p => p.dataset.pane === k)) k = "avg";
+    tabs.forEach(b => { b.classList.toggle("on", b.dataset.pane === k); b.setAttribute("aria-selected", b.dataset.pane === k); });
+    panes.forEach(p => p.hidden = p.dataset.pane !== k); };
+  tabs.forEach(b => b.addEventListener("click", () => { show(b.dataset.pane); history.replaceState(null, "", location.pathname + location.search + (b.dataset.pane === "avg" ? "" : "#" + b.dataset.pane)); }));
+  show((location.hash || "").slice(1));
 })();
 </script>
 </body>

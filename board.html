@@ -301,7 +301,7 @@ async function render(){
 async function vGuide(){
   const L = await guideAll();
   const cnt = c => L.filter(p=>p.cat===c).length;
-  return `<p class="lead">상견례부터 혼수까지, 결혼 준비 순서대로 정리했어요. 글마다 로그인하면 댓글로 물어볼 수 있어요.</p>
+  return `<p class="lead">결혼 준비를 먼저 해 본 사람이 쓴 글이에요. 한 장씩 넘기면서 읽어요.</p>
   <div class="bar"><input class="search" id="q" type="search" placeholder="궁금한 말로 찾기 (예: 보증 인원, 헬퍼비, 상견례)" value="${esc(S.q)}" aria-label="가이드 검색">${U.admin?'<button class="btn y" data-act="write" data-v="guide">가이드 쓰기</button>':""}</div>
   <div class="pills" id="gpills" style="margin-bottom:6px">${[["전체","전체"],...CATS].map(([k,n])=>`<button class="${!S.q.trim()&&S.c===k?"on":""}" data-cat="${k}">${n}<small>${k==="전체"?L.length:cnt(k)}</small></button>`).join("")}</div>
   <div id="glist">${guideList(L)}</div>`;
@@ -323,7 +323,7 @@ async function vQna(){
   let qy = SB.from("board_posts").select("id,cat,title,nick,comment_count,like_count,created_at,user_id,hidden").eq("board","qna").order("created_at",{ascending:false}).limit(100);
   if(S.c!=="전체") qy = qy.eq("cat", S.c);
   const r = await qy, L = r.data || [];
-  let h = `<p class="lead">결혼 준비하다 막히는 것, 먼저 해 본 사람에게 물어보세요. 로그인하면 누구나 질문하고 답할 수 있어요.</p>
+  let h = `<p class="lead">막히는 거 있으면 물어보세요. 먼저 해 본 사람이 답해 줘요. 구글 로그인만 하면 돼요.</p>
   <div class="bar"><div class="pills" style="flex:1">${["전체",...QCATS].map(k=>`<button class="${S.c===k?"on":""}" data-cat="${k}">${k}</button>`).join("")}</div><button class="btn y" data-act="write" data-v="qna">질문하기</button></div>`;
   if(!L.length) return h + `<div class="empty">아직 질문이 없어요. 첫 질문을 남겨 주세요.</div>`;
   return h + '<div class="list">' + L.map(p=>`<button class="row" data-post="${p.id}"><div class="t"><span>${p.hidden?"[숨김] ":""}${esc(p.title)}</span>${p.like_count?`<span class="lk">♥ ${p.like_count}</span>`:""}<span class="cc${p.comment_count?"":" z"}">답변 ${p.comment_count}</span></div><div class="m">${esc(p.cat||"기타")} · ${esc(p.nick)} · ${ago(p.created_at)}</div></button>`).join("") + "</div>";
