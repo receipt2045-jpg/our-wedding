@@ -13,6 +13,10 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>
+/* 줄바꿈: 제목·버튼은 줄 길이를 고르게, 문단은 마지막 줄에 한두 글자만 남지 않게 */
+h1,h2,h3,h4,button,.btn,th,label,dt,.lead{text-wrap:balance}
+p,li,dd,td,.m,.s,small{text-wrap:pretty}
+
 :root{
   --acc:#FFF0A6; --acc2:#FFF6C9; --accs:#FFFCEC; --accl:#F1DC6E; --accd:#D9B300; --acct:#3A3200;
   --ink:#1C1F26; --sub:#4F5563; --muted:#8B909B; --line:#EEEEEE; --track:#F2F2F2; --red:#DC4449; --green:#1C9A57;
@@ -108,6 +112,7 @@ select,#q{border:1px solid var(--line);padding:8px 10px;font-size:14px;backgroun
 .rvx svg{width:150px;height:auto;display:block;overflow:visible}
 .lvl{display:grid;gap:1px;font-size:12px}
 .lvl button{display:flex;justify-content:space-between;gap:6px;border:0;background:none;padding:2px 4px;text-align:left;color:var(--ink);font-size:12px}
+.lvl button span:first-child{white-space:nowrap;flex:0 0 auto}
 .lvl button:hover,.lvl button.on{background:var(--accs)}
 .lvl .g{color:var(--green);font-weight:700}.lvl .m{color:var(--sub)}.lvl .c{color:var(--acct);font-weight:700}.lvl .n{color:var(--muted)}
 .why{font-size:12px;background:#FAFAF7;padding:7px 9px;margin-top:6px;line-height:1.6}

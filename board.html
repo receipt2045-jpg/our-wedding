@@ -12,6 +12,10 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <style>
+/* 줄바꿈: 제목·버튼은 줄 길이를 고르게, 문단은 마지막 줄에 한두 글자만 남지 않게 */
+h1,h2,h3,h4,button,.btn,th,label,dt,.lead{text-wrap:balance}
+p,li,dd,td,.m,.s,small{text-wrap:pretty}
+
 :root{--acc:#FFF0A6;--acc2:#FFF6C9;--accs:#FFFCEC;--accl:#F1DC6E;--accd:#D9B300;--acct:#3A3200;--ink:#1C1F26;--sub:#4F5563;--muted:#8B909B;--line:#EEEEEE;--zebra:#FAFAFA;--red:#DC4449}
 *,*::before,*::after{box-sizing:border-box;border-radius:0!important}
 html{-webkit-text-size-adjust:100%}
@@ -80,12 +84,30 @@ h1.pt{font-size:24px;line-height:1.4;margin:0 0 6px;letter-spacing:-.4px}
 .doc tr:nth-child(even) td{background:var(--zebra)}
 .doc td:last-child{white-space:nowrap;font-weight:700}
 .tipbox{background:var(--accs);border:1px solid var(--accl);padding:12px 14px;margin:18px 0;font-size:15px}
+.likebar{display:flex;justify-content:center;margin:22px 0 6px}
+.heart{display:inline-flex;align-items:center;gap:8px;border:1.5px solid var(--line);background:#fff;padding:10px 20px;font-size:15px;font-weight:700;color:var(--sub)}
+.heart svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2}
+.heart b{color:var(--ink);min-width:1ch}
+.heart.on{border-color:#E5484D;color:#E5484D;background:#FFF5F5}
+.heart.on svg{fill:#E5484D;stroke:#E5484D}
+.heart.pop svg{animation:pop .35s ease}
+@keyframes pop{40%{transform:scale(1.35)}}
+.gobox{border:1px solid var(--ink);margin:18px 0 6px}
+.gobox .gh{font-size:13px;font-weight:700;background:var(--ink);color:#fff;padding:7px 14px}
+.gobox a{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 14px;text-decoration:none;border-top:1px solid var(--line)}
+.gobox a:first-of-type{border-top:0}
+.gobox a:hover{background:var(--accs)}
+.gobox a b{font-size:16px}
+.gobox a span{display:block;font-size:13px;color:var(--muted);font-weight:400}
+.gobox a i{font-style:normal;flex:0 0 auto;background:var(--acc);border:1px solid var(--accd);color:var(--acct);font-weight:800;font-size:14px;padding:7px 12px}
+.lk{font-size:12px;color:#E5484D;white-space:nowrap}
 .tipbox b{color:var(--acct)}
 .ubody{white-space:pre-wrap;font-size:16px;line-height:1.75;margin-bottom:12px}
 .pn{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:24px 0 8px}
 .pn button{border:1px solid var(--line);background:#fff;padding:10px 12px;text-align:left;font-size:13px;color:var(--muted)}
 .pn button b{display:block;color:var(--ink);font-size:14px;font-weight:600;margin-top:2px}
 .pn button:last-child{text-align:right}
+@media (max-width:520px){.pn{grid-template-columns:1fr}.pn button:last-child{text-align:left}.pn span:empty{display:none}}
 .acts{display:flex;gap:6px;flex-wrap:wrap}
 .cm{margin-top:30px;border-top:2px solid var(--ink);padding-top:14px}
 .cm h2{font-size:17px;margin:0 0 10px}
@@ -204,7 +226,7 @@ function closeDlg(){ $("ov").classList.remove("open"); }
 
 // 데이터
 async function guideAll(){ if(GUIDE) return GUIDE;
-  const r = await SB.from("board_posts").select("id,cat,grp,title,tip,sort,comment_count").eq("board","guide").eq("hidden",false).order("sort");
+  const r = await SB.from("board_posts").select("id,cat,grp,title,tip,sort,comment_count,like_count").eq("board","guide").eq("hidden",false).order("sort");
   GUIDE = r.data || []; return GUIDE; }
 async function getPost(id){ const r = await SB.from("board_posts").select("*").eq("id",id).maybeSingle(); return r.data; }
 async function getComments(id){ const r = await SB.from("board_comments").select("id,user_id,nick,body,hidden,created_at").eq("post_id",id).order("created_at"); return r.data || []; }
@@ -237,18 +259,49 @@ function guideList(L){                   // 검색할 때는 이 부분만 다�
   const groups = [];                     // 전체: 분야별, 분야 하나: 소분류별, 검색: 한 묶음
   for(const p of xs){ const g = q ? "" : (S.c==="전체" ? catName(p.cat) : (p.grp||"")); const last = groups[groups.length-1];
     if(last && last.g===g) last.ps.push(p); else groups.push({g, ps:[p]}); }
-  const row = p => `<button class="row" data-post="${p.id}"><div class="t"><span>${esc(p.title)}</span>${p.comment_count?`<span class="cc">댓글 ${p.comment_count}</span>`:""}</div>${p.tip?`<div class="m">${esc(p.tip)}</div>`:""}</button>`;
+  const row = p => `<button class="row" data-post="${p.id}"><div class="t"><span>${esc(p.title)}</span>${p.like_count?`<span class="lk">♥ ${p.like_count}</span>`:""}${p.comment_count?`<span class="cc">댓글 ${p.comment_count}</span>`:""}</div>${p.tip?`<div class="m">${esc(p.tip)}</div>`:""}</button>`;
   return h + groups.map(G => (G.g?`<div class="grp">${esc(G.g)}</div>`:"") + '<div class="list">' + G.ps.map(row).join("") + "</div>").join("");
 }
 
 async function vQna(){
-  let qy = SB.from("board_posts").select("id,cat,title,nick,comment_count,created_at,user_id,hidden").eq("board","qna").order("created_at",{ascending:false}).limit(100);
+  let qy = SB.from("board_posts").select("id,cat,title,nick,comment_count,like_count,created_at,user_id,hidden").eq("board","qna").order("created_at",{ascending:false}).limit(100);
   if(S.c!=="전체") qy = qy.eq("cat", S.c);
   const r = await qy, L = r.data || [];
   let h = `<p class="lead">결혼 준비하다 막히는 것, 먼저 해 본 사람에게 물어보세요. 로그인하면 누구나 질문하고 답할 수 있어요.</p>
   <div class="bar"><div class="pills" style="flex:1">${["전체",...QCATS].map(k=>`<button class="${S.c===k?"on":""}" data-cat="${k}">${k}</button>`).join("")}</div><button class="btn y" data-act="write" data-v="qna">질문하기</button></div>`;
   if(!L.length) return h + `<div class="empty">아직 질문이 없어요. 첫 질문을 남겨 주세요.</div>`;
-  return h + '<div class="list">' + L.map(p=>`<button class="row" data-post="${p.id}"><div class="t"><span>${p.hidden?"[숨김] ":""}${esc(p.title)}</span><span class="cc${p.comment_count?"":" z"}">답변 ${p.comment_count}</span></div><div class="m">${esc(p.cat||"기타")} · ${esc(p.nick)} · ${ago(p.created_at)}</div></button>`).join("") + "</div>";
+  return h + '<div class="list">' + L.map(p=>`<button class="row" data-post="${p.id}"><div class="t"><span>${p.hidden?"[숨김] ":""}${esc(p.title)}</span>${p.like_count?`<span class="lk">♥ ${p.like_count}</span>`:""}<span class="cc${p.comment_count?"":" z"}">답변 ${p.comment_count}</span></div><div class="m">${esc(p.cat||"기타")} · ${esc(p.nick)} · ${ago(p.created_at)}</div></button>`).join("") + "</div>";
+}
+
+// 하트: 로그인 없이 누름. 브라우저마다 무작위 번호로 한 번만 셈
+const LIKE_ID = (()=>{ try{ let v = localStorage.getItem("ow-like-client"); if(!v){ v = (crypto.randomUUID ? crypto.randomUUID() : "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c => (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16))); localStorage.setItem("ow-like-client", v); } return v; }catch(e){ return null; } })();
+const likedSet = () => { try{ return new Set(JSON.parse(localStorage.getItem("ow-liked")||"[]")); }catch(e){ return new Set(); } };
+const HEART = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.1 0 3.6 1.2 4.3 2.5h2c.7-1.3 2.2-2.5 4.3-2.5 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z"/></svg>';
+const heartBtn = p => `<div class="likebar"><button class="heart${likedSet().has(p.id)?" on":""}" data-act="like" data-v="${p.id}" aria-pressed="${likedSet().has(p.id)}">${HEART}<span>${p.board==="guide"?"도움이 됐어요":"저도 궁금해요"}</span><b>${p.like_count||0}</b></button></div>`;
+async function like(btn, id){
+  if(!LIKE_ID) return toast("이 브라우저에서는 하트를 누를 수 없어요.");
+  btn.disabled = true;
+  const r = await SB.rpc("toggle_like", {p_post:id, p_client:LIKE_ID}); btn.disabled = false;
+  if(r.error) return toast(errMsg(r.error));
+  const L = likedSet(); r.data.liked ? L.add(id) : L.delete(id);
+  try{ localStorage.setItem("ow-liked", JSON.stringify([...L])); }catch(e){}
+  btn.classList.toggle("on", r.data.liked); btn.setAttribute("aria-pressed", r.data.liked); btn.querySelector("b").textContent = r.data.count;
+  if(r.data.liked){ btn.classList.remove("pop"); void btn.offsetWidth; btn.classList.add("pop"); }
+  if(GUIDE){ const g = GUIDE.find(x=>x.id===id); if(g) g.like_count = r.data.count; }
+}
+// 글 아래 '같이 보면 좋아요': 글 분야·제목에 맞는 사이트 안 화면으로 바로 가기
+function goBox(p){
+  const t = (p.title||"") + " " + (p.grp||""), G = [];
+  const add = (href, b, s, cta) => { if(!G.some(x=>x.href===href) && G.length<2) G.push({href,b,s,cta}); };
+  if(p.cat==="웨딩홀" || /웨딩홀|홀 투어|베뉴/.test(t)) add("halls.html", "웨딩홀 리스트", "서울·경기·인천 154곳 하객 후기를 육각형으로 비교해요", "웨딩홀 보기");
+  if(/보증 인원|하객|식대/.test(t)) add("app.html?go=guest", "하객·보증 인원 계산", "명단만 적으면 참석 예상과 보증 인원을 계산해요", "계산하기");
+  if(p.cat==="웨딩홀" || /웨딩홀/.test(t)) add("app.html?go=hall", "웨딩홀 비교표", "투어 다녀온 홀을 점수로 비교하고 1위를 골라요", "비교하기");
+  if(p.cat==="스드메") add("app.html?go=sdm", "스드메 견적 비교", "받은 견적이 우리 지역에서 비싼지 싼지 바로 알려줘요", "견적 넣기");
+  if(/비용|돈|예산/.test(t)) add("cost.html", "남들은 얼마 쓸까", "지역별 실제 계약 평균으로 결혼 비용을 봐요", "평균 보기");
+  if(/비용|돈|예산|할부/.test(t)) add("app.html?go=budget", "우리 예산 세우기", "지역을 고르면 평균 금액이 예산 칸에 채워져요", "예산 세우기");
+  if(p.cat==="혼수" || p.cat==="예물") add("perks.html", "예비부부 혜택", "가전·가구·예물 할인과 혜택을 모았어요", "혜택 보기");
+  add("app.html?go=todo", "할 일 체크리스트", "1년 전부터 입주까지 120개, 지금 할 일부터 보여줘요", "체크하기");
+  return `<div class="gobox"><div class="gh">같이 보면 좋아요</div>${G.map(x=>`<a href="${x.href}"><div><b>${x.b}</b><span>${x.s}</span></div><i>${x.cta} ›</i></a>`).join("")}</div>`;
 }
 
 async function vPost(){
@@ -262,7 +315,8 @@ async function vPost(){
   <div class="pm">${who(p.nick || "OUR WEDDING")}${isG?"":`<span>${ago(p.created_at)}</span>`}${p.updated_at && p.created_at && (new Date(p.updated_at)-new Date(p.created_at))>60000 && !isG?"<span>수정됨</span>":""}
     <span class="acts">${(mine||U.admin)?`<button class="btn s" data-act="edit" data-v="${p.id}">수정</button>`:""}${(mine&&!p.comment_count)||U.admin?`<button class="btn s" data-act="delpost" data-v="${p.id}">삭제</button>`:""}${U.admin&&!isG?`<button class="btn s" data-act="hidepost" data-v="${p.id}" data-h="${p.hidden?0:1}">${p.hidden?"숨김 풀기":"숨기기"}</button>`:""}${!mine&&!isG&&U.user?`<button class="btn s" data-act="report" data-k="post" data-v="${p.id}">신고</button>`:""}</span></div>
   ${isG ? '<div class="doc">'+md(p.body)+"</div>" : '<div class="ubody">'+esc(p.body)+"</div>"}
-  ${p.tip?`<div class="tipbox"><b>한마디</b> · ${esc(p.tip)}</div>`:""}`;
+  ${p.tip?`<div class="tipbox"><b>한마디</b> · ${esc(p.tip)}</div>`:""}
+  ${heartBtn(p)}${isG?goBox(p):""}`;
   if(isG){ const L = await guideAll(), i = L.findIndex(x=>x.id===p.id), a = L[i-1], b = L[i+1];
     h += `<div class="pn">${a?`<button data-post="${a.id}">‹ 이전 글<b>${esc(a.title)}</b></button>`:"<span></span>"}${b?`<button data-post="${b.id}">다음 글 ›<b>${esc(b.title)}</b></button>`:"<span></span>"}</div>`; }
   h += `<section class="cm"><h2>${isG?"댓글":"답변"} ${cs.filter(c=>!c.hidden).length}</h2>`;
@@ -335,6 +389,7 @@ document.addEventListener("click", async e => {
       if(r.error) return toast(errMsg(r.error)); if(GUIDE){ const g=GUIDE.find(x=>x.id===S.p); if(g) g.comment_count++; } return render(); }
     case "delc": if(!confirm("이 댓글을 지울까요?")) return; { const r = await SB.from("board_comments").delete().eq("id",+v); if(r.error) return toast(errMsg(r.error)); GUIDE=null; return render(); }
     case "hidec": { const r = await SB.from("board_comments").update({hidden: a.dataset.h==="1"}).eq("id",+v); if(r.error) return toast(errMsg(r.error)); GUIDE=null; return render(); }
+    case "like": return like(a, +v);
     case "report": { const reason = prompt("신고 이유를 짧게 적어 주세요. (광고, 욕설, 개인정보 등)"); if(reason===null) return;
       const r = await SB.from("board_reports").insert({kind:a.dataset.k, target_id:+v, user_id:U.user.id, reason:reason.slice(0,200)});
       return toast(r.error ? (r.error.code==="23505"?"이미 신고했어요.":errMsg(r.error)) : "신고했어요. 운영자가 확인할게요."); }

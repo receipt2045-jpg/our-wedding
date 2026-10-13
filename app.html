@@ -9,6 +9,10 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <style>
+/* 줄바꿈: 제목·버튼은 줄 길이를 고르게, 문단은 마지막 줄에 한두 글자만 남지 않게 */
+h1,h2,h3,h4,button,.btn,th,label,dt,.lead,.kpi .l,.kpi .s{text-wrap:balance}
+p,li,dd,td,.m,.s,small{text-wrap:pretty}
+
 :root{
   --acc:#FFF0A6; --acc2:#FFF6C9; --accs:#FFFCEC; --accl:#F1DC6E; --accd:#D9B300; --acct:#3A3200;
   --r:0px; --rb:0px; --rp:0px; --rbar:0px; --hf:Pretendard,-apple-system,sans-serif; --ink:#1C1F26; --sub:#4F5563; --muted:#8B909B;
@@ -212,6 +216,9 @@ select.sm{border:1px solid var(--line);border-radius:8px;padding:5px 6px;backgro
 
 /* 할일 */
 .stages{display:flex;flex-direction:column;gap:4px}
+.tdgrid{display:grid;grid-template-columns:240px minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:1100px){.tdgrid{grid-template-columns:1fr}.tdgrid .stages{flex-direction:row;flex-wrap:wrap}.tdgrid .stages button{flex:1 1 150px}}
+@media (max-width:960px){.tdgrid .todo .it{flex-wrap:wrap}.tdgrid .todo .tx{flex:1 1 calc(100% - 40px)}.tdgrid .mcell{width:auto;flex:1 1 100%;margin-left:38px}}
 .stages button{display:block;text-align:left;border:1px solid transparent;background:none;border-radius:12px;padding:10px 12px}
 .stages button.on{background:#fff;border:1.5px solid var(--acc)}
 .stages .t{display:flex;justify-content:space-between;font-size:15px;font-weight:600}
@@ -393,6 +400,7 @@ tr.newrow .pickbtn{background:#fff}
 .acct b{color:var(--ink)}
 .acct .dot{display:inline-block;width:7px;height:7px;background:var(--green);margin-right:5px;vertical-align:1px}
 .acct .dot.wait{background:var(--accd)} .acct .dot.bad{background:var(--red)}
+.loginbtn small{display:block;font-size:12px;font-weight:600;color:var(--acct);opacity:.75;margin-top:1px}
 .loginbtn{width:100%;border:1px solid var(--accd);background:var(--acc);padding:10px;font-weight:800;font-size:14px;cursor:pointer;margin-bottom:10px}
 .mtabs .mlogin{flex:0 0 auto;border:1px solid var(--accd);background:var(--acc);padding:7px 14px;font-size:15px;font-weight:800}
 .invite{display:flex;gap:6px;margin:6px 0}
@@ -1371,7 +1379,7 @@ function vTodo(){
       <div class="tx"><span>${t[2]}</span><small>${t[1]}${a?" · 냈어요 기록돼서 자동 완료":isPlanned(t)?" · 낼 예정 지출 있음":""}${af&&!d?` · ${af}`:""}</small>${S.mode==="mo"?moneyCell(t,true):""}</div>
       ${S.mode==="pc"?moneyCell(t,false):""}</div>`}).join("")}</div>`;
   const head=`<div class="ph"><h1>할 일</h1><p>체크하면서 옆에서 <b>예산·쓴 돈</b>까지 같이 봐요. 예산 칸을 고치면 예산 탭에도 그대로 반영돼요. 전체 ${TODO.length}개 중 ${doneN}개 끝.</p></div>`;
-  if(S.mode==="pc") return head+`<div style="display:grid;grid-template-columns:240px minmax(0,1fr);gap:16px;align-items:start"><div class="stages">${STAGES.map(stageBtn).join("")}</div><div>${sumCard}${list}</div></div>${foot()}`;
+  if(S.mode==="pc") return head+`<div class="tdgrid"><div class="stages">${STAGES.map(stageBtn).join("")}</div><div>${sumCard}${list}</div></div>${foot()}`;
   return head+`<div class="pills">${STAGES.map(s=>{const it=TODO.filter(t=>t[0]===s),d=it.filter(isDone).length;return `<button class="${s===cur?'on':''}" data-act="stage" data-v="${s}">${s}<small>${d}/${it.length}</small></button>`}).join("")}</div>${sumCard}${list}${fab()}${foot()}`;
 }
 
@@ -1561,7 +1569,7 @@ async function adminCheck(){try{if(!SB||!CL.user||CL.user.email!=="receipt2045@g
   CL.newInq=a.count||0;CL.newRep=b.count||0;render()}catch(e){}}
 function acctBox(){
   if(CL.id)return `<div class="acct"><span class="dot ${/실패/.test(CL.state)?"bad":/중/.test(CL.state)?"wait":""}"></span><b>${esc(userName())}</b><br><span id="cloudState">${esc(CL.state||"저장됨")}</span> · <button class="linkb" data-go="set">계정</button></div>`;
-  if(SB)return `<button class="loginbtn" data-act="login">로그인하고 둘이 같이 쓰기</button><div class="acct">지금은 이 브라우저에만 저장돼요</div>`;
+  if(SB)return `<button class="loginbtn" data-act="login">둘이 같이 쓰기<small>구글로 로그인</small></button><div class="acct">지금은 이 브라우저에만 저장돼요</div>`;
   return "기록은 이 브라우저에만 저장돼요";
 }
 function acctCard(){
@@ -1860,6 +1868,8 @@ function addHallFromList(){
     render();window.scrollTo(0,0)};
   document.body.appendChild(sc);
 }
+// ?go=sdm 처럼 들어오면 그 탭부터 보여줌 (가이드 글의 바로가기 버튼용)
+try{const u=new URL(location.href),g=u.searchParams.get("go");if(g&&NAV.some(n=>n[0]===g)){S.view=g;u.searchParams.delete("go");history.replaceState(null,"",u.pathname+u.search+u.hash)}}catch(e){}
 render();
 if(window.PERKS)PERKS.load().then(()=>render());
 addHallFromList();
