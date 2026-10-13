@@ -3,311 +3,279 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>OUR WEDDING · 결혼 비용, 남들은 얼마 쓸까</title>
-<meta name="description" content="우리 지역 예비부부는 결혼에 얼마를 쓸까요? 한국소비자원 실제 계약 평균과 듀오 결혼비용 보고서로 예식장·스드메·혼수·신혼여행 비용을 한눈에 비교해요.">
-<meta property="og:title" content="OUR WEDDING · 결혼 비용, 남들은 얼마 쓸까">
-<meta property="og:description" content="지역을 고르면 예식장·스드메 실제 계약 평균과 항목별 결혼 비용이 바로 나와요.">
+<title>OUR WEDDING · 막막한 결혼 준비, 한 번에</title>
+<meta name="description" content="남들은 결혼에 얼마 쓰는지, 무엇부터 어떤 순서로 하는지, 어느 웨딩홀이 괜찮은지. 흩어진 결혼 준비 정보를 한곳에 모은 무료 결혼 가계부.">
+<meta property="og:title" content="OUR WEDDING · 막막한 결혼 준비, 한 번에">
+<meta property="og:description" content="남들은 얼마 쓰는지, 어떤 순서로 하는지. 흩어진 결혼 준비 정보를 한곳에서 봐요.">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#FFF0A6">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<script>
+  // 예전 첫 화면(평균 비용)을 ?r=지역 으로 공유한 링크는 결혼 비용 페이지로 보냄
+  (function(){ var q = location.search; if (/[?&]r=/.test(q)) location.replace("cost.html" + q); })();
+</script>
 <style>
-:root{
-  --acc:#FFF0A6; --acc2:#FFF6C9; --accs:#FFFCEC; --accl:#F1DC6E; --accd:#D9B300; --acct:#3A3200;
-  --ink:#1C1F26; --sub:#4F5563; --muted:#8B909B; --line:#EEEEEE; --track:#F2F2F2; --red:#DC4449; --green:#1C9A57;
-}
+:root{--acc:#FFF0A6;--acc2:#FFF6C9;--accs:#FFFCEC;--accl:#F1DC6E;--accd:#D9B300;--acct:#3A3200;--ink:#1C1F26;--sub:#4F5563;--muted:#8B909B;--line:#EEEEEE;--track:#F2F2F2}
 *,*::before,*::after{box-sizing:border-box;border-radius:0!important}
 html{-webkit-text-size-adjust:100%}
-body{margin:0;background:#fff;color:var(--ink);font-family:Pretendard,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-size:15px;line-height:1.55;font-variant-numeric:tabular-nums;word-break:keep-all}
-button,input{font:inherit;color:inherit}
-button{cursor:pointer}
+body{margin:0;background:#fff;color:var(--ink);font-family:Pretendard,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-size:16px;line-height:1.6;word-break:keep-all;font-variant-numeric:tabular-nums}
 a{color:inherit}
 .wrap{max-width:1040px;margin:0 auto;padding:0 16px}
-
-/* 머리 */
-header{border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff;z-index:10}
-header .wrap{display:flex;justify-content:space-between;align-items:center;height:58px}
-.logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:16px;letter-spacing:.05em;text-decoration:none}
+header{border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(255,255,255,.96);z-index:10}
+header .wrap{display:flex;justify-content:space-between;align-items:center;height:58px;gap:8px}
+.logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:16px;letter-spacing:.05em;text-decoration:none;white-space:nowrap}
 .logo i{width:20px;height:20px;background:var(--acc);border:1px solid var(--accl);display:inline-block}
-.soon{font-size:13px;color:var(--sub);border:1px solid var(--line);padding:4px 10px;white-space:nowrap}
-.soon.go{background:var(--acc);border-color:var(--accl);color:var(--acct);font-weight:700;text-decoration:none;padding:7px 12px}
-@media (max-width:480px){.soon .lg{display:none}}
+.nav{display:flex;gap:6px}
+.nav a{font-size:13px;color:var(--sub);border:1px solid var(--line);padding:6px 10px;text-decoration:none;white-space:nowrap}
+.nav a.go{background:var(--acc);border-color:var(--accl);color:var(--acct);font-weight:700}
+@media (max-width:620px){.nav .lg{display:none}}
 
-main{padding:28px 0 20px}
-h1{font-size:15px;color:var(--sub);font-weight:600;margin:0 0 14px}
-h2{font-size:19px;margin:0 0 4px;letter-spacing:-.3px}
-.lead{color:var(--sub);font-size:14px;margin:0 0 16px}
-.card{border:1px solid var(--line);background:#fff;padding:22px}
-.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
-@media (max-width:860px){.grid2{grid-template-columns:1fr}}
-section{margin-top:40px}
+.btn{display:inline-block;text-decoration:none;font-weight:700;font-size:16px;padding:14px 22px;border:1px solid var(--ink)}
+.btn.y{background:var(--acc);border-color:var(--accd);color:var(--acct)}
+.btn.w{background:#fff}
+.more{display:inline-block;margin-top:14px;font-size:15px;font-weight:700;text-decoration:none;border-bottom:2px solid var(--accd);padding-bottom:1px}
+.mark{background:linear-gradient(transparent 58%,var(--acc) 58%)}
+.eyebrow{font-size:14px;font-weight:700;color:var(--acct);background:var(--acc2);display:inline-block;padding:3px 9px;margin-bottom:14px}
 
 /* 첫 화면 */
-.headline{font-size:26px;font-weight:700;line-height:1.5;letter-spacing:-.6px;margin:0}
-@media (max-width:480px){.headline{font-size:22px}}
-.pick{border:0;background:none;padding:0 2px;border-bottom:3px solid var(--accd);font-weight:800;font-size:inherit;letter-spacing:inherit}
-.pick::after{content:" ▾";font-size:.55em;color:var(--muted);vertical-align:middle}
-.big{font-size:56px;font-weight:800;letter-spacing:-2px;line-height:1.1;margin:10px 0 6px}
-.big small{font-size:24px;letter-spacing:-.5px;margin-left:2px}
-@media (max-width:480px){.big{font-size:46px}}
-.vs{font-size:15px;margin:0 0 14px;min-height:24px}
-.vs b.up{color:var(--red)} .vs b.dn{color:var(--green)}
-.toggle{display:inline-flex;border:1px solid var(--line)}
-.toggle button{border:0;background:#fff;padding:8px 14px;font-size:14px;color:var(--sub)}
-.toggle button.on{background:var(--acc);color:var(--acct);font-weight:700}
-.note{font-size:13px;color:var(--muted);margin-top:16px;line-height:1.6}
-.note b{color:var(--sub);font-weight:600}
+.hero{padding:56px 0 48px;border-bottom:1px solid var(--line)}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:40px;align-items:center}
+@media (max-width:860px){.hero{padding:36px 0}.hero .wrap{grid-template-columns:1fr;gap:28px}}
+.hero h1{font-size:44px;line-height:1.3;letter-spacing:-1.4px;margin:0 0 18px;font-weight:800}
+@media (max-width:480px){.hero h1{font-size:33px;letter-spacing:-1px}}
+.hero p.sub{font-size:17px;color:var(--sub);margin:0 0 26px;max-width:520px}
+.ctas{display:flex;gap:8px;flex-wrap:wrap}
+.free{font-size:13px;color:var(--muted);margin-top:12px}
+.glance{border:1px solid var(--ink);background:#fff}
+.glance .hd{background:var(--ink);color:#fff;font-size:13px;font-weight:700;padding:9px 16px;letter-spacing:.03em}
+.glance a{display:grid;grid-template-columns:1fr auto;gap:2px 12px;align-items:baseline;padding:15px 16px;border-bottom:1px solid var(--line);text-decoration:none}
+.glance a:last-child{border-bottom:0}
+.glance a:hover{background:var(--accs)}
+.glance .q{font-size:14px;color:var(--sub)}
+.glance .v{font-size:24px;font-weight:800;letter-spacing:-.6px;grid-row:span 2;align-self:center;white-space:nowrap}
+.glance .v small{font-size:14px;font-weight:600;margin-left:1px}
+.glance .s{font-size:12px;color:var(--muted)}
 
-/* 항목 막대 */
-.item{padding:12px 0;border-bottom:1px solid var(--line)}
-.item:last-child{border-bottom:0}
-.item .t{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
-.item .n{font-size:16px;font-weight:600}
-.item .v{font-size:17px;font-weight:800;white-space:nowrap}
-.item .s{font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:8px;margin-top:6px}
-.bar{height:10px;background:var(--track);margin-top:8px}
-.bar i{display:block;height:100%;background:var(--acc);border-right:2px solid var(--accd)}
-.src{white-space:nowrap}
-.src.local{color:var(--acct);background:var(--acc2);padding:0 5px}
+section.blk{padding:64px 0;border-bottom:1px solid var(--line)}
+@media (max-width:620px){section.blk{padding:44px 0}}
+.blk h2{font-size:30px;letter-spacing:-.8px;line-height:1.35;margin:0 0 10px}
+@media (max-width:480px){.blk h2{font-size:25px}}
+.blk .lead{color:var(--sub);font-size:16px;margin:0 0 26px;max-width:620px}
+.num{font-size:13px;font-weight:800;color:var(--muted);letter-spacing:.08em;margin-bottom:6px}
+.two{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:40px;align-items:start}
+@media (max-width:860px){.two{grid-template-columns:1fr;gap:20px}}
 
-/* 예산 나눠보기 */
-.chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.chips button{border:1px solid var(--line);background:#fff;padding:8px 14px;font-size:15px}
-.chips button.on{background:var(--acc);border-color:var(--accl);color:var(--acct);font-weight:700}
-.chips label{display:flex;align-items:center;gap:6px;border:1px solid var(--line);padding:0 10px;height:40px}
-.chips input{border:0;outline:0;width:90px;text-align:right;font-weight:700;background:transparent}
-.split{margin-top:18px;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:0;border-top:1px solid var(--line);border-left:1px solid var(--line)}
-.split div{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:12px 14px}
-.split div span{display:block;font-size:13px;color:var(--sub)}
-.split div b{font-size:19px}
-.empty{color:var(--muted);font-size:14px;margin-top:16px}
+/* 1. 얼마 */
+.big{font-size:64px;font-weight:800;letter-spacing:-2.5px;line-height:1}
+.big small{font-size:24px;letter-spacing:-.5px;margin-left:3px}
+@media (max-width:480px){.big{font-size:50px}}
+.bignote{font-size:14px;color:var(--muted);margin-top:10px}
+.bars .it{display:grid;grid-template-columns:72px minmax(0,1fr) 74px;gap:10px;align-items:center;padding:7px 0}
+.bars .n{font-size:15px;font-weight:600}
+.bars .b{height:14px;background:var(--track)}
+.bars .b i{display:block;height:100%;background:var(--acc);border-right:2px solid var(--accd)}
+.bars .v{text-align:right;font-weight:800;font-size:15px;white-space:nowrap}
 
-/* 표 */
-table{border-collapse:collapse;width:100%;font-size:15px}
-th,td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left}
-th{font-size:13px;color:var(--muted);font-weight:600}
-td.num,th.num{text-align:right;white-space:nowrap}
-td.hl{background:var(--accs);font-weight:700}
-.zonechips{margin-bottom:14px}
+/* 2. 순서 */
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--ink);border-left:1px solid var(--line)}
+@media (max-width:860px){.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.steps{grid-template-columns:1fr}}
+.st{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:16px 16px 18px;position:relative}
+.st .w{font-size:13px;font-weight:800;color:var(--acct);background:var(--acc);display:inline-block;padding:2px 8px}
+.st .i{font-size:12px;color:var(--muted);margin-left:6px}
+.st ul{margin:10px 0 0;padding:0;list-style:none}
+.st li{font-size:15px;padding:3px 0 3px 14px;position:relative}
+.st li::before{content:"";position:absolute;left:0;top:12px;width:6px;height:6px;background:var(--accd)}
+.st a{font-size:13px;color:var(--sub);display:inline-block;margin-top:8px}
 
-/* 달별 */
-.months{display:flex;align-items:flex-end;gap:6px;height:190px;margin-top:10px;overflow-x:auto;padding-bottom:4px}
-.months .m{flex:1 0 34px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
-.months .m i{display:block;width:100%;max-width:34px;background:var(--acc2);border:1px solid var(--accl)}
-.months .m.lo i{background:var(--acc);border-color:var(--accd)}
-.months .m em{font-style:normal;font-size:11px;color:var(--sub);margin-bottom:3px}
-.months .m span{font-size:11px;color:var(--muted);margin-top:4px;white-space:nowrap}
-.months .m.lo em{color:var(--acct);font-weight:800}
+/* 3. 웨딩홀 */
+.hexw{display:flex;justify-content:center}
+.hexw svg{width:100%;max-width:340px;height:auto}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 4px}
+.chips span{font-size:14px;border:1px solid var(--line);padding:5px 10px}
 
-/* 가계부 안내 */
-.cta{background:var(--accs);border:1px solid var(--accl);padding:26px}
-.cta h2{font-size:21px}
-.cta ul{margin:10px 0 0;padding-left:18px;color:var(--sub)}
-.cta li{margin:4px 0}
-.gobtn{display:inline-block;margin-top:18px;background:var(--acc);border:1px solid var(--accd);color:var(--acct);font-weight:800;font-size:16px;padding:13px 22px;text-decoration:none}
+/* 4. 가이드 */
+.gl{border-top:1px solid var(--ink)}
+.gl a{display:flex;justify-content:space-between;gap:12px;align-items:baseline;padding:14px 4px;border-bottom:1px solid var(--line);text-decoration:none}
+.gl a:nth-child(even){background:#FAFAFA}
+.gl a:hover{background:var(--accs)}
+.gl b{font-size:16px;font-weight:600}
+.gl span{font-size:13px;color:var(--muted);white-space:nowrap}
+.qa{background:var(--accs);border:1px solid var(--accl);padding:20px;margin-top:18px}
+.qa b{font-size:17px}
+.qa p{margin:6px 0 12px;color:var(--sub);font-size:15px}
 
-footer{border-top:1px solid var(--line);margin-top:48px;padding:22px 0 40px;font-size:13px;color:var(--muted);line-height:1.8}
+/* 5. 가계부 */
+.feats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border-top:1px solid var(--line);border-left:1px solid var(--line)}
+@media (max-width:860px){.feats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.feats{grid-template-columns:1fr}}
+.ft{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:20px 18px}
+.ft b{display:block;font-size:17px;margin-bottom:4px}
+.ft b::before{content:"";display:inline-block;width:10px;height:10px;background:var(--acc);border:1px solid var(--accd);margin-right:8px;vertical-align:1px}
+.ft p{margin:0;font-size:14px;color:var(--sub)}
+
+.src{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:760px){.src{grid-template-columns:1fr}}
+.src div{border:1px solid var(--line);padding:16px}
+.src b{display:block;font-size:15px;margin-bottom:4px}
+.src p{margin:0;font-size:14px;color:var(--sub)}
+
+.end{background:var(--acc);padding:56px 0;text-align:center;border-bottom:1px solid var(--accl)}
+.end h2{font-size:30px;letter-spacing:-.8px;margin:0 0 8px;color:var(--acct)}
+.end p{margin:0 0 22px;color:var(--acct)}
+.end .btn{background:var(--ink);color:#fff;border-color:var(--ink)}
+footer{padding:22px 0 40px;font-size:13px;color:var(--muted);line-height:1.8}
 footer a{color:var(--sub)}
-
-/* 지역 고르기 창 */
-#ov{position:fixed;inset:0;background:rgba(20,22,28,.4);display:none;z-index:50;align-items:center;justify-content:center;padding:16px}
-#ov.open{display:flex}
-.dlg{background:#fff;width:min(520px,100%);max-height:90vh;overflow:auto;padding:22px}
-.dlg h3{margin:0 0 14px;font-size:18px}
-.opts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
-@media (max-width:420px){.opts{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.opts button{border:1px solid var(--line);background:#fff;padding:12px 6px;font-size:15px}
-.opts button.on{background:var(--acc);border-color:var(--accd);font-weight:700}
-.opts button small{display:block;font-size:12px;color:var(--muted);font-weight:400}
 </style>
 </head>
 <body>
 <header><div class="wrap">
   <a class="logo" href="./"><i></i>OUR WEDDING</a>
-  <div style="display:flex;gap:6px"><a class="soon" href="halls.html" style="text-decoration:none">웨딩홀<span class="lg"> 리스트</span></a><a class="soon go" href="app.html"><span class="lg">우리 </span>결혼 가계부 쓰기 ›</a></div>
+  <div class="nav"><a href="cost.html" class="lg">결혼 비용</a><a href="halls.html" class="lg">웨딩홀</a><a href="board.html">가이드</a><a href="board.html?b=qna" class="lg">묻고 답하기</a><a href="app.html" class="go">가계부</a></div>
 </div></header>
 
-<main class="wrap">
-  <h1>결혼 비용, 남들은 얼마 쓸까</h1>
-
-  <div class="grid2">
-    <div class="card">
-      <p class="headline"><button class="pick" id="pickRegion">전국</button>에서 결혼하면<br>평균</p>
-      <div class="big"><span id="total">0</span><small>만원</small></div>
-      <p class="vs" id="vs"></p>
-      <div class="toggle" role="group" aria-label="신혼집 포함 여부">
-        <button id="hOff" class="on">신혼집 빼고</button><button id="hOn">신혼집 포함</button>
-      </div>
-      <p class="note" id="note"></p>
-    </div>
-    <div class="card">
-      <h2>어디에 얼마나 쓸까</h2>
-      <p class="lead" style="margin-bottom:4px">큰 돈부터 차례로 보여줘요.</p>
-      <div id="items"></div>
-    </div>
+<section class="hero"><div class="wrap">
+  <div>
+    <div class="eyebrow">결혼 준비, 무료로 한곳에서</div>
+    <h1>막막한 결혼 준비,<br><span class="mark">여기서 한 번에</span> 봐요</h1>
+    <p class="sub">카페·블로그·박람회에 흩어진 결혼 정보를 한곳에 모았어요. 남들은 얼마 쓰는지, 무엇부터 어떤 순서로 하는지, 어느 웨딩홀이 괜찮은지 실제 통계와 경험으로 정리했어요.</p>
+    <div class="ctas"><a class="btn y" href="app.html">우리 결혼 가계부 시작하기</a><a class="btn w" href="cost.html">남들은 얼마 쓸까</a></div>
+    <div class="free">회원가입 없이 바로 써요 · 돈 받지 않아요</div>
   </div>
+  <div class="glance" aria-label="한눈에 보기">
+    <div class="hd">결혼 준비 한눈에</div>
+    <a href="cost.html"><span class="q">전국 평균 결혼 비용</span><span class="v"><span id="gTotal">-</span><small>만원</small></span><span class="s">신혼집 빼고 · 소비자원·듀오 2026</span></a>
+    <a href="app.html"><span class="q">결혼 준비 할 일</span><span class="v">120<small>개</small></span><span class="s">1년 전부터 입주까지 10단계</span></a>
+    <a href="halls.html"><span class="q">하객 후기로 본 웨딩홀</span><span class="v">154<small>곳</small></span><span class="s">서울·경기·인천</span></a>
+    <a href="board.html"><span class="q">결혼 준비 가이드</span><span class="v">88<small>편</small></span><span class="s">상견례부터 혼수까지</span></a>
+  </div>
+</div></section>
 
-  <section>
-    <h2>우리 예산으로 나눠보기</h2>
-    <p class="lead">결혼 예산을 고르면 평균 비율대로 항목마다 얼마쯤 쓰면 되는지 나눠드려요. 신혼집은 빼고 계산해요.</p>
-    <div class="card">
-      <div class="chips" id="budgetChips">
-        <button data-b="3000">3천만원</button><button data-b="5000">5천만원</button><button data-b="7000">7천만원</button><button data-b="10000">1억원</button>
-        <label>직접 <input id="budgetIn" inputmode="numeric" placeholder="0" aria-label="예산 직접 입력(만원)"> 만원</label>
-      </div>
-      <div id="split"></div>
+<section class="blk"><div class="wrap two">
+  <div>
+    <div class="num">01 · 얼마나</div>
+    <h2>남들은 결혼에<br>얼마 쓸까</h2>
+    <p class="lead">한국소비자원이 모은 실제 계약 금액과 최근 2년 안에 결혼한 1,000쌍 조사로 계산했어요. 지역을 고르면 그 지역 평균으로 바뀌어요.</p>
+    <div class="big"><span id="bTotal">-</span><small>만원</small></div>
+    <div class="bignote">전국 평균 · 신혼집 빼고</div>
+    <a class="more" href="cost.html">우리 지역 평균 보기 →</a>
+  </div>
+  <div class="bars" id="bars" aria-label="항목별 평균 비용"></div>
+</div></section>
+
+<section class="blk"><div class="wrap">
+  <div class="num">02 · 무엇부터</div>
+  <h2>어떤 순서로 하면 될까</h2>
+  <p class="lead">결혼 준비는 웨딩홀 계약이 첫 단추예요. 날짜가 정해지면 나머지가 그 날짜를 기준으로 줄줄이 따라와요. 가계부 할 일 탭에 120개가 이 순서대로 들어 있어요.</p>
+  <div class="steps">
+    <div class="st"><span class="w">가장 먼저</span><span class="i">1년 이상 전</span><ul><li>양가에 결혼 허락 받기</li><li>웨딩홀 투어·계약</li><li>신혼집 알아보기</li></ul><a href="board.html?s=g8">왜 웨딩홀부터일까 ›</a></div>
+    <div class="st"><span class="w">D-365</span><span class="i">1년 전</span><ul><li>양가 첫인사</li><li>스드메·본식 스냅 계약</li><li>웨딩링 고르기</li></ul><a href="board.html?s=g11">첫인사 선물은 ›</a></div>
+    <div class="st"><span class="w">5~6개월 전</span><ul><li>상견례</li><li>드레스 투어·웨딩 촬영</li><li>신혼여행 예약</li></ul><a href="board.html?s=g19">상견례 식당 고르기 ›</a></div>
+    <div class="st"><span class="w">4개월 전</span><ul><li>청첩장 주문</li><li>신랑 예복 맞추기</li><li>혼주 한복·메이크업 예약</li></ul><a href="board.html?s=g24">청첩장, 몇 장 뽑을까 ›</a></div>
+    <div class="st"><span class="w">2~3개월 전</span><ul><li>청첩장 모임</li><li>하객 버스 대절</li><li>예단 준비</li></ul><a href="board.html?s=g38">하객 수 예상하는 법 ›</a></div>
+    <div class="st"><span class="w">D-30</span><ul><li>웨딩홀 뷔페 시식</li><li>본식 드레스 가봉</li><li>식순·음악 정하기</li></ul><a href="board.html?s=g45">드레스 추가금 막기 ›</a></div>
+    <div class="st"><span class="w">D-7</span><ul><li>모든 예약 다시 확인</li><li>헬퍼비·사례비 봉투 준비</li><li>본식 네일</li></ul><a href="board.html?s=g80">헬퍼비는 현금일까 ›</a></div>
+    <div class="st"><span class="w">본식 후</span><ul><li>식대 정산</li><li>감사 인사·답례품</li><li>도와준 사람 답례</li></ul><a href="board.html?s=g83">답례 금액 정하기 ›</a></div>
+    <div class="st"><span class="w">입주 전</span><ul><li>가전·가구 사기</li><li>인테리어</li><li>이사</li></ul><a href="board.html?s=g84">가전 싸게 사는 법 ›</a></div>
+  </div>
+  <a class="more" href="app.html">우리 예식일로 할 일 보기 →</a>
+</div></section>
+
+<section class="blk"><div class="wrap two">
+  <div class="hexw" aria-hidden="true">
+    <svg viewBox="-170 -150 340 300" role="img">
+      <g fill="none" stroke="#EEEEEE" stroke-width="1">
+        <polygon points="0,-110 95.3,-55 95.3,55 0,110 -95.3,55 -95.3,-55"/>
+        <polygon points="0,-73 63.5,-36.7 63.5,36.7 0,73 -63.5,36.7 -63.5,-36.7"/>
+        <polygon points="0,-37 31.8,-18.3 31.8,18.3 0,37 -31.8,18.3 -31.8,-18.3"/>
+        <path d="M0,-110V110M95.3,-55L-95.3,55M95.3,55L-95.3,-55"/>
+      </g>
+      <polygon points="0,-90 82,-47 60,35 0,96 -72,42 -52,-30" fill="#FFF0A6" fill-opacity=".75" stroke="#D9B300" stroke-width="2"/>
+      <g font-family="Pretendard,sans-serif" font-size="14" font-weight="700" fill="#1C1F26" text-anchor="middle">
+        <text x="0" y="-122">가격</text><text x="122" y="-58">홀</text><text x="122" y="70">음식</text>
+        <text x="0" y="134">주차</text><text x="-122" y="70">교통</text><text x="-124" y="-58">하객 편의</text>
+      </g>
+    </svg>
+  </div>
+  <div>
+    <div class="num">03 · 어디서</div>
+    <h2>웨딩홀은 하객 후기로<br>먼저 걸러요</h2>
+    <p class="lead">하객이 기억하는 건 드레스보다 밥과 주차예요. 서울·경기·인천 웨딩홀 154곳의 하객 후기를 여섯 가지로 나눠 육각형으로 보여 드려요. 사진·지도·보증 인원·식대도 같이 봐요.</p>
+    <div class="chips"><span>후기 육각형</span><span>대표 사진·지도</span><span>상담 때 확인할 점</span><span>후기 원문 링크</span></div>
+    <a class="more" href="halls.html">웨딩홀 리스트 보기 →</a>
+  </div>
+</div></section>
+
+<section class="blk"><div class="wrap two">
+  <div>
+    <div class="num">04 · 모르는 것</div>
+    <h2>처음 보는 말,<br>처음 해 보는 일</h2>
+    <p class="lead">베뉴, 촬드, 헬퍼비, 보증 인원… 결혼 준비 순서대로 정리한 가이드 88편이 있어요. 글마다 댓글로 물어볼 수 있고, 따로 질문을 올리면 먼저 해 본 사람이 답해 줘요.</p>
+    <a class="more" href="board.html">가이드 전체 보기 →</a>
+  </div>
+  <div>
+    <div class="gl">
+      <a href="board.html?s=g0"><b>결혼 준비 순서별 웨딩 용어 사전</b><span>웨딩 용어</span></a>
+      <a href="board.html?s=g8"><b>결혼 준비 뭐부터 해야 할까?</b><span>가장 먼저</span></a>
+      <a href="board.html?s=g35"><b>최소 보증 인원은 몇 명이 좋나요?</b><span>웨딩홀</span></a>
+      <a href="board.html?s=g42"><b>스튜디오 추가금 종류와 평균 비용</b><span>스드메</span></a>
+      <a href="board.html?s=g4"><b>결혼 전 돈 이야기 확실하게 하는 방법</b><span>가장 먼저</span></a>
     </div>
-  </section>
+    <div class="qa"><b>묻고 답하기</b><p>“보증 인원 250명이면 많은 걸까요?” 막히는 건 바로 물어보세요. 구글로 로그인하고 닉네임만 정하면 돼요.</p><a class="btn y" style="font-size:15px;padding:10px 16px" href="board.html?b=qna">질문 보러 가기</a></div>
+  </div>
+</div></section>
 
-  <section>
-    <h2>예식장 자세히</h2>
-    <p class="lead">한국소비자원이 모은 실제 계약의 <b>중간값</b>이에요. 딱 가운데 있는 계약 금액이라 너무 비싸거나 싼 곳에 덜 흔들려요.</p>
-    <div class="grid2">
-      <div class="card">
-        <div class="chips zonechips" id="zoneChips"></div>
-        <table><tbody id="zoneTable"></tbody></table>
-      </div>
-      <div class="card">
-        <h2 style="font-size:16px">추가로 드는 것들</h2>
-        <p class="lead" style="margin-bottom:6px">예식장에서 따로 고르는 항목이에요. 단위 만원.</p>
-        <table><thead><tr><th>항목</th><th class="num" id="optHead">전국</th><th class="num">전국</th></tr></thead><tbody id="optTable"></tbody></table>
-      </div>
-    </div>
-  </section>
+<section class="blk"><div class="wrap">
+  <div class="num">05 · 끝까지</div>
+  <h2>준비하는 동안은 가계부 하나로</h2>
+  <p class="lead">위에서 본 평균·순서·웨딩홀이 가계부 안에서 그대로 이어져요. 둘이 같이 쓰면 누가 얼마 냈는지도 다툴 일이 없어요.</p>
+  <div class="feats">
+    <div class="ft"><b>예산이 저절로 채워져요</b><p>지역을 고르면 항목마다 평균 금액이 들어가요. 우리 상황에 맞게 고치기만 하면 돼요.</p></div>
+    <div class="ft"><b>둘이 같이 써요</b><p>구글로 로그인하고 초대 링크를 보내면 폰·PC 어디서든 같은 가계부를 봐요.</p></div>
+    <div class="ft"><b>달마다 필요한 현금</b><p>계약금·잔금·카드 할부를 적어 두면 어느 달에 얼마가 나가는지 한눈에 보여요.</p></div>
+    <div class="ft"><b>스드메 견적 비교</b><p>소비자원 실제 가격으로 우리 지역 스드메 견적이 비싼지 싼지 바로 알 수 있어요.</p></div>
+    <div class="ft"><b>웨딩홀 상담 모드</b><p>정신없는 상담 중에도 금액·조건을 빠르게 적고, 홀끼리 육각형으로 비교해요.</p></div>
+    <div class="ft"><b>하객·축의금</b><p>하객 명단으로 보증 인원을 가늠하고, 받은 축의금과 답례까지 기록해요.</p></div>
+  </div>
+</div></section>
 
-  <section>
-    <h2>언제 결혼하면 쌀까</h2>
-    <p class="lead">예식 달마다 결혼식장 계약 금액의 중간값이에요. 가장 싼 달을 진하게 표시했어요. 먼 달일수록 아직 계약이 적어서 달라질 수 있어요.</p>
-    <div class="card"><div class="months" id="months"></div></div>
-  </section>
+<section class="blk"><div class="wrap">
+  <div class="num">어디서 온 숫자인지</div>
+  <h2 style="font-size:24px">출처를 밝혀요</h2>
+  <div class="src">
+    <div><b>한국소비자원 참가격</b><p>지역별 예식장·스드메 실제 계약 금액 (<span id="asKca">2026년 8월</span> 기준)</p></div>
+    <div><b>듀오 2026 결혼비용 보고서</b><p>최근 2년 안에 결혼한 1,000명 조사 — 혼수·신혼여행·예단·예물</p></div>
+    <div><b>하객 후기·업체 홈페이지</b><p>웨딩홀 후기는 요약과 원문 링크를 함께, 사진은 각 업체 홈페이지 대표 이미지</p></div>
+  </div>
+</div></section>
 
-  <section>
-    <div class="cta">
-      <h2>우리 결혼 가계부, 지금 바로 써 보세요</h2>
-      <ul>
-        <li>회원가입 없이 바로 시작해요. 항목마다 예산을 적고 돈 낼 때마다 한 줄씩 적으면 남은 돈이 바로 계산돼요.</li>
-        <li>계약금·잔금은 "낼 예정"으로 적어 두면 언제 얼마 나가는지 챙겨줘요.</li>
-        <li>하객 명단·보증 인원·축의금, 시기별 할 일 120개, 웨딩홀 비교표까지 한곳에서 관리해요.</li>
-      </ul>
-      <a class="gobtn" href="app.html">가계부 쓰러 가기</a>
-      <p style="font-size:13px;color:var(--muted);margin:12px 0 0">지금은 적은 내용이 쓰는 기기의 브라우저에만 저장돼요. 백업 파일로 다른 기기에 옮길 수 있어요.</p>
-    </div>
-  </section>
-</main>
+<section class="end"><div class="wrap">
+  <h2>결혼 준비, 오늘 첫 줄부터</h2>
+  <p>예식일과 지역만 고르면 예산과 할 일이 바로 채워져요.</p>
+  <a class="btn" href="app.html">우리 결혼 가계부 시작하기</a>
+</div></section>
 
 <footer><div class="wrap">
-  <div><b>출처</b></div>
-  <div>· 예식장·스드메·지역별 금액: <a id="srcKca" target="_blank" rel="noopener">한국소비자원 참가격 결혼서비스 통계</a> (<span id="asKca"></span> 기준, 옵션 제외)</div>
-  <div>· 혼수·신혼여행·예단·예물·이바지·신혼집: <a id="srcDuo" target="_blank" rel="noopener">듀오 2026 결혼비용 보고서</a> (최근 2년 내 결혼한 1,000명 조사)</div>
-  <div style="margin-top:8px">평균과 중간값은 참고용이에요. 실제 계약 금액은 업체·날짜·옵션에 따라 달라요.</div>
-  <div style="margin-top:8px">© OUR WEDDING · <a href="perks.html">혜택</a> · <a href="partner.html">광고·제휴 신청</a> · <a href="privacy.html">개인정보처리방침</a></div>
-  <div>운영 마이머니플랜 · 사업자등록번호 223-29-01904 · 문의 <a href="mailto:receipt2045@gmail.com">receipt2045@gmail.com</a></div>
+  평균과 중간값은 참고용이에요. 실제 계약 금액은 업체·날짜·옵션에 따라 달라요.<br>
+  © OUR WEDDING · <a href="cost.html">결혼 비용</a> · <a href="board.html">가이드</a> · <a href="perks.html">혜택</a> · <a href="partner.html">광고·제휴 신청</a> · <a href="privacy.html">개인정보처리방침</a><br>
+  운영 마이머니플랜 · 사업자등록번호 223-29-01904 · 문의 <a href="mailto:receipt2045@gmail.com">receipt2045@gmail.com</a>
 </div></footer>
-
-<div id="ov" role="dialog" aria-modal="true"><div class="dlg" id="dlg"></div></div>
 
 <script src="data.js"></script>
 <script>
 (function(){
-  const D = window.OW;
-  const S = { r: "all", house: false, budget: null, zone: null };
-  const fmt = n => Math.round(n).toLocaleString("ko-KR");
-  const $ = id => document.getElementById(id);
-  const reg = id => D.regions.find(r => r.id === (id || S.r)) || D.regions[0];
-
-  // 주소에 ?r=지역 을 붙이면 그 지역으로 열림 (공유용)
-  try { const q = new URLSearchParams(location.search).get("r"); if (q && D.regions.some(r => r.id === q)) S.r = q; } catch (e) {}
-
-  function items(r) {
-    const list = [
-      { name: "예식장", sub: "식대 " + fmt(r.meal) + " · 대관료 " + fmt(r.rental) + (r.deco ? " · 기본 장식 " + fmt(r.deco) : ""), v: r.meal + r.rental + r.deco, local: true },
-      { name: "스드메", sub: "스튜디오·드레스·메이크업", v: r.sdm, local: true }
-    ].concat(D.national.map(n => ({ name: n.name, sub: n.sub, v: n.v, local: false })));
-    if (S.house) list.push({ name: "신혼집", sub: D.houseName[r.house] + " 평균", v: D.house[r.house], local: r.house !== "all", house: true });
-    return list.sort((a, b) => b.v - a.v);
-  }
-  const sumOf = r => items(r).reduce((t, x) => t + x.v, 0);
-
-  function renderTop() {
-    const r = reg(), list = items(r), total = sumOf(r);
-    $("pickRegion").textContent = r.name;
-    $("total").textContent = fmt(total);
-    if (r.id === "all") $("vs").innerHTML = "지역을 고르면 그 지역 실제 계약 평균으로 바뀌어요.";
-    else {
-      const d = total - sumOf(reg("all"));
-      $("vs").innerHTML = "전국 평균보다 " + (d >= 0 ? '<b class="up">' + fmt(d) + "만원 더</b> 들어요." : '<b class="dn">' + fmt(-d) + "만원 덜</b> 들어요.");
-    }
-    $("hOff").classList.toggle("on", !S.house); $("hOn").classList.toggle("on", S.house);
-    $("note").innerHTML = "<b>예식장·스드메</b>는 " + (r.id === "all" ? "전국" : r.name) + " 실제 계약 평균, <b>나머지</b>는 전국 평균" + (S.house ? "(신혼집은 " + D.houseName[r.house] + " 평균)" : "") + "이에요. 옵션·추가금은 빠져 있어요.";
-    const max = Math.max.apply(null, list.map(x => x.v));
-    $("items").innerHTML = list.map(x =>
-      '<div class="item"><div class="t"><span class="n">' + x.name + '</span><span class="v">' + fmt(x.v) + '만</span></div>' +
-      '<div class="bar"><i style="width:' + Math.max(2, x.v / max * 100) + '%"></i></div>' +
-      '<div class="s"><span>' + x.sub + '</span><span class="src' + (x.local ? " local" : "") + '">' + (x.local ? (r.id === "all" ? "전국" : (x.house ? D.houseName[r.house] : r.name)) + " 실제" : "전국 평균") + '</span></div></div>'
-    ).join("");
-    try { const u = new URL(location.href); if (S.r === "all") u.searchParams.delete("r"); else u.searchParams.set("r", S.r); history.replaceState(null, "", u); } catch (e) {}
-  }
-
-  function renderSplit() {
-    document.querySelectorAll("#budgetChips button").forEach(b => b.classList.toggle("on", +b.dataset.b === S.budget));
-    if (!S.budget) { $("split").innerHTML = '<p class="empty">위에서 예산을 고르거나 직접 적어 보세요.</p>'; return; }
-    const r = reg(), keep = S.house; S.house = false;
-    const list = items(r), avg = sumOf(r); S.house = keep;
-    const d = S.budget - avg;
-    $("split").innerHTML =
-      '<p style="margin:16px 0 0;font-size:15px">' + (r.id === "all" ? "전국" : r.name) + " 평균 " + fmt(avg) + "만원보다 " +
-      (d >= 0 ? "<b>" + fmt(d) + "만원 여유</b> 있어요." : '<b style="color:var(--red)">' + fmt(-d) + "만원 적어요.</b> 줄일 항목을 먼저 정해두면 좋아요.") + "</p>" +
-      '<div class="split">' + list.map(x => "<div><span>" + x.name + "</span><b>" + fmt(S.budget * x.v / avg) + "</b>만</div>").join("") + "</div>" +
-      '<p class="note">평균 비율대로 나눈 금액이에요. 예산대가 비슷한 부부가 실제로 어떻게 썼는지는 가계부 기록이 모이면 보여드릴게요.</p>';
-  }
-
-  function renderZone() {
-    const z = S.zone || reg().zone, Z = D.zones[z], A = D.zones.all, zi = D.zoneOrder.indexOf(z);
-    $("zoneChips").innerHTML = D.zoneOrder.map(k => '<button data-z="' + k + '" class="' + (k === z ? "on" : "") + '">' + D.zones[k].name + "</button>").join("");
-    const row = (label, v, unit) => "<tr><td>" + label + '</td><td class="num hl">' + v + unit + "</td></tr>";
-    $("zoneTable").innerHTML =
-      row("대관료", fmt(Z.rental), "만원") + row("식대 합계", fmt(Z.meal), "만원") +
-      row("1인당 식대", Z.perMeal.toFixed(1), "만원") + row("최소 보증 인원", Z.minGuest, "명") + row("스드메 패키지", fmt(Z.sdm), "만원");
-    $("optHead").textContent = Z.name;
-    $("optTable").innerHTML = D.options.map(o => "<tr><td>" + o[0] + '</td><td class="num hl">' + o[1 + zi] + '</td><td class="num" style="color:var(--muted)">' + o[1] + "</td></tr>").join("");
-  }
-
-  function renderMonths() {
-    const vals = D.months.map(m => m[1]), max = Math.max.apply(null, vals), min = Math.min.apply(null, vals);
-    $("months").innerHTML = D.months.map(m => {
-      const [y, mo] = m[0].split("-");
-      return '<div class="m' + (m[1] === min ? " lo" : "") + '"><em>' + fmt(m[1]) + '</em><i style="height:' + (m[1] / max * 140) + 'px"></i><span>' + (mo === "01" || m === D.months[0] ? y.slice(2) + "." : "") + +mo + "월</span></div>";
-    }).join("");
-  }
-
-  function openRegions() {
-    $("dlg").innerHTML = "<h3>어디서 결혼해요?</h3><div class=\"opts\">" +
-      D.regions.map(r => '<button data-r="' + r.id + '" class="' + (r.id === S.r ? "on" : "") + '">' + r.name + "<small>" + fmt(r.meal + r.rental + r.deco + r.sdm) + "만</small></button>").join("") +
-      '</div><p class="note">작은 숫자는 그 지역 예식장+스드메 평균이에요.</p>';
-    $("ov").classList.add("open");
-  }
-  const closeDlg = () => $("ov").classList.remove("open");
-
-  document.addEventListener("click", e => {
-    const t = e.target;
-    if (t.closest("#pickRegion")) return openRegions();
-    const rb = t.closest("[data-r]"); if (rb) { S.r = rb.dataset.r; S.zone = null; closeDlg(); renderAll(); return; }
-    if (t.id === "ov") return closeDlg();
-    if (t.closest("#hOff")) { S.house = false; renderTop(); return; }
-    if (t.closest("#hOn")) { S.house = true; renderTop(); return; }
-    const bb = t.closest("[data-b]"); if (bb) { S.budget = +bb.dataset.b; $("budgetIn").value = ""; renderSplit(); return; }
-    const zb = t.closest("[data-z]"); if (zb) { S.zone = zb.dataset.z; renderZone(); return; }
-  });
-  $("budgetIn").addEventListener("input", e => {
-    const n = parseInt(e.target.value.replace(/[^0-9]/g, ""), 10);
-    e.target.value = n ? n.toLocaleString("ko-KR") : "";
-    S.budget = n || null; renderSplit();
-  });
-  addEventListener("keydown", e => { if (e.key === "Escape") closeDlg(); });
-
-  function renderAll() { renderTop(); renderSplit(); renderZone(); }
-  $("srcKca").href = D.sources.kca.url; $("srcDuo").href = D.sources.duo.url; $("asKca").textContent = D.asOf.kca;
-  renderAll(); renderMonths();
+  var D = window.OW; if (!D) return;
+  var r = D.regions[0], fmt = function(n){ return Math.round(n).toLocaleString("ko-KR"); };
+  var items = [{n:"예식장", v:r.meal + r.rental + r.deco}, {n:"스드메", v:r.sdm}].concat(D.national.map(function(x){ return {n:x.name, v:x.v}; }));
+  items.sort(function(a, b){ return b.v - a.v; });
+  var total = items.reduce(function(t, x){ return t + x.v; }, 0), max = items[0].v;
+  document.getElementById("gTotal").textContent = fmt(total);
+  document.getElementById("bTotal").textContent = fmt(total);
+  document.getElementById("asKca").textContent = D.asOf.kca + " 기준";
+  document.getElementById("bars").innerHTML = items.map(function(x){
+    return '<div class="it"><span class="n">' + x.n + '</span><span class="b"><i style="width:' + Math.max(3, x.v / max * 100) + '%"></i></span><span class="v">' + fmt(x.v) + '만</span></div>';
+  }).join("");
 })();
 </script>
 </body>

@@ -1522,10 +1522,10 @@ function render(){
   document.getElementById("side").innerHTML=`<a class="logo" href="./"><i></i>OUR WEDDING</a>
     <div class="couple"><div class="n">${names()}</div><div class="d">${ddText()}</div><div class="s">${wedText()}</div></div>
     <div class="nav">${NAV.map(([k,l],i)=>`${k==="set"?'<div class="sep"></div>':""}<button class="${S.view===k?'on':''}" data-go="${k}">${l}</button>`).join("")}
-      <a class="navlink" href="./">남들은 얼마 쓸까 ›</a><a class="navlink" href="halls.html">웨딩홀 리스트 ›</a>${CL.admin?`<a class="adm" href="admin.html">운영자 페이지${CL.newInq?` · 새 제휴 신청 ${CL.newInq}건`:""} ›</a>`:""}</div>
+      <a class="navlink" href="cost.html">남들은 얼마 쓸까 ›</a><a class="navlink" href="halls.html">웨딩홀 리스트 ›</a><a class="navlink" href="board.html">결혼 준비 가이드 ›</a><a class="navlink" href="board.html?b=qna">묻고 답하기 ›</a>${CL.admin?`<a class="adm" href="admin.html">운영자 페이지${CL.newInq?` · 새 제휴 신청 ${CL.newInq}건`:""} ›</a>`:""}</div>
     <div class="side-foot">${acctBox()}</div>`;
   document.getElementById("mhead").innerHTML=`<div class="mtop"><a class="logo" href="./" style="padding:0;font-size:16px"><i></i>OUR WEDDING</a><div class="r">${names()}<br><b>${ddText()}</b></div></div>
-    <div class="mtabs">${!CL.id&&SB?'<button class="mlogin" data-act="login">로그인</button>':""}${NAV.map(([k,l])=>`<button class="${S.view===k?'on':''}" data-go="${k}">${l}</button>`).join("")}<a href="./">남들 평균</a></div>`;
+    <div class="mtabs">${!CL.id&&SB?'<button class="mlogin" data-act="login">로그인</button>':""}${NAV.map(([k,l])=>`<button class="${S.view===k?'on':''}" data-go="${k}">${l}</button>`).join("")}<a href="cost.html">남들 평균</a><a href="board.html">가이드</a></div>`;
   const draft={};["fA","fV","fM","fD"].forEach(id=>{const el=document.getElementById(id);if(el&&el.closest("tr.newrow")&&el.value)draft[id]=el.value});
   document.getElementById("main").innerHTML=(P.demo?`<div class="demo"><span><b>예시 가계부</b>를 보고 있어요. 숫자는 모두 예시예요.</span><button class="btn" data-act="enddemo" style="padding:6px 12px">예시 지우고 내 가계부 시작</button></div>`:"")+VIEWS[S.view]();
   document.getElementById("catlist").innerHTML=CATS.map(c=>`<option value="${esc(c.small)}">${c.big} · ${c.mid}</option>`).join("");
