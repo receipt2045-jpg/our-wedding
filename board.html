@@ -32,7 +32,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 a{color:inherit}
 [hidden]{display:none!important}
-.wrap{max-width:860px;margin:0 auto;padding:0 16px}
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px}
 header{border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff;z-index:10}
 header .wrap{max-width:1040px;display:flex;justify-content:space-between;align-items:center;height:58px;gap:8px}
 .logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:16px;letter-spacing:.05em;text-decoration:none;white-space:nowrap}
@@ -111,6 +111,55 @@ h1.pt{font-size:24px;line-height:1.4;margin:0 0 6px;letter-spacing:-.4px}
 .lk{font-size:12px;color:#E5484D;white-space:nowrap}
 .tipbox b{color:var(--acct)}
 .ubody{white-space:pre-wrap;font-size:16px;line-height:1.75;margin-bottom:12px}
+
+/* 가이드 카드 읽기 */
+.gpost{display:grid;grid-template-columns:220px minmax(0,760px);gap:40px;align-items:start;justify-content:center}
+@media (max-width:980px){.gpost{display:block}.gcats{display:none}}
+.gcats{border-top:2px solid var(--ink);position:sticky;top:76px}
+.gcats button{width:100%;display:flex;align-items:center;gap:10px;border:0;border-bottom:1px solid var(--line);background:#fff;padding:12px 10px;font-size:14.5px;text-align:left;color:var(--sub)}
+.gcats button svg{width:19px;height:19px;flex:0 0 auto}
+.gcats button small{margin-left:auto;font-size:12px;color:var(--muted)}
+.gcats button.on{background:var(--acc);color:var(--acct);font-weight:800}
+.rd .prog{display:flex;gap:4px;margin:4px 0 12px}
+.rd .prog i{flex:1;height:5px;background:#E8E8E8}
+.rd .prog i.on{background:var(--ink)}
+.sl{border:2px solid var(--ink);min-height:320px;padding:24px 26px 28px;display:flex;flex-direction:column;gap:12px;background:#fff;touch-action:pan-y}
+@media (max-width:560px){.sl{min-height:300px;padding:18px 18px 22px}}
+.sl .sh{display:flex;justify-content:space-between;align-items:center}
+.sl .ico{width:56px;height:56px;background:var(--acc);display:grid;place-items:center;color:var(--acct)}
+.sl .ico svg{width:32px;height:32px}
+.sl .num{font-size:12px;font-weight:800;color:var(--muted)}
+.sl h4{font-size:24px;line-height:1.35;letter-spacing:-.5px;margin:4px 0 0}
+.sl .lead{font-size:21px;font-weight:800;line-height:1.5;letter-spacing:-.3px;margin:0;color:var(--ink)}
+.sl p{font-size:17px;line-height:1.75;color:var(--sub);margin:0}
+@media (max-width:560px){.sl h4{font-size:21px}.sl .lead{font-size:19px}.sl p{font-size:16px}}
+.sl mark{background:linear-gradient(transparent 58%,var(--acc) 58%);color:var(--ink);font-weight:700}
+.sl a{color:var(--acct);background:var(--acc2);text-decoration:none;font-weight:700;padding:0 3px}
+.sl ul{list-style:none;padding:0;margin:0}
+.sl li{padding:9px 0;border-bottom:1px solid var(--line);font-size:16px;line-height:1.6}
+.sl li>b:first-child{margin-right:8px}
+.sl li .tp{display:block;font-size:14px;color:var(--sub);margin-top:2px}
+.sl .tw{overflow-x:auto}
+.sl table{border-collapse:collapse;width:100%;font-size:14px;min-width:420px}
+.sl th,.sl td{border-bottom:1px solid var(--line);padding:9px 8px;text-align:left;vertical-align:top}
+.sl th{font-size:13px;color:var(--muted);font-weight:600;border-bottom:2px solid var(--line)}
+.sl tr:nth-child(even) td{background:var(--zebra)}
+.sl td:last-child{white-space:nowrap;font-weight:700}
+.sl.end{background:var(--accs);border-color:var(--accd)}
+.sl.end .lbl{font-size:13px;font-weight:800;color:var(--acct);margin:0}
+.sl.end .likebar{justify-content:flex-start;margin:6px 0 0}
+.sl.end .likebar+p{text-align:left!important}
+.sl.end .gobox{margin:8px 0 0;background:#fff}
+.sl.end .gobox a{background:#fff;color:var(--ink);font-weight:400;padding:13px 14px}
+.sl.end .gobox a b{font-weight:800}
+.rnav{display:flex;justify-content:space-between;align-items:center;margin-top:12px;gap:10px}
+.rnav .btn{padding:12px 20px;font-size:15px;font-weight:700;min-width:110px}
+.btn.k{background:var(--ink);color:#fff;border-color:var(--ink)}
+.rnav .cnt{font-size:13px;color:var(--muted)}
+.rall{display:flex;justify-content:space-between;gap:10px;margin-top:10px;font-size:12px;color:var(--muted)}
+.rall button{border:0;background:none;padding:0;color:var(--sub);text-decoration:underline;font-size:13px}
+@media (max-width:860px){.rall .kb{display:none}}
+
 .pn{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:24px 0 8px}
 .pn button{border:1px solid var(--line);background:#fff;padding:10px 12px;text-align:left;font-size:13px;color:var(--muted)}
 .pn button b{display:block;color:var(--ink);font-size:14px;font-weight:600;margin-top:2px}
@@ -243,7 +292,8 @@ async function render(){
   const v = $("view");
   try{
     if(S.w) return v.innerHTML = await vWrite();
-    if(S.p) return v.innerHTML = await vPost();
+    if(S.p){ v.innerHTML = await vPost(); if(RD) drawRD(); return; }
+    RD = null;
     v.innerHTML = S.b==="guide" ? await vGuide() : await vQna();
   }catch(e){ v.innerHTML = `<div class="empty">불러오지 못했어요. 잠시 뒤 새로고침해 주세요.</div>`; }
 }
@@ -295,6 +345,7 @@ async function like(btn, id){
   btn.classList.toggle("on", r.data.liked); btn.setAttribute("aria-pressed", r.data.liked); btn.querySelector("b").textContent = r.data.count;
   if(r.data.liked){ btn.classList.remove("pop"); void btn.offsetWidth; btn.classList.add("pop"); }
   if(GUIDE){ const g = GUIDE.find(x=>x.id===id); if(g) g.like_count = r.data.count; }
+  if(RD && RD.p.id===id) RD.p.like_count = r.data.count;
   if(window.OWNAV && CUR && CUR.k==="guide:"+id && OWNAV.isSaved(CUR.k)!==r.data.liked){ OWNAV.toggleSave(CUR); }   // 하트 = 내 것에 저장
   if(r.data.liked) toast("내 것에 저장했어요");
 }
@@ -313,6 +364,88 @@ function goBox(p){
   return `<div class="gobox"><div class="gh">같이 보면 좋아요</div>${G.map(x=>`<a href="${x.href}"><div><b>${x.b}</b><span>${x.s}</span></div><i>${x.cta} ›</i></a>`).join("")}</div>`;
 }
 
+// ---------- 가이드 글을 카드 여러 장으로 (한 장에 한 가지) ----------
+const CAT_IC = {"용어":"book","처음":"start","인사":"mail","웨딩홀":"hall","스드메":"camera","혼주":"hanbok","예물":"ring","본식":"mic","혼수":"sofa"};
+const KW_IC = [[/만\s?원|비용|돈|예산|가격|금액|할인|캐시백|추가금/,"won"],[/보증 인원|하객|명단|사람|가족|친구|지인|부모님/,"users"],[/식사|식당|밥|식대|뷔페|음식|한정식|코스/,"utensils"],[/조심|주의|바가지|후회|실수|폭탄|금지/,"alert"],[/촬영|사진|스냅|DVD|앨범/,"camera"],[/반지|밴드|각인/,"ring"],[/선물|답례|넥타이|꽃다발/,"gift"],[/청첩장|모청|초대/,"mail"],[/드레스|한복|예복|턱시도|메이크업|헤어/,"hanbok"],[/가전|가구|침대|에어컨|TV|인테리어|신혼집/,"sofa"],[/웨딩홀|홀 투어|예식장|베뉴/,"hall"],[/계산|합계|평균/,"calc"]];
+const slideIcon = (txt, cat) => { for(const [re, ic] of KW_IC) if(re.test(txt)) return ic; return CAT_IC[cat] || "book"; };
+// 금액·퍼센트·인원 같은 숫자는 노란 밑줄
+const hiNum = h => h.replace(/(\d[\d,.~]*\s?(?:만\s?원|원|%|명|개월|주|시간|벌|곳|장|분|대|평|부|통)(?:\s?(?:이상|이내|정도|내외|선))?)/g, "<mark>$1</mark>");
+const sents = t => (t.match(/[^.!?]+[.!?]+["”’)\]]*\s*|[^.!?]+$/g) || [t]).map(x => x.trim()).filter(Boolean);
+function splitSlides(body){
+  const L = String(body || "").split("\n"), out = []; let cur = null, i = 0;
+  const push = () => { if(cur && (cur.h || cur.lead || cur.ps.length || cur.items.length || cur.table)) out.push(cur); cur = null; };
+  const fresh = (o) => Object.assign({h:null, lead:null, ps:[], items:[], table:null}, o || {});
+  const paraSlides = (t, h) => {          // 긴 문단은 두 문장씩 끊어서 여러 장으로
+    const ss = sents(t), groups = []; let g = [];
+    ss.forEach(s => { if(g.length && (g.length >= 2 || g.join(" ").length + s.length > 110)){ groups.push(g); g = []; } g.push(s); });
+    if(g.length) groups.push(g);
+    groups.forEach((gr, j) => { const lead = gr[0].length <= 80 ? gr[0] : null; out.push(fresh({h: j === 0 ? h : null, lead, ps: lead ? gr.slice(1) : gr})); });
+  };
+  while(i < L.length){
+    const l = L[i].trim();
+    if(!l){ i++; continue; }
+    if(/^\|.*\|$/.test(l)){ const rows = []; while(i < L.length && /^\|.*\|$/.test(L[i].trim())){ rows.push(L[i].trim().slice(1, -1).split("|").map(x => x.trim())); i++; }
+      const h = cur && cur.h && !cur.ps.length && !cur.items.length ? cur.h : (cur && cur.lead && !cur.ps.length && cur.lead.length < 40 ? cur.lead : "한눈에 보기");
+      if(cur && (cur.h === h || cur.lead === h) && !cur.ps.length && !cur.items.length) cur = null; else push();
+      out.push(fresh({h, table: rows})); continue; }
+    if(/^### /.test(l)){ push(); cur = fresh({h: l.slice(4)}); i++; continue; }
+    if(/^- /.test(l)){ if(!cur) cur = fresh(); cur.items.push(l.slice(2)); i++; continue; }
+    const m = l.match(/^(\d)\) (.*)$/);
+    if(m){ push(); const t = m[2];
+      if(t.length < 28 && !/[.!?요다]$/.test(t)) cur = fresh({h: t});
+      else if(t.includes(" : ")){ const [a, ...b] = t.split(" : "); out.push(fresh({h: a, ps: [b.join(" : ")]})); }
+      else paraSlides(t, null);
+      i++; continue; }
+    // 일반 문단
+    if(cur && cur.h && !cur.ps.length && !cur.items.length && l.length <= 160){ cur.ps.push(l); push(); i++; continue; }
+    if(cur && cur.h && !cur.ps.length && !cur.items.length){ const h = cur.h; cur = null; paraSlides(l, h); i++; continue; }
+    push(); paraSlides(l, null); i++;
+  }
+  push();
+  // 목록이 길면 6개씩 나눔
+  const res = [];
+  out.forEach(s => { if(s.items.length > 6){ for(let k = 0; k < s.items.length; k += 6) res.push(Object.assign({}, s, {items: s.items.slice(k, k + 6), h: (s.h || "") + (k ? " (이어서)" : ""), ps: k ? [] : s.ps})); } else res.push(s); });
+  return res;
+}
+let RD = null;                            // {p, sl:[...], i}
+function slideHTML(s, k, n, p){
+  const txt = [s.h, s.lead, ...s.ps, ...s.items].join(" ");
+  const ic = window.OWNAV ? OWNAV.ic(slideIcon(txt, p.cat)) : "";
+  const tbl = s.table ? `<div class="tw"><table><thead><tr>${s.table[0].map(c => `<th>${inline(c)}</th>`).join("")}</tr></thead><tbody>${s.table.slice(1).map(r => `<tr>${r.map(c => `<td>${hiNum(inline(c))}</td>`).join("")}</tr>`).join("")}</tbody></table></div>` : "";
+  const items = s.items.length ? `<ul>${s.items.map(x => { const [a, b] = x.split(" — 💡 "); return `<li>${hiNum(inline(a))}${b ? `<span class="tp">💡 ${hiNum(inline(b))}</span>` : ""}</li>`; }).join("")}</ul>` : "";
+  return `<div class="sl"><div class="sh"><span class="ico">${ic}</span><span class="num">${k + 1} / ${n}</span></div>
+    ${s.h ? `<h4>${inline(s.h)}</h4>` : ""}${s.lead ? `<p class="lead">${hiNum(inline(s.lead))}</p>` : ""}${s.ps.map(x => `<p>${hiNum(inline(x))}</p>`).join("")}${items}${tbl}</div>`;
+}
+function endHTML(p){
+  return `<div class="sl end"><div class="sh"><span class="num">마지막 장</span></div>
+    ${p.tip ? `<p class="lbl">한마디</p><h4>${esc(p.tip)}</h4>` : `<h4>${esc(p.title)}</h4>`}
+    ${heartBtn(p)}${goBox(p)}</div>`;
+}
+function drawRD(){
+  if(!RD) return; const n = RD.sl.length + 1, i = RD.i, box = $("rdbox"); if(!box) return;
+  box.innerHTML = i < RD.sl.length ? slideHTML(RD.sl[i], i, n, RD.p) : endHTML(RD.p);
+  document.querySelectorAll("#rdprog i").forEach((x, j) => x.classList.toggle("on", j <= i));
+  const pv = $("rdpv"), nx = $("rdnx"), last = i === n - 1;
+  pv.disabled = i === 0;
+  nx.innerHTML = last ? (RD.next ? "다음 글 ›" : "목록으로") : "다음 ›";
+  $("rdcnt").textContent = (i + 1) + " / " + n;
+}
+function rdMove(d){
+  if(!RD) return; const n = RD.sl.length + 1, j = RD.i + d;
+  if(j >= n){ return RD.next ? go({p: RD.next.id}) : go({p: null}); }
+  if(j < 0) return;
+  RD.i = j; drawRD();
+  const r = $("rd"); if(r && r.getBoundingClientRect().top < 60) r.scrollIntoView({block: "start"});
+}
+function readerHTML(p, next){
+  const sl = splitSlides(p.body); RD = {p, sl, i: 0, next};
+  const n = sl.length + 1;
+  return `<div class="rd" id="rd"><div class="prog" id="rdprog">${Array.from({length: n}, (_, j) => `<i class="${j ? "" : "on"}"></i>`).join("")}</div>
+    <div id="rdbox"></div>
+    <div class="rnav"><button class="btn" id="rdpv" data-act="sp" disabled>‹ 이전</button><span id="rdcnt" class="cnt"></span><button class="btn k" id="rdnx" data-act="sn">다음 ›</button></div>
+    <div class="rall"><button data-act="sall">한 번에 다 보기</button><span class="kb">← → 키나 옆으로 밀어서 넘겨요</span></div></div>`;
+}
+
 async function vPost(){
   const [p, cs] = await Promise.all([getPost(S.p), getComments(S.p)]);
   if(!p) return `<div class="empty">없는 글이거나 숨겨진 글이에요. <button class="btn s" data-act="list">목록으로</button></div>`;
@@ -321,14 +454,14 @@ async function vPost(){
   CUR = {k:"guide:"+p.id, t:p.title, s:(p.board==="guide"?"가이드 · "+catName(p.cat):"묻고 답하기 · "+(p.cat||"기타")), u:"board.html?p="+p.id, i:p.board==="guide"?"book":"chat"};
   if(window.OWNAV) OWNAV.track(CUR);
   const mine = U.user && p.user_id === U.user.id, isG = p.board==="guide";
+  const GL = isG ? await guideAll() : [], gi = GL.findIndex(x=>x.id===p.id), GN = {a: GL[gi-1], b: GL[gi+1]};
+  if(!isG) RD = null;
   let h = `<div class="crumb"><button data-act="list">${isG?"결혼 준비 가이드":"묻고 답하기"}</button> › ${esc(isG?catName(p.cat):(p.cat||"기타"))}${isG&&p.grp?" › "+esc(p.grp):""}</div>
   <h1 class="pt">${p.hidden?"[숨김] ":""}${esc(p.title)}</h1>
-  <div class="pm">${who(p.nick || "OUR WEDDING")}${isG?"":`<span>${ago(p.created_at)}</span>`}${p.updated_at && p.created_at && (new Date(p.updated_at)-new Date(p.created_at))>60000 && !isG?"<span>수정됨</span>":""}
+  <div class="pm">${isG?"":who(p.nick || "OUR WEDDING")}${isG?"":`<span>${ago(p.created_at)}</span>`}${p.updated_at && p.created_at && (new Date(p.updated_at)-new Date(p.created_at))>60000 && !isG?"<span>수정됨</span>":""}
     <span class="acts">${(mine||U.admin)?`<button class="btn s" data-act="edit" data-v="${p.id}">수정</button>`:""}${(mine&&!p.comment_count)||U.admin?`<button class="btn s" data-act="delpost" data-v="${p.id}">삭제</button>`:""}${U.admin&&!isG?`<button class="btn s" data-act="hidepost" data-v="${p.id}" data-h="${p.hidden?0:1}">${p.hidden?"숨김 풀기":"숨기기"}</button>`:""}${!mine&&!isG&&U.user?`<button class="btn s" data-act="report" data-k="post" data-v="${p.id}">신고</button>`:""}</span></div>
-  ${isG ? '<div class="doc">'+md(p.body)+"</div>" : '<div class="ubody">'+esc(p.body)+"</div>"}
-  ${p.tip?`<div class="tipbox"><b>한마디</b> · ${esc(p.tip)}</div>`:""}
-  ${heartBtn(p)}${isG?goBox(p):""}`;
-  if(isG){ const L = await guideAll(), i = L.findIndex(x=>x.id===p.id), a = L[i-1], b = L[i+1];
+  ${isG ? readerHTML(p, GN.b) : '<div class="ubody">'+esc(p.body)+"</div>"+(p.tip?`<div class="tipbox"><b>한마디</b> · ${esc(p.tip)}</div>`:"")+heartBtn(p)}`;
+  if(isG){ const a = GN.a, b = GN.b;
     h += `<div class="pn">${a?`<button data-post="${a.id}">‹ 이전 글<b>${esc(a.title)}</b></button>`:"<span></span>"}${b?`<button data-post="${b.id}">다음 글 ›<b>${esc(b.title)}</b></button>`:"<span></span>"}</div>`; }
   h += `<section class="cm"><h2>${isG?"댓글":"답변"} ${cs.filter(c=>!c.hidden).length}</h2>`;
   h += cs.length ? cs.map(c=>{ const cm = U.user && c.user_id===U.user.id;
@@ -336,7 +469,10 @@ async function vPost(){
     : `<p style="color:var(--muted);font-size:14px">${isG?"궁금한 점이나 내 경험을 남겨 주세요.":"아직 답변이 없어요. 아는 만큼 알려 주세요."}</p>`;
   h += U.user ? `<div class="cbox"><textarea id="cbody" maxlength="1000" placeholder="${isG?"댓글을 남겨 주세요":"답변을 남겨 주세요"}. 다른 사람이 상처받는 말, 광고는 지워져요."></textarea><div class="r"><span>${U.admin?"OUR WEDDING 이름으로 올라가요":esc(U.nick?U.nick+" 이름으로 올라가요":"닉네임을 먼저 정해요")}</span><button class="btn y" data-act="comment">${isG?"댓글":"답변"} 남기기</button></div></div>`
     : `<div class="gate" style="margin-top:14px"><span>로그인하면 ${isG?"댓글":"답변"}을 남길 수 있어요.</span><button class="btn y" data-act="login">구글로 로그인</button></div>`;
-  return h + "</section>";
+  h += "</section>";
+  if(!isG) return h;
+  const cnt = c => GL.filter(x=>x.cat===c).length;
+  return `<div class="gpost"><nav class="gcats" aria-label="분야">${CATS.map(([k,n])=>`<button data-cat="${k}" class="${k===p.cat?"on":""}">${window.OWNAV?OWNAV.ic(CAT_IC[k]||"book"):""}${n}<small>${cnt(k)}</small></button>`).join("")}</nav><div>${h}</div></div>`;
 }
 
 async function vWrite(){
@@ -401,6 +537,10 @@ document.addEventListener("click", async e => {
     case "delc": if(!confirm("이 댓글을 지울까요?")) return; { const r = await SB.from("board_comments").delete().eq("id",+v); if(r.error) return toast(errMsg(r.error)); GUIDE=null; return render(); }
     case "hidec": { const r = await SB.from("board_comments").update({hidden: a.dataset.h==="1"}).eq("id",+v); if(r.error) return toast(errMsg(r.error)); GUIDE=null; return render(); }
     case "like": return like(a, +v);
+    case "sp": return rdMove(-1);
+    case "sn": return rdMove(1);
+    case "sall": { if(!RD) return; const P = RD.p; RD = null;
+      $("rd").outerHTML = '<div class="doc">'+md(P.body)+'</div>'+(P.tip?`<div class="tipbox"><b>한마디</b> · ${esc(P.tip)}</div>`:"")+heartBtn(P)+goBox(P); return; }
     case "report": { const reason = prompt("신고 이유를 짧게 적어 주세요. (광고, 욕설, 개인정보 등)"); if(reason===null) return;
       const r = await SB.from("board_reports").insert({kind:a.dataset.k, target_id:+v, user_id:U.user.id, reason:reason.slice(0,200)});
       return toast(r.error ? (r.error.code==="23505"?"이미 신고했어요.":errMsg(r.error)) : "신고했어요. 운영자가 확인할게요."); }
@@ -411,7 +551,8 @@ document.addEventListener("input", e => {
     document.querySelectorAll("#gpills button").forEach(b=>b.classList.toggle("on", !S.q.trim() && b.dataset.cat===S.c)); }
   if(e.target.id==="wbody"){ $("wlen").textContent = e.target.value.length.toLocaleString()+"자"; }
 });
-addEventListener("keydown", e => { if(e.key==="Escape") closeDlg(); if(e.key==="Enter" && e.target.id==="nk" && !e.isComposing) saveNick(); });
+addEventListener("keydown", e => { if(RD && !/INPUT|TEXTAREA|SELECT/.test(e.target.tagName) && !$("ov").classList.contains("open")){ if(e.key==="ArrowRight"){ e.preventDefault(); rdMove(1); } if(e.key==="ArrowLeft"){ e.preventDefault(); rdMove(-1); } }
+  if(e.key==="Escape") closeDlg(); if(e.key==="Enter" && e.target.id==="nk" && !e.isComposing) saveNick(); });
 SB.auth.onAuthStateChange((ev) => { if(ev==="SIGNED_IN"||ev==="SIGNED_OUT") loadMe().then(render); });
 
 async function resolveSlug(){            // ?s=g8 처럼 원고 글 표시로 들어오면 글 번호로 바꿈 (첫 화면 링크용)
@@ -419,6 +560,10 @@ async function resolveSlug(){            // ?s=g8 처럼 원고 글 표시로 �
   const r = await SB.from("board_posts").select("id,board").eq("slug", s).maybeSingle();
   if(r.data){ S.b = r.data.board; S.p = r.data.id; go({}, true); }
 }
+let TX = null;                            // 카드 옆으로 밀기
+document.addEventListener("touchstart", e => { if(RD && e.target.closest("#rdbox")) TX = [e.touches[0].clientX, e.touches[0].clientY]; }, {passive:true});
+document.addEventListener("touchend", e => { if(!TX || !RD) return; const dx = e.changedTouches[0].clientX - TX[0], dy = e.changedTouches[0].clientY - TX[1]; TX = null;
+  if(Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) rdMove(dx < 0 ? 1 : -1); }, {passive:true});
 readURL();
 Promise.all([loadMe(), resolveSlug()]).then(render);
 })();
