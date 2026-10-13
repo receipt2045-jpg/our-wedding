@@ -190,9 +190,9 @@ function hexBox(h){
   const H=HEX,lv=H.AX.map(a=>h.rv[a]||"n"),vals=lv.map(k=>H.LV[k][0]),my=mineOf(h),w=openWhy[h.id];
   const list=[{name:"후기",vals,color:"#5B6270",fill:.14,tips:lv.map(k=>H.LV[k][1])}];
   if(my)list.push({name:"내 평가",vals:my.map(x=>x||0),color:H.COL[0],dash:true,fill:0});
-  const svg=H.svg(list,{rings:[2,3.2,4.5],miss:lv.map(k=>k==="n"),fs:34,dots:!!my});
+  const svg=H.svg(list,{rings:[2,3.2,4.5],ringLabels:[],miss:lv.map(k=>k==="n"),fs:34,dots:!!my});   // 눈금 숫자는 후기 단계와 안 맞아서 뺌
   const why=w!=null&&h.rvWhy&&h.rvWhy[H.AX[w]]?`<div class="why"><b>${H.AX[w]}</b> · ${h.rvWhy[H.AX[w]].map(([s,t])=>`<span class="${s==="+"?"pl":"ck"}">${s==="+"?"좋음":"확인"}</span> ${esc(t)}`).join(" / ")}</div>`:w!=null?`<div class="why"><b>${H.AX[w]}</b> · 이 칸 이야기가 나온 후기가 없어요.</div>`:"";
-  return `<div class="rvx"><div class="hd"><b>후기 육각형</b><span>후기 ${h.sources.length}곳 요약 기준 · 참고용</span></div>
+  return `<div class="rvx"><div class="hd"><b>후기 육각형</b><span>후기 ${h.sources.length}곳 요약 기준 · 참고용${lv.includes("n")?" · 회색 칸은 자료 부족이라 빼고 그렸어요":""}</span></div>
     <div class="bd"><svg viewBox="0 0 440 400" role="img" aria-label="${esc(h.name)} 후기 육각형">${svg}</svg>
     <div class="lvl">${H.AX.map((a,i)=>`<button data-why="${h.id}|${i}" class="${w===i?"on":""}"><span>${a}</span><span class="${lv[i]}">${H.LV[lv[i]][1]}</span></button>`).join("")}</div></div>
     ${my?`<div class="mine"><span><i style="width:12px;height:3px;background:#5B6270;display:inline-block"></i>후기 요약</span><span><i style="width:12px;border-top:2px dashed ${H.COL[0]};display:inline-block"></i>내 평가(이 기기에만 보여요)</span></div>`:""}${why}</div>`;

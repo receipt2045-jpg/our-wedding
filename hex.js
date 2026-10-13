@@ -42,6 +42,14 @@
   const CX = 220, CY = 205, R = 150;
   const pt = (i, v) => { const a = -Math.PI / 2 + i * Math.PI / 3, r = R * ((v || 0) / 5); return [CX + r * Math.cos(a), CY + r * Math.sin(a)]; };
   const poly = vs => vs.map((v, i) => pt(i, v).map(x => x.toFixed(1)).join(",")).join(" ");
+  // 자료가 없는 칸(null·0)은 0점이 아니라 '모름'이라 선을 가운데로 끌어내리지 않고 건너뜀
+  const has = v => v != null && v > 0;
+  const shape = (vs, attrs, closedFill) => {
+    const k = vs.map((v, i) => has(v) ? pt(i, v).map(x => x.toFixed(1)).join(",") : null).filter(Boolean);
+    if (k.length >= 3) return `<polygon points="${k.join(" ")}" ${closedFill} ${attrs}/>`;
+    if (k.length === 2) return `<polyline points="${k.join(" ")}" fill="none" ${attrs}/>`;
+    return "";
+  };
   const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   // list: [{name, vals, color, dash, fill, tips}]  opt: {labels, prio, rings, ringLabels, miss, under, sw, dots}
   function svg(list, opt) {
@@ -61,14 +69,15 @@
     else if (opt.labels !== false) [1, 3, 5].forEach(k => { const [x, y] = pt(0, k); g += `<text x="${(x + 6).toFixed(1)}" y="${y.toFixed(1)}" font-size="10" fill="#8B909B" dominant-baseline="middle">${k}</text>`; });
     if (opt.under) g += opt.under;
     list.forEach(s => {
-      g += `<polygon points="${poly(s.vals)}" fill="${s.color}" fill-opacity="${s.fill ?? .12}" stroke="${s.color}" stroke-width="${opt.sw || 2}" stroke-linejoin="round" ${s.dash ? 'stroke-dasharray="6 5"' : ""}/>`;
-      if (opt.dots !== false) s.vals.forEach((v, i) => {
-        if (!v) return; const [x, y] = pt(i, v);
+      g += shape(s.vals, `stroke="${s.color}" stroke-width="${opt.sw || 2}" stroke-linejoin="round" ${s.dash ? 'stroke-dasharray="6 5"' : ""}`, `fill="${s.color}" fill-opacity="${s.fill ?? .12}"`);
+      const few = s.vals.filter(has).length < 3;          // 점이 셋보다 적으면 면이 안 생기니 점은 꼭 찍음
+      if (opt.dots !== false || few) s.vals.forEach((v, i) => {
+        if (!has(v)) return; const [x, y] = pt(i, v);
         g += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="4.5" fill="${s.color}" stroke="#fff" stroke-width="2"/><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="14" fill="transparent"><title>${esc(s.name)} · ${AX[i]} ${s.tips ? s.tips[i] : v.toFixed(1) + "점"}</title></circle>`;
       });
     });
     return g;
   }
-  const avgPoly = vals => `<polygon points="${poly(vals)}" fill="none" stroke="#9AA0A8" stroke-width="2" stroke-dasharray="6 5"/>`;
+  const avgPoly = vals => shape(vals, `stroke="#9AA0A8" stroke-width="2" stroke-dasharray="6 5"`, `fill="none"`);
   window.HEX = { AX, LABELS, ROWS, COL, LV, score, weighted, plain, filledCount, svg, avgPoly };
 })();
