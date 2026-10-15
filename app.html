@@ -316,6 +316,26 @@ tr.newrow .ce{border-color:var(--line);background:#fff}
 tr.plan .ce{background:transparent}
 .mrow.tap{cursor:pointer}
 
+
+/* 엑셀처럼: 칸마다 선, 후보 목록 */
+table.xl{border-collapse:collapse}
+table.xl th{background:#F7F7F5;border:1px solid #E6E6E3;font-size:12px}
+table.xl td{border:1px solid #EDEDEA}
+table.xl tr:not(.newrow):not(.big):not(.grp):hover td{background:#FFFDF2}
+table.xl.bud td.num{white-space:nowrap}
+table.xl.bud input.ly{width:calc(100% - 20px);min-width:84px;text-align:right;font-weight:700;border:1px solid transparent;background:var(--accs);padding:6px 7px}
+table.xl.bud input.ly:focus{outline:2px solid var(--accd);outline-offset:-2px;background:#fff}
+table.xl.bud input.ly.auto{border:1px dashed var(--accl)}
+.sx{display:flex;align-items:center}
+.sx .ce{flex:1 1 auto}
+.sxb{border:0;background:none;color:var(--muted);padding:4px 6px;font-size:12px;cursor:pointer}
+.sxb:hover{color:var(--ink);background:var(--acc2)}
+.sugbox{position:fixed;z-index:80;background:#fff;border:1.5px solid var(--ink);box-shadow:0 8px 24px rgba(0,0,0,.12);max-width:360px}
+.sugbox[hidden]{display:none}
+.sugbox .o{display:flex;justify-content:space-between;gap:12px;padding:8px 11px;cursor:pointer;font-size:14px;border-bottom:1px solid #F0F0F0}
+.sugbox .o span{font-size:12px;color:var(--muted);white-space:nowrap}
+.sugbox .o.on,.sugbox .o:hover{background:var(--acc)}
+.sugbox .none{padding:10px 12px;font-size:13px;color:var(--muted)}
 /* ---------- 실제 가계부 ---------- */
 a.logo{text-decoration:none;color:inherit}
 .navlink{display:block;padding:11px 12px;font-size:15px;color:var(--sub);text-decoration:none}
@@ -948,7 +968,7 @@ function vBudget(){
   <div class="ph"><h1>예산</h1><p><b>색칠된 칸</b>에 우리 예산만 적으세요. 냈어요·남은 돈은 지출 탭에서 자동으로 채워져요.</p></div>
   <div class="pills">${bigs.map(b=>`<button class="${S.big===b?'on':''}" data-act="big" data-v="${b}">${b}<small>${man(sum(CATS.filter(c=>b==="전체"||c.big===b),c=>MY[c.small]||0))}</small></button>`).join("")}</div>
   <div class="basis" data-act="basis">남들 평균 기준 <b>${reg().name}</b> ▾ <span style="font-size:12px;color:var(--muted)">소비자원 2026.8 · 듀오 2026</span></div>
-  <div class="avbar"><button class="btn" data-act="fillavg" style="padding:6px 12px">평균으로 예산 채우기</button><span class="mut"><i class="k"></i>점선 칸 = 평균으로 넣은 값 · 칸을 눌러 바로 고치면 우리 예산이 돼요 · 직접 적은 칸은 그대로 둬요</span>
+  <div class="avbar"><button class="btn" data-act="fillavg" style="padding:6px 12px">평균으로 예산 채우기</button><span class="mut"><i class="k"></i>점선 칸 = 평균으로 넣은 값 · 칸에 숫자만 치면 우리 예산이 돼요(만원) · Enter·↓로 아래 칸 · 엑셀에서 금액 한 줄(또는 항목·금액 두 줄)을 복사해 붙여 넣어도 돼요</span>
     <span class="mut" style="flex-basis:100%;font-size:12px">대관료·식대·스드메 등 11개는 소비자원 <b>지역 평균</b>, <sup class="src">참고</sup>는 엑셀 25~26 평균·듀오 평균을 나눈 값, <sup class="src est">추정</sup>은 흔한 금액으로 잡은 참고값이에요. 신혼집(계약금·잔금 등)과 여행사 패키지는 사람마다 너무 달라서 비워 둬요.</span></div>
   <div class="grid g4" style="margin-bottom:14px">
     <div class="card kpi"><div class="l">예산</div><div class="v">${man(tb)}</div></div>
@@ -957,7 +977,7 @@ function vBudget(){
     <div class="card kpi hl"><div class="l">남은 돈</div><div class="v">${man(tb-tp-tq)}</div></div>
   </div>
   <div style="margin:0 0 12px"><button class="addrow" data-act="pick" data-v="cat">+ 원하는 분류·항목 새로 만들기</button> <span class="mut" style="font-size:12px">대분류·중분류부터 새로 만들 수 있어요</span></div>
-  ${S.mode==="pc"?`<div class="tw"><table><thead><tr><th>항목</th><th class="num">남들 평균</th><th class="num">우리 예산</th><th class="num">냈어요</th><th class="num">낼 예정</th><th class="num">남은 돈</th><th>진행</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`:mob}
+  ${S.mode==="pc"?`<div class="tw"><table class="xl bud"><thead><tr><th>항목</th><th class="num">남들 평균</th><th class="num">우리 예산</th><th class="num">냈어요</th><th class="num">낼 예정</th><th class="num">남은 돈</th><th>진행</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`:mob}
   ${S.mode==="mo"?fab():""}${foot()}`;
 }
 
@@ -1122,8 +1142,8 @@ function vExp(){
   if(S.mode==="pc"){
     const opt=v=>PAY.map(p=>`<option ${p===v?"selected":""}>${p}</option>`).join("");
     const stOpt=v=>`<option value="완료" ${v==="완료"?"selected":""}>냈어요</option><option value="예정" ${v==="예정"?"selected":""}>낼 예정</option>`;
-    const newRow=`<tr class="newrow"><td><input class="ce c-d" id="fD" type="date" value="${todayISO()}" data-fk="n-d"></td>
-      <td><input type="hidden" id="fS" value="${esc(cat(S.newS)?S.newS:"")}"><button class="ce c-s pickbtn" id="fSbtn" data-act="pick" data-v="new" data-fk="n-s">${cat(S.newS)?`${esc(S.newS)}<small>${esc(cat(S.newS).big)} › ${esc(cat(S.newS).mid)}</small>`:'<span class="phx">+ 항목 고르기</span><small>대분류 › 중분류 › 항목</small>'}</button></td>
+    const newRow=`<tr class="newrow"><td><input class="ce c-d" id="fD" value="${todayISO()}" placeholder="10.15" data-fk="n-d" autocomplete="off" title="예: 10.15 · 10/15 · 15(이번 달) · 오늘"></td>
+      <td><div class="sx"><input class="ce c-s" id="fS" data-sug="new" value="${esc(cat(S.newS)?S.newS:"")}" placeholder="항목 (예: 대관료)" data-fk="n-s" autocomplete="off"><button class="sxb" data-act="pick" data-v="new" tabindex="-1" title="목록에서 고르기">▾</button></div></td>
       <td><input class="ce c-a num" id="fA" inputmode="numeric" placeholder="금액" data-fk="n-a"></td>
       <td><select class="ce c-p" id="fP" data-fk="n-p">${opt(S.pay)}</select></td>
       <td class="insc"><select class="ce c-n" id="fN" data-fk="n-n" ${isCard(S.pay)?"":"disabled"} title="카드로 낼 때만 할부를 고를 수 있어요">${insOpts(0)}</select></td>
@@ -1133,8 +1153,8 @@ function vExp(){
       <td class="pad"><input type="checkbox" id="fR"></td>
       <td class="pad" colspan="2"><button class="btn" data-act="addexp" style="padding:6px 14px">추가</button></td></tr>`;
     const rows=fl.map(e=>{const c=cat(e.s),l=leftOf(e.s),i=e.i,k=f=>`data-xi="${i}" data-xf="${f}" data-fk="e-${i}-${f}" data-col="x${f}"`;
-      return `<tr class="${e.st==="예정"?"plan":""}"><td><input class="ce c-d" type="date" value="${e.d}" ${k("d")}></td>
-      <td><button class="ce c-s pickbtn" data-act="pick" data-v="row:${i}" data-fk="e-${i}-s" data-col="xs">${esc(e.s)}<small>${c?esc(c.big)+" › "+esc(c.mid):""}</small></button></td>
+      return `<tr class="${e.st==="예정"?"plan":""}"><td><input class="ce c-d" value="${e.d}" ${k("d")} autocomplete="off"></td>
+      <td><div class="sx"><input class="ce c-s" value="${esc(e.s)}" data-sug="row:${i}" ${k("s")} autocomplete="off" title="${c?esc(c.big)+" › "+esc(c.mid):""}"><button class="sxb" data-act="pick" data-v="row:${i}" tabindex="-1" title="목록에서 고르기">▾</button></div></td>
       <td><input class="ce c-a num" inputmode="numeric" value="${e.a.toLocaleString()}" ${k("a")}></td>
       <td><select class="ce c-p" ${k("p")}>${opt(e.p)}</select></td>
       <td class="insc">${isCard(e.p)?`<select class="ce c-n" ${k("n")}>${insOpts(e.n)}</select>${insN(e)?`<small>${insNote(e)}</small>`:""}`:'<span class="mut" style="font-size:12px">카드만</span>'}</td>
@@ -1144,7 +1164,7 @@ function vExp(){
       <td class="pad"><input type="checkbox" ${e.r?"checked":""} ${k("r")}></td>
       <td class="num pad ${l<0?'red b':''}">${l==null?'<span class="mut">예산 없음</span>':man(l)}</td>
       <td><button class="x" data-act="delexp" data-i="${i}" title="이 줄 지우기">×</button></td></tr>`}).join("");
-    body=`<div class="hint" id="fH" style="margin:0 0 8px">칸을 눌러 바로 고치세요. <b>Enter</b>나 <b>↓</b>를 누르면 아래 줄로 내려가요. 맨 위 레몬 줄에서 <b>항목 고르기</b>를 누르고 금액을 적은 뒤 Enter를 누르면 새 지출이 추가돼요.</div>
+    body=`<div class="hint" id="fH" style="margin:0 0 8px">엑셀처럼 쓰면 돼요. 옆 칸은 <b>Tab</b>·<b>←→</b>, 위아래는 <b>↑↓</b>·<b>Enter</b>. 맨 위 레몬 줄에 날짜·항목·금액을 치고 <b>Enter</b>면 한 줄 추가. 항목은 글자를 치면 후보가 떠요. 날짜는 <b>10.15</b>처럼만 쳐도 돼요. 엑셀에서 여러 줄을 복사해 레몬 줄에 붙여 넣으면 한 번에 들어가요.</div>
     <div class="tw"><table class="xl"><thead><tr><th>날짜</th><th>항목</th><th class="num">금액 (원)</th><th>결제 수단</th><th>할부</th><th>상태</th><th>업체</th><th>메모</th><th>현금영수증</th><th class="num">이 항목 남은 예산</th><th></th></tr></thead><tbody>${newRow}${rows}</tbody></table></div>`;
   } else {
     const byM={};[...fl].sort((a,b)=>a.d<b.d?1:-1).forEach(e=>{(byM[e.d.slice(0,7)]=byM[e.d.slice(0,7)]||[]).push(e)});
@@ -1156,9 +1176,9 @@ function vExp(){
     <div class="card kpi"><div class="l">낼 예정</div><div class="v">${man(tq)}</div></div>
     <div class="card kpi hl"><div class="l">전부 합치면</div><div class="v">${man(tp+tq)}</div></div>
   </div>
-  ${vCash()}
   <div class="pills">${["전체","냈어요","낼 예정"].map(x=>`<button class="${S.ef===x?'on':''}" data-act="ef" data-v="${x}">${x}</button>`).join("")}<button data-act="sortexp" style="margin-left:auto">날짜순으로 다시 정렬</button></div>
-  ${body}${foot()}`;
+  ${body}
+  <div style="margin-top:22px">${vCash()}</div>${foot()}`;   // 입력 표를 먼저, 월별 그래프는 아래로
 }
 
 
@@ -1544,7 +1564,7 @@ function render(){
     <div class="side-foot">${acctBox()}</div>`;
   document.getElementById("mhead").innerHTML=`<div class="mtop"><a class="logo" href="./" style="padding:0;font-size:16px"><i></i>OUR WEDDING</a><div class="r">${names()}<br><b>${ddText()}</b></div></div>
     <div class="mtabs">${!CL.id&&SB?'<button class="mlogin" data-act="login">로그인</button>':""}${NAV.map(([k,l])=>`<button class="${S.view===k?'on':''}" data-go="${k}">${l}</button>`).join("")}<a href="cost.html">남들 평균</a><a href="board.html">가이드</a></div>`;
-  const draft={};["fA","fV","fM","fD"].forEach(id=>{const el=document.getElementById(id);if(el&&el.closest("tr.newrow")&&el.value)draft[id]=el.value});
+  const draft={};["fA","fV","fM","fD","fS"].forEach(id=>{const el=document.getElementById(id);if(el&&el.closest("tr.newrow")&&el.value)draft[id]=el.value});
   document.getElementById("main").innerHTML=(P.demo?`<div class="demo"><span><b>예시 가계부</b>를 보고 있어요. 숫자는 모두 예시예요.</span><button class="btn" data-act="enddemo" style="padding:6px 12px">예시 지우고 내 가계부 시작</button></div>`:"")+VIEWS[S.view]();
   document.getElementById("catlist").innerHTML=CATS.map(c=>`<option value="${esc(c.small)}">${c.big} · ${c.mid}</option>`).join("");
   if(!S.clearDraft)Object.entries(draft).forEach(([id,v])=>{const el=document.getElementById(id);if(el&&el.closest("tr.newrow"))el.value=v});S.clearDraft=false;
@@ -1683,16 +1703,128 @@ function cloudSave(){
 }
 async function signOutAll(){try{if(CL.ch)SB.removeChannel(CL.ch);await SB.auth.signOut()}catch(e){}CL.user=null;CL.id=null;CL.ch=null;try{localStorage.removeItem(KEY)}catch(e){}use(fresh());S.view="home";render();window.scrollTo(0,0)}
 
+/* ================= 엑셀처럼 입력 (2026-10-15) =================
+ * 날짜는 글자로: 10.15, 10/15, 1015, 15(이번 달), 26.10.15, 2026-10-15, 오늘
+ * 항목은 글자를 치면 아래에 후보가 뜸(↑↓·Enter·Tab), ▾ 단추는 목록에서 고르기
+ * ←→ 화살표로 옆 칸, Enter·↑↓로 위아래 칸, 엑셀에서 여러 줄 복사해 붙여 넣기 */
+function parseDate(str){
+  let s=String(str||"").trim().replace(/\s+/g,"");if(!s)return null;
+  const now=new Date(),Y=now.getFullYear(),pad=n=>String(n).padStart(2,"0");
+  if(s==="오늘")return todayISO();
+  let y,m,d,mt;
+  if((mt=s.match(/^(\d{4})[-./년]?(\d{1,2})[-./월]?(\d{1,2})일?$/)))[y,m,d]=[+mt[1],+mt[2],+mt[3]];
+  else if((mt=s.match(/^(\d{2})[-./](\d{1,2})[-./](\d{1,2})$/)))[y,m,d]=[2000+ +mt[1],+mt[2],+mt[3]];
+  else if((mt=s.match(/^(\d{1,2})[-./월](\d{1,2})일?$/)))[y,m,d]=[Y,+mt[1],+mt[2]];
+  else if((mt=s.match(/^(\d{2})(\d{2})$/)))[y,m,d]=[Y,+mt[1],+mt[2]];
+  else if((mt=s.match(/^(\d{1,2})일?$/)))[y,m,d]=[Y,now.getMonth()+1,+mt[1]];
+  else return null;
+  const dt=new Date(y,m-1,d);if(dt.getMonth()!==m-1||dt.getDate()!==d)return null;
+  return `${y}-${pad(m)}-${pad(d)}`;
+}
+// ---- 항목 후보 ----
+const SUG={el:null,list:[],i:0,box:null};
+function sugFind(q){
+  q=q.trim().replace(/\s+/g,"");if(!q)return CATS.slice(0,8);
+  const sc=c=>{const s=c.small.replace(/\s+/g,""),m=c.mid.replace(/\s+/g,""),b=c.big.replace(/\s+/g,"");
+    return s===q?100:s.startsWith(q)?80:s.includes(q)?60:m.includes(q)?40:b.includes(q)?20:0};
+  return CATS.map(c=>[sc(c),c]).filter(x=>x[0]).sort((a,b)=>b[0]-a[0]).slice(0,8).map(x=>x[1]);
+}
+function sugShow(el){
+  if(!SUG.box){SUG.box=document.createElement("div");SUG.box.className="sugbox";SUG.box.setAttribute("role","listbox");document.body.appendChild(SUG.box);
+    SUG.box.addEventListener("mousedown",e=>{const o=e.target.closest("[data-si]");if(o){e.preventDefault();SUG.i=+o.dataset.si;sugPick(false)}});}
+  SUG.el=el;SUG.list=sugFind(el.value);SUG.i=0;
+  if(!SUG.list.length){SUG.box.innerHTML='<div class="none">맞는 항목이 없어요 · ▾ 단추로 새로 만들 수 있어요</div>'}
+  else SUG.box.innerHTML=SUG.list.map((c,j)=>`<div class="o${j===SUG.i?" on":""}" data-si="${j}" role="option"><b>${esc(c.small)}</b><span>${esc(c.big)} › ${esc(c.mid)}</span></div>`).join("");
+  const r=el.getBoundingClientRect();SUG.box.style.left=Math.round(r.left)+"px";SUG.box.style.top=Math.round(r.bottom+2)+"px";SUG.box.style.minWidth=Math.max(240,Math.round(r.width))+"px";SUG.box.hidden=false;
+}
+function sugHide(){if(SUG.box)SUG.box.hidden=true;SUG.el=null;}
+function sugMove(d){if(!SUG.list.length)return;SUG.i=(SUG.i+d+SUG.list.length)%SUG.list.length;SUG.box.querySelectorAll(".o").forEach((o,j)=>o.classList.toggle("on",j===SUG.i));}
+function sugPick(viaTab){
+  const el=SUG.el,c=SUG.list[SUG.i];if(!el||!c){sugHide();return false}
+  el.value=c.small;sugHide();
+  if(el.id==="fS"){S.newS=c.small;toast(hintFor(c.small));if(!viaTab){const a=document.getElementById("fA");if(a){a.focus();a.select()}}}
+  else{el.dispatchEvent(new Event("change",{bubbles:true}));if(!viaTab){const n=el.closest("tr")&&el.closest("tr").querySelector('[data-xf="a"]');if(n){n.focus();n.select()}}}
+  return true;
+}
+document.addEventListener("input",e=>{const t=e.target;if(t.dataset&&t.dataset.sug!=null)sugShow(t)});
+document.addEventListener("focusin",e=>{const t=e.target;
+  if(t.matches&&t.matches("input.ce:not([type=checkbox]),input.ly")&&S.mode==="pc")setTimeout(()=>{if(document.activeElement===t){try{t.select()}catch(x){}}},0);   // 엑셀처럼 칸에 들어가면 통째로 선택 → 바로 덮어쓰기
+});
+document.addEventListener("focusout",e=>{if(SUG.el&&e.target===SUG.el)setTimeout(()=>{if(document.activeElement!==SUG.el)sugHide()},120)});
+addEventListener("scroll",()=>{if(SUG.el)sugHide()},true);
+// 후보가 떠 있을 때는 ↑↓·Enter·Tab·Esc를 후보가 먼저 가져감
+addEventListener("keydown",e=>{
+  if(!SUG.el||SUG.box.hidden||e.target!==SUG.el)return;
+  if(e.isComposing||e.keyCode===229)return;
+  if(e.key==="ArrowDown"){e.preventDefault();e.stopImmediatePropagation();sugMove(1)}
+  else if(e.key==="ArrowUp"){e.preventDefault();e.stopImmediatePropagation();sugMove(-1)}
+  else if(e.key==="Enter"){if(SUG.list.length&&SUG.el.value.trim()){e.preventDefault();e.stopImmediatePropagation();sugPick(false)}else sugHide()}
+  else if(e.key==="Tab"){if(SUG.list.length&&SUG.el.value.trim())sugPick(true);else sugHide()}
+  else if(e.key==="Escape"){e.stopImmediatePropagation();sugHide()}
+},true);
+// ---- ←→ 옆 칸 ----
+function rowCells(tr){return [...tr.querySelectorAll("input.ce,select.ce,input.ly,input[type=checkbox]")].filter(x=>!x.disabled&&x.type!=="hidden"&&x.offsetParent)}
+function sideMove(t,dir){
+  const tr=t.closest&&t.closest("table.xl tr");if(!tr)return false;
+  const cs=rowCells(tr),n=cs[cs.indexOf(t)+dir];if(!n)return false;
+  n.focus();try{n.select()}catch(x){}return true;
+}
+function atEdge(t,dir){
+  if(t.tagName!=="INPUT"||t.type==="checkbox")return true;
+  let a,b;try{a=t.selectionStart;b=t.selectionEnd}catch(x){return true}if(a==null)return true;
+  const L=t.value.length,all=a===0&&b===L;
+  return all||(dir<0?(a===0&&b===0):(a===L&&b===L));
+}
+// ---- 붙여 넣기: 엑셀·구글시트에서 여러 칸 복사 ----
+function tsv(text){return text.replace(/\r/g,"").split("\n").filter(l=>l.trim()).map(l=>l.split("\t").map(x=>x.trim()))}
+function pasteExp(rows){
+  const out=[],bad=[];
+  rows.forEach(r=>{
+    const o={d:null,s:null,a:null,p:null,st:null,rest:[]};
+    r.forEach(v=>{if(!v)return;
+      if(!o.d&&/\d/.test(v)&&parseDate(v)&&!/만|원|,/.test(v)&&v.length<=11){o.d=parseDate(v);return}
+      if(!o.s&&cat(v)){o.s=v;return}
+      if(!o.st&&/^(냈어요|완료|낼\s?예정|예정)$/.test(v)){o.st=/예정/.test(v)?"예정":"완료";return}
+      if(!o.p&&PAY.includes(v)){o.p=v;return}
+      if(o.a==null){const n=parseMoney(v,"won");if(n&&/\d/.test(v)){o.a=n;return}}
+      o.rest.push(v);});
+    if(!o.s){const g=o.rest.find(v=>sugFind(v).length===1||(sugFind(v)[0]&&sugFind(v)[0].small===v));if(g){o.s=sugFind(g)[0].small;o.rest.splice(o.rest.indexOf(g),1)}}
+    if(o.s&&o.a)out.push({d:o.d||todayISO(),s:o.s,a:o.a,p:o.p||S.pay,st:o.st||"완료",v:o.rest[0]||"",m:o.rest.slice(1).join(" "),r:false,n:0});
+    else bad.push(r.join(" "));
+  });
+  if(!out.length){moneyNote("붙여 넣은 줄에서 항목과 금액을 찾지 못했어요. 항목 이름이 가계부 항목과 같아야 해요.");return}
+  if(!confirm(`${out.length}줄을 지출에 넣을까요?${bad.length?`\n(항목이나 금액을 못 읽은 ${bad.length}줄은 빼요: ${bad.slice(0,3).join(" / ")}${bad.length>3?" …":""})`:""}`))return;
+  for(let j=out.length-1;j>=0;j--)EXP.unshift(out[j]);
+  S.clearDraft=true;render();moneyNote(`${out.length}줄을 넣었어요${bad.length?` · ${bad.length}줄은 못 읽어서 뺐어요`:""}`);
+}
+function pasteBudget(t,rows){
+  const all=[...document.querySelectorAll('table.xl [data-bud]')];let k=all.indexOf(t),n=0,byName=0;
+  rows.forEach(r=>{
+    if(r.length>=2&&cat(r[0])){const v=parseMoney(r[r.length-1],"man");if(v!=null){MY[r[0]]=Math.round(v*10000);(P.autoB=P.autoB||{})[r[0]]=false;byName++}return}
+    const el=all[k++];if(!el)return;const v=parseMoney(r[r.length-1],"man");if(v==null)return;
+    MY[el.dataset.bud]=Math.round(v*10000);(P.autoB=P.autoB||{})[el.dataset.bud]=false;n++;});
+  if(n+byName){render();moneyNote(`예산 ${n+byName}칸을 붙여 넣었어요${byName?` (항목 이름으로 맞춘 ${byName}칸 포함)`:""}`)}
+}
+document.addEventListener("paste",e=>{
+  const t=e.target;if(!t.closest||!t.closest("table.xl"))return;
+  const text=(e.clipboardData||window.clipboardData).getData("text");if(!text)return;
+  const rows=tsv(text);if(rows.length<2&&!(rows[0]&&rows[0].length>1))return;   // 한 칸만 붙여 넣으면 그냥 둠
+  e.preventDefault();
+  if(t.dataset.bud!=null)pasteBudget(t,rows);else if(t.closest("tr.newrow")||t.dataset.xf!=null)pasteExp(rows);
+});
+
 /* ================= 이벤트 ================= */
 function toast(t){const h=document.querySelector("#dlg #fH")||document.getElementById("fH");if(h)h.innerHTML=t}
 function readExp(){
   const g=id=>document.querySelector("#dlg #"+id)||document.getElementById(id);
   const s=g("fS").value.trim(),am=parseMoney(g("fA").value,"won");
-  if(!cat(s)){toast('<span class="red">어디에 쓴 돈인지 대분류 › 중분류 › 항목을 골라 주세요.</span>');const b=g("fSbtn");if(b)b.focus();return null}
+  if(!cat(s)){toast('<span class="red">어디에 쓴 돈인지 항목을 골라 주세요. 글자를 치면 후보가 떠요.</span>');const b=g("fSbtn")||g("fS");if(b)b.focus();return null}
   if(!am){toast('<span class="red">금액을 적어 주세요.</span>');g("fA").focus();return null}
   const pSel=g("fP"),stSel=g("fStS");
   const pay=pSel?pSel.value:S.pay,nSel=g("fN"),n=nSel&&isCard(pay)?(+nSel.value||0):0;
-  return {d:g("fD").value||todayISO(),s,a:am,p:pay,st:stSel?stSel.value:S.st,v:g("fV").value,m:g("fM").value,r:g("fR").checked,n};
+  const dRaw=(g("fD").value||"").trim(),dd=dRaw?parseDate(dRaw):todayISO();
+  if(!dd){toast('<span class="red">날짜를 읽지 못했어요. 예: 10.15, 2026-10-15</span>');g("fD").focus();return null}
+  return {d:dd,s,a:am,p:pay,st:stSel?stSel.value:S.st,v:g("fV").value,m:g("fM").value,r:g("fR").checked,n};
 }
 document.addEventListener("click",e=>{
   const g=e.target.closest("[data-go]");
@@ -1791,6 +1923,7 @@ document.addEventListener("change",e=>{
   if(t.dataset.bud!=null){const n=parseMoney(t.value,"man");MY[t.dataset.bud]=n==null?0:Math.round(n*10000);(P.autoB=P.autoB||{})[t.dataset.bud]=false;later();}
   else if(t.dataset.xf!=null){const e=EXP[+t.dataset.xi],f=t.dataset.xf;
     if(f==="s"){const v=t.value.trim();if(!cat(v)){t.classList.add("bad");toast('<span class="red">목록에 있는 항목만 쓸 수 있어요. 글자를 치면 찾아줘요.</span>');t.value=e.s;setTimeout(()=>t.classList.remove("bad"),1500);return}e.s=v}
+    else if(f==="d"){const d=parseDate(t.value);if(!d){moneyNote("날짜를 읽지 못했어요. 예: 10.15, 2026-10-15");t.value=e.d;return}e.d=d;t.value=d}
     else if(f==="a"){const n=parseMoney(t.value,"won");if(!n){moneyNote("금액을 읽지 못했어요. 예: 150만, 1500000");t.value=e.a.toLocaleString();return}e.a=n}
     else if(f==="r")e.r=t.checked; else if(f==="n")e.n=+t.value||0; else e[f]=t.value;
     later();}
@@ -1844,13 +1977,14 @@ addEventListener("compositionend",e=>{const p=S.pendKey;S.pendKey=null;if(!p||p.
   setTimeout(()=>{if((S.navAt||0)>p.at)return;if(document.activeElement===p.t||p.key==="Enter")onKey(p.t,p.key,p.shift,()=>{})},30)});
 function onKey(t,key,shift,pd){
   const e={key,shiftKey:shift,preventDefault:pd};
+  if((key==="ArrowLeft"||key==="ArrowRight")&&t.closest&&t.closest("table.xl")){const d=key==="ArrowLeft"?-1:1;if(atEdge(t,d)&&sideMove(t,d))pd();return}
   if(e.key==="Enter"&&t.dataset.pkadd){e.preventDefault();pkAdd(t.dataset.pkadd);return}
   if(e.key==="Enter"&&t.id==="pkq"){e.preventDefault();const f=document.querySelector('#pk [data-act="pksm"]');if(f)f.click();return}
   if(e.key==="Enter"&&t.classList&&t.classList.contains("pickbtn"))return;
   if(e.key==="Enter"&&t.closest&&t.closest("tr.newrow")){e.preventDefault();document.querySelector('tr.newrow [data-act="addexp"]').click();return}
   const col=t.dataset.col;if(!col){if(e.key==="Enter"&&t.classList.contains("ly"))t.blur();return}
   let dir=0;if(e.key==="Enter")dir=e.shiftKey?-1:1;else if(e.key==="ArrowDown")dir=1;else if(e.key==="ArrowUp")dir=-1;else return;
-  if(e.key!=="Enter"&&(t.tagName==="SELECT"||t.type==="date"))return;
+  if(e.key!=="Enter"&&t.type==="date")return;
   e.preventDefault();
   const scope=t.closest("table")||document.getElementById("main");
   const all=[...scope.querySelectorAll(`[data-col="${col}"]`)];const n=all[all.indexOf(t)+dir];
